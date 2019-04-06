@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="1150.0" style="-fx-background-color: #222326;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@dashboard.css" />
+    </stylesheets>
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="51.0" layoutY="27.0" stroke="BLACK" strokeType="INSIDE" width="1150.0" />
+      <Label layoutX="51.0" layoutY="38.0" text="Dashboard" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI Bold" size="21.0" />
+         </font>
+      </Label>
+      <TextField fx:id="searchField" layoutX="402.0" layoutY="36.0" prefHeight="32.0" prefWidth="400.0" promptText="Search music">
+         <font>
+            <Font name="Segoe UI" size="13.0" />
+         </font>
+      </TextField>
+      <Pane layoutY="560.0" prefHeight="90.0" prefWidth="1150.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="90.0" stroke="BLACK" strokeType="INSIDE" width="1150.0" />
+            <ImageView fx:id="cover" fitHeight="75.0" fitWidth="75.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Files/album_art.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="play" contentDisplay="GRAPHIC_ONLY" layoutX="575.0" layoutY="11.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+            <Button fx:id="prev" contentDisplay="GRAPHIC_ONLY" layoutX="525.0" layoutY="22.0" minHeight="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" />
+            <Button fx:id="shuffle" contentDisplay="GRAPHIC_ONLY" layoutX="471.0" layoutY="20.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" />
+            <Button fx:id="next" contentDisplay="GRAPHIC_ONLY" layoutX="646.0" layoutY="22.0" minHeight="10.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" />
+            <Button fx:id="repeat" contentDisplay="GRAPHIC_ONLY" layoutX="692.0" layoutY="13.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+            <Slider fx:id="musicSlider" layoutX="385.0" layoutY="59.0" prefHeight="20.0" prefWidth="420.0" />
+            <Label fx:id="start" layoutX="348.0" layoutY="61.0" text="00:00" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="end" layoutX="810.0" layoutY="62.0" text="00:00" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="12.0" />
+               </font>
+            </Label>
+            <Button fx:id="list" contentDisplay="GRAPHIC_ONLY" layoutX="1100.0" layoutY="9.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+            <Button fx:id="speaker" contentDisplay="GRAPHIC_ONLY" layoutX="952.0" layoutY="57.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" />
+            <Slider fx:id="speakerSlider" layoutX="988.0" layoutY="60.0" prefHeight="20.0" prefWidth="157.0" />
+            <Label fx:id="songName" layoutX="95.0" layoutY="21.0" maxWidth="-Infinity" prefHeight="28.0" prefWidth="226.0" text="Song Name" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="artistName" layoutX="95.0" layoutY="50.0" maxWidth="-Infinity" prefHeight="19.0" prefWidth="171.0" text="Artist Name" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Italic" size="16.0" />
+               </font>
+            </Label>
+         </children></Pane>
+      <Button fx:id="close" contentDisplay="GRAPHIC_ONLY" layoutX="1120.0" layoutY="3.0" maxWidth="25.0" minHeight="23.0" minWidth="23.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="23.0" />
+      <Button fx:id="minim" contentDisplay="GRAPHIC_ONLY" layoutX="1089.0" layoutY="3.0" maxWidth="25.0" minHeight="23.0" minWidth="23.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="23.0" />
+      <Button fx:id="search" contentDisplay="GRAPHIC_ONLY" layoutX="812.0" layoutY="37.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
+      <Button fx:id="profile" contentDisplay="GRAPHIC_ONLY" layoutX="1092.0" layoutY="32.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+      <ImageView fitHeight="75.0" fitWidth="82.0" layoutX="-16.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Files/small_logo.png" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="songViewPane" layoutY="78.0" prefHeight="461.0" prefWidth="1142.0">
+         <children>
+            <Button fx:id="createPlaylist" contentDisplay="GRAPHIC_ONLY" layoutX="1005.0" layoutY="53.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="133.0" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="15.0" />
+               </font>
+            </Button>
+            <TableView fx:id="table" layoutX="228.0" layoutY="106.0" prefHeight="375.0" prefWidth="914.0" style="-fx-background-color: #222326;">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy></TableView>
+            <Line endX="1016.0" layoutX="122.0" layoutY="143.0" startX="104.0" stroke="WHITE" strokeWidth="2.0" />
+            <Label fx:id="listLabel" layoutX="232.0" layoutY="11.0" text="Songs" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <AnchorPane fx:id="tabPane" prefHeight="467.0" prefWidth="215.0" style="-fx-background-color: #e03753;">
+               <children>
+                  <VBox layoutY="56.0" prefHeight="425.0" prefWidth="215.0">
+                     <children>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../Files/tracks.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Tracks" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="tracks" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../Files/playlist.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Playlists" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="lookPlaylist" fitHeight="80.0" fitWidth="80.0" layoutX="158.0" layoutY="-17.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../Files/expand.png" />
+                                 </image>
+                              </ImageView>
+                              <Button fx:id="playlists" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Files/artist.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Artists" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="artists" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Files/album.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Albums" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="albums" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Files/genre.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Genres" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="genres" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Files/year.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Years" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="years" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Files/starred_logo.PNG" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Favorites" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="favMusic" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                        <Pane prefHeight="45.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="23.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Files/recent.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="89.0" layoutY="13.0" text="Most Played" textFill="WHITE">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="mostPlayed" contentDisplay="GRAPHIC_ONLY" layoutY="-6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="226.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Pane>
+                     </children>
+                  </VBox>
+                  <Label layoutX="11.0" layoutY="7.0" prefWidth="123.0" text="Library" textFill="WHITE">
+                     <font>
+                        <Font name="Segoe UI Bold" size="30.0" />
+                     </font>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Button fx:id="playPlaylist" contentDisplay="GRAPHIC_ONLY" layoutX="225.0" layoutY="64.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="123.0" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="upload" contentDisplay="GRAPHIC_ONLY" layoutX="1005.0" layoutY="12.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="133.0" />
+         </children>
+      </AnchorPane>
+      <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="-10.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Files/small_logo.png" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="playlistViewPane" layoutX="215.0" layoutY="183.0" prefHeight="375.0" prefWidth="935.0">
+         <children>
+            <TableView fx:id="table1" layoutX="10.0" prefHeight="375.0" prefWidth="914.0" style="-fx-background-color: #222326;">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <Line endX="1016.0" layoutX="-92.0" layoutY="37.0" startX="104.0" stroke="WHITE" strokeWidth="2.0" />
+         </children>
+      </AnchorPane>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#222326" height="61.0" layoutX="1123.0" layoutY="164.0" stroke="#222326" strokeType="INSIDE" width="23.0" />
+      <AnchorPane fx:id="playlistPane" layoutX="215.0" layoutY="184.0" prefHeight="277.0" prefWidth="200.0" style="-fx-background-color: black;">
+         <children>
+            <ScrollPane fx:id="sideScroll" fitToWidth="true" layoutX="1.0" layoutY="19.0" maxHeight="1.7976931348623157E308" prefHeight="239.0" prefWidth="198.0">
+               <content>
+                  <VBox fx:id="playlistVBox" maxHeight="1.7976931348623157E308" prefHeight="238.0" prefWidth="183.0" style="-fx-background-color: black;" />
+               </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="profilePane" layoutX="909.0" layoutY="77.0" prefHeight="364.0" prefWidth="241.0" style="-fx-background-color: black;">
+         <children>
+            <Button fx:id="profileImage" contentDisplay="GRAPHIC_ONLY" layoutX="71.0" layoutY="27.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" />
+            <Label fx:id="greetings" alignment="CENTER" layoutX="25.0" layoutY="149.0" prefHeight="19.0" prefWidth="192.0" text="Good morning, Guest!" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="13.0" />
+               </font>
+            </Label>
+            <Button fx:id="login" contentDisplay="GRAPHIC_ONLY" layoutX="54.0" layoutY="210.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="134.0" />
+            <Label fx:id="or" alignment="CENTER" layoutX="80.0" layoutY="256.0" prefHeight="19.0" prefWidth="82.0" text="or" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI" size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="signup" contentDisplay="GRAPHIC_ONLY" layoutX="54.0" layoutY="281.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="134.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

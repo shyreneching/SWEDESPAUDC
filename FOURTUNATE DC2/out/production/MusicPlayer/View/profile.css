@@ -1,0 +1,42 @@
+#profile {
+    -fx-background-color: black;
+}
+
+.text-field {
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+}
+
+#closeprofile.button {
+	-fx-background-image: url("/Files/close.png");
+}
+
+#editeverything.button {
+    -fx-background-image: url("/Files/edit_button.png");
+}
+
+#save.button {
+    -fx-background-image: url("/Files/save_button.png");
+}
+
+#cancel.button {
+    -fx-background-image: url("/Files/cancel_button.png");
+}
+
+#editeverything.button:hover {
+    -fx-background-image: url("/Files/edit_button_clicked.png");
+}
+
+#save.button:hover {
+    -fx-background-image: url("/Files/save_button_clicked.png");
+}
+
+#cancel.button:hover {
+    -fx-background-image: url("/Files/cancel_button_clicked.png");
+}

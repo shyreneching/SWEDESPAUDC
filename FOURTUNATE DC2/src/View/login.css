@@ -1,0 +1,50 @@
+#pane {
+    -fx-background-color: black;
+}
+
+#signup_pane {
+    -fx-background-color: black;
+}
+
+.text-field {
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+}
+
+#closelogin.button {
+	-fx-background-image: url("/Files/close.png");	
+}
+
+#closesignup.button {
+	-fx-background-image: url("/Files/close.png");	
+}
+
+#login.button {
+    -fx-background-image: url("/Files/login_button.png");
+}
+
+#signup.button {
+    -fx-background-image: url("/Files/signup_button_red-black.png");
+}
+
+#login.button:hover {
+    -fx-background-image: url("/Files/login_button_clicked.png");
+}
+
+#signup.button:hover {
+    -fx-background-image: url("/Files/signup_button_red-black_clicked.png");
+}
+
+#mainsignup.button {
+    -fx-background-image: url("/Files/signup_button.png");
+}
+
+#mainsignup.button:hover {
+    -fx-background-image: url("/Files/signup_button_clicked.png");
+}

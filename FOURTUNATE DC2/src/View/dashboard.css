@@ -1,0 +1,257 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.menu-item:hover {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.menu-item {
+    -fx-background-color: #e03753;
+    -fx-text-fill: black;
+}
+
+.context-menu {
+    -fx-background-color: #e03753;
+}
+
+.text-field {
+    -fx-background-radius: 20, 19, 18;
+} 
+
+.button {
+    -fx-background-color: transparent;
+}
+
+#saveTitle.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/save_button.png");
+}
+
+#saveTitle.button:hover {
+    -fx-background-image: url("/Files/save_button_clicked.png");
+}
+
+#play.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/play.png");
+}
+
+#bw.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/backtrack_button.png");
+}
+
+#bw.button:hover {
+    -fx-background-image: url("/Files/backtrack_button_hover.png");
+}
+
+#fw.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/fastforward_button.png");
+}
+
+#fw.button:hover {
+    -fx-background-image: url("/Files/fastforward_button_hover.png");
+}
+
+#close.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/close.png");
+}
+
+#next.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/next.png");
+}
+
+#next.button:hover {
+    -fx-background-image: url("/Files/next_hover.png");
+}
+
+#prev.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/prev.png");
+}
+
+#prev.button:hover {
+    -fx-background-image: url("/Files/prev_hover.png");
+}
+
+#repeat.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/repeat.png");
+}
+
+#shuffle.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/shuffle.png");
+}
+
+#list.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/list.png");
+}
+
+#list.button:hover {
+    -fx-background-image: url("/Files/list_hover.png");
+}
+
+#speaker.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/volume.png");
+}
+
+#search.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/search.png");
+}
+
+#minim.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/minim.png");
+}
+
+#profile.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/profile.png");
+}
+
+#profileImage.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/profile_edited.png");
+}
+
+#login.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/login_button.png");
+}
+
+#signup.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/signup_button_red-black.png");
+}
+
+#createPlaylist.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/create_playlist.png");
+}
+
+#createPlaylist.button:hover {
+    -fx-background-image: url("/Files/create_playlist_hover.png");
+}
+
+#playPlaylist.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/play_button.png");
+}
+
+#playPlaylist.button:hover {
+    -fx-background-image: url("/Files/play_button_clicked.png");
+}
+
+#upload.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/upload_song_button.png");
+}
+
+#upload.button:hover {
+    -fx-background-image: url("/Files/upload_song_button_clicked.png");
+}
+
+.slider .track {
+    -fx-padding: 1;
+}
+
+.slider .thumb {
+    -fx-background-color: #e03753;
+    -fx-padding: 8;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: black;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: black;
+    -fx-background-radius: 1em;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #e03753;
+    -fx-background-radius: 2em;
+}
+
+/* Border color */
+.table-view {
+  -fx-table-cell-border-color: transparent;
+}
+
+/* Header color */
+.table-view .column-header {
+    -fx-background-color: #222326;
+    -fx-pref-height: 40;
+}
+
+/* Header label color */
+.table-view .column-header .label {
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: white;   
+    -fx-font-size: 12pt;
+    -fx-alignment: center_left;
+}
+
+/* Row color */
+.table-row-cell {
+    -fx-pref-height: 40;
+    -fx-background-color: #222326;
+    -fx-text-fill: white;   
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}
+
+/* Hover row */
+.table-view:row-selection .table-row-cell:filled:hover {
+    -fx-background-color: gray;
+}
+
+/* Selected row */
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-table-cell-border-color: transparent;
+    -fx-background-color: #e03753;
+}
+
+/* Selected row when table not focused */
+.table-row-cell:filled:focused:selected {
+    -fx-table-cell-border-color: transparent;
+    -fx-background-color: #e03753;
+}
+
+
+

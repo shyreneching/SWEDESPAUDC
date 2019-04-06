@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="signup_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="569.0" prefWidth="398.0" stylesheets="@login.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="firstname" layoutX="30.0" layoutY="221.0" prefHeight="40.0" prefWidth="157.0" promptText="First Name">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="lastname" layoutX="209.0" layoutY="221.0" prefHeight="40.0" prefWidth="157.0" promptText="Last Name">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="username" layoutX="30.0" layoutY="281.0" prefHeight="40.0" prefWidth="337.0" promptText="Username">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </TextField>
+      <Button fx:id="mainsignup" layoutX="132.0" layoutY="489.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="134.0" />
+      <PasswordField fx:id="password" layoutX="30.0" layoutY="342.0" prefHeight="40.0" prefWidth="337.0" promptText="Password">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </PasswordField>
+      <Button fx:id="closesignup" layoutX="371.0" layoutY="8.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="25.0" />
+      <PasswordField fx:id="conpassword" layoutX="30.0" layoutY="404.0" prefHeight="40.0" prefWidth="337.0" promptText="Confirm Password">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </PasswordField>
+      <ImageView fitHeight="164.0" fitWidth="164.0" layoutX="117.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Files/logo1.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="142.0" layoutY="156.0" prefHeight="29.0" prefWidth="134.0" text="Sign Up " textFill="WHITE">
+         <font>
+            <Font name="Segoe UI" size="32.0" />
+         </font>
+      </Label>
+      <Label fx:id="passwordwarn2" alignment="CENTER" layoutX="76.0" layoutY="444.0" prefHeight="0.0" prefWidth="246.0" text="**Passwords do not match**  " textAlignment="JUSTIFY" textFill="#e03753" />
+      <Label fx:id="passwordwarn1" alignment="CENTER" layoutX="76.0" layoutY="382.0" prefHeight="0.0" prefWidth="246.0" text="**Please input a valid password**  " textAlignment="JUSTIFY" textFill="#e03753" />
+      <Label fx:id="usernamewarn" alignment="CENTER" layoutX="21.0" layoutY="321.0" prefHeight="17.0" prefWidth="356.0" text="**Username is already taken**  " textAlignment="JUSTIFY" textFill="#e03753" />
+      <Label fx:id="required1" alignment="CENTER" layoutX="36.0" layoutY="261.0" prefHeight="17.0" prefWidth="145.0" text="**This field is required**" textAlignment="JUSTIFY" textFill="#e03753" />
+      <Label fx:id="required2" alignment="CENTER" layoutX="215.0" layoutY="261.0" prefHeight="17.0" prefWidth="145.0" text="**This field is required**" textAlignment="JUSTIFY" textFill="#e03753" />
+   </children>
+</AnchorPane>

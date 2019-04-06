@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="mp3agic">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src/Lib/mp3agic-master/src/main/java" />
+      <root url="file://$PROJECT_DIR$/src/Lib/mp3agic-master/src/test/java" />
+    </SOURCES>
+  </library>
+</component>

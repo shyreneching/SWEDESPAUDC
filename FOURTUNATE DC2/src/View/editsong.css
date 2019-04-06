@@ -1,0 +1,53 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20, 19, 18;
+}
+
+.text-field {
+    -fx-background-radius: 20, 19, 18;
+}
+
+#upload.button {
+    -fx-background-color: #e03753;
+}
+
+#close.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/close.png");
+}
+
+#save.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/save_button.png");
+}
+
+#save.button:hover {
+    -fx-background-image: url("/Files/save_button_clicked.png");
+}
+
+#cancel.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/cancel_button.png");
+}
+
+#cancel.button {
+    -fx-background-image: url("/Files/cancel_button_clicked.png");
+}
+
+#edit.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/edit_button.png");
+}
+
+#edit.button {
+    -fx-background-image: url("/Files/edit_button_clicked.png");
+}
+

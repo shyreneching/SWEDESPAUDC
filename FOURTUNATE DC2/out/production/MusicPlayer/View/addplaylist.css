@@ -1,0 +1,24 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.button {
+    -fx-background-color: transparent;
+}
+
+.text-field {
+    -fx-background-radius: 20, 19, 18;
+}
+
+#create.button {
+    -fx-background-radius: 20, 19, 18;
+    -fx-background-color: #e03753;
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+}
+
+#close.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-image: url("/Files/close.png");
+}

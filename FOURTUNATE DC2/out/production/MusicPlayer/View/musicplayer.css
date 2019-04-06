@@ -1,0 +1,33 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.button {
+    -fx-background-position: center;
+    -fx-background-size: 100%;
+    -fx-background-color: transparent;
+}
+
+#home.button {
+    -fx-background-image: url("/Files/logo1.png");
+}
+
+#next.button {
+    -fx-background-image: url("/Files/next.png");
+}
+
+#prev.button {
+    -fx-background-image: url("/Files/prev.png");
+}
+
+#shuffle.button {
+    -fx-background-image: url("/Files/shuffle.png");
+}
+
+#repeat.button {
+    -fx-background-image: url("/Files/repeat.png");
+}
+
+#play.button {
+    -fx-background-image: url("/Files/play.png");
+}
