@@ -472,4 +472,75 @@ public class PlaylistService implements Service{
         return false;
     }
 
+    //new
+    public ObservableList<PlaylistInterface> getFollowedPlaylist(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        ObservableList <SongInterface> songs;
+
+        String query ="SELECT * FROM playlist INNER JOIN followedplaylist " +
+                "ON playlist.idplaylist = followedplaylist.idplaylist " +
+                "WHERE followedplaylist.username = '" + username + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                PlaylistInterface p = new Playlist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setSongs(FXCollections.observableArrayList());
+                playlists.add(p);
+            }
+
+            ResultSet rs2 = statement2.executeQuery();
+            while (rs2.next()){
+                SongInterface s = new Song();
+                String playlistid = rs2.getString("idplaylist");
+                s.setSongid(rs2.getString("idsong"));
+                s.setName(rs2.getString("songname"));
+                s.setGenre(rs2.getString("genre"));
+                s.setArtist(rs2.getString("artist"));
+                s.setAlbum(rs2.getString("album"));
+                s.setYear(rs2.getInt("year"));
+                s.setTrackNumber(rs2.getInt("trackNumber"));
+                s.setLength(rs2.getInt("length"));
+                s.setSize(rs2.getFloat("size"));
+                s.setSize(rs2.getFloat("size"));
+                // sets the name to "Artist-title"
+                s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
+               /* //gets the song from the databse and make put it in a File datatype
+                File theFile = new File(s.getName());
+                OutputStream out = new FileOutputStream(theFile);
+                InputStream input = rs2.getBinaryStream("songfile");
+                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
+                while (input.read(buffer) > 0) {
+                    out.write(buffer);
+                }
+                s.setSongfile(theFile);
+                //takes the exact location of the song
+                s.setFilelocation(theFile.getAbsolutePath());*/
+                for(PlaylistInterface p : playlists){
+                    if(p.getPlaylistid().compareTo(playlistid) == 0) {
+                        songs = p.getSongs();
+                        songs.add(s);
+                        p.setSongs(songs);
+                    }
+                }
+            }
+            return playlists;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } /*catch (IOException e) {
+            e.printStackTrace();
+        } */finally {
+            if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
 }

@@ -204,4 +204,84 @@ public class AccountService implements Service{
         return false;
     }
 
+    public ObservableList<Object> getFollowers(String username) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+
+        ObservableList <Object> accounts = FXCollections.observableArrayList();
+        String query ="SELECT * FROM accounts INNER JOIN followpeople" +
+                "ON accounts.username = followpeople.followed" +
+                "WHERE followpeople.followed = " +username;
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                //Add
+                AccountInterface a;
+                String s = rs.getString("accountType");
+                if(s.equalsIgnoreCase("Listener")){
+                    a = new Listener();
+                }
+                else{
+                    a = new Artist();
+                }
+
+                //AccountInterface a = new Account();
+                a.setUsername(rs.getString("username"));
+                a.setPassword(rs.getString("password"));
+                a.setName(rs.getString("name"));
+                accounts.add(a);
+            }
+            return accounts;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    public ObservableList<Object> getFollowed(String username) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+
+        ObservableList <Object> accounts = FXCollections.observableArrayList();
+        String query ="SELECT * FROM accounts INNER JOIN followpeople" +
+                "ON accounts.username = followpeople.follower" +
+                "WHERE followpeople.follower = " +username;
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                //Add
+                AccountInterface a;
+                String s = rs.getString("accountType");
+                if(s.equalsIgnoreCase("Listener")){
+                    a = new Listener();
+                }
+                else{
+                    a = new Artist();
+                }
+
+                //AccountInterface a = new Account();
+                a.setUsername(rs.getString("username"));
+                a.setPassword(rs.getString("password"));
+                a.setName(rs.getString("name"));
+                accounts.add(a);
+            }
+            return accounts;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
 }
