@@ -1,8 +1,5 @@
-SET GLOBAL max_allowed_packet=1073741824;
-
-CREATE DATABASE IF NOT EXISTS MusicPlayer /*!40100 DEFAULT CHARACTER SET utf8*/;
-USE MusicPlayer;
-
+CREATE DATABASE  IF NOT EXISTS `musicplayer` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `musicplayer`;
 -- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicplayer
@@ -157,6 +154,32 @@ LOCK TABLES `playlist` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `recentlyplayed`
+--
+
+DROP TABLE IF EXISTS `recentlyplayed`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `recentlyplayed` (
+  `idrecentlyplayed` int(11) NOT NULL,
+  `idsong` varchar(15) NOT NULL,
+  `username` varchar(15) NOT NULL,
+  `timeplayed` datetime NOT NULL,
+  PRIMARY KEY (`idrecentlyplayed`),
+  UNIQUE KEY `idrecentlyplayed_UNIQUE` (`idrecentlyplayed`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recentlyplayed`
+--
+
+LOCK TABLES `recentlyplayed` WRITE;
+/*!40000 ALTER TABLE `recentlyplayed` DISABLE KEYS */;
+/*!40000 ALTER TABLE `recentlyplayed` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `song`
 --
 
@@ -253,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-10 15:19:02
+-- Dump completed on 2019-04-10 16:06:31
