@@ -1,8 +1,3 @@
-SET GLOBAL max_allowed_packet=1073741824;
-
-CREATE DATABASE IF NOT EXISTS MusicPlayer /*!40100 DEFAULT CHARACTER SET utf8*/;
-USE MusicPlayer;
-
 -- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicplayer
@@ -84,6 +79,7 @@ CREATE TABLE `followedplaylist` (
   `idplaylist` varchar(15) NOT NULL,
   `username` varchar(15) NOT NULL,
   `status` varchar(45) DEFAULT NULL,
+  `display` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`idplaylist`,`username`),
   KEY `person_idx` (`username`),
   CONSTRAINT `person` FOREIGN KEY (`username`) REFERENCES `accounts` (`username`),
@@ -109,8 +105,8 @@ DROP TABLE IF EXISTS `followpeople`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `followpeople` (
   `follower` varchar(15) NOT NULL,
-  `followed` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`follower`),
+  `followed` varchar(15) NOT NULL,
+  PRIMARY KEY (`follower`,`followed`),
   KEY `following_idx` (`followed`),
   CONSTRAINT `follower` FOREIGN KEY (`follower`) REFERENCES `accounts` (`username`),
   CONSTRAINT `following` FOREIGN KEY (`followed`) REFERENCES `accounts` (`username`)
@@ -138,6 +134,8 @@ CREATE TABLE `playlist` (
   `playlistname` varchar(45) DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   `status` varchar(45) DEFAULT NULL,
+  `display` tinyint(4) DEFAULT NULL,
+  `datecreated` datetime DEFAULT NULL,
   PRIMARY KEY (`idplaylist`),
   KEY `username_idx` (`username`),
   CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `accounts` (`username`)
@@ -250,4 +248,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-08 14:09:21
+-- Dump completed on 2019-04-10 15:19:02
