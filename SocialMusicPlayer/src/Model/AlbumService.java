@@ -26,7 +26,7 @@ public class AlbumService implements Service {
         String query = "INSERT INTO album VALUE (?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
-            statement.setInt(1, a.getAlbumID());
+            statement.setString(1, a.getAlbumID());
             statement.setString(2, a.getAlbumname());
             statement.setString(3, a.getArtist());
             statement.setTimestamp(4, timestamp);
@@ -57,7 +57,7 @@ public class AlbumService implements Service {
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
                 Album a = new Album();
-                a.setAlbumID(rs.getInt("albumid"));
+                a.setAlbumID(rs.getString("albumid"));
                 a.setAlbumname(rs.getString("albumname"));
                 a.setArtist(rs.getString("artist"));
                 a.setDate(rs.getTimestamp("dateCreated"));
@@ -75,8 +75,8 @@ public class AlbumService implements Service {
     }
 
     //add
-    // gets the song file of the music
-    public File getSongFile(String albumid) throws SQLException {
+    // gets the album image
+    public File getAlbumArt(String albumid) throws SQLException {
         Connection connection = pool.checkOut();
 
         String query ="SELECT * FROM album WHERE albumid = '" + albumid + "'";
@@ -119,7 +119,7 @@ public class AlbumService implements Service {
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
                 Album a = new Album();
-                a.setAlbumID(rs.getInt("albumid"));
+                a.setAlbumID(rs.getString("albumid"));
                 a.setAlbumname(rs.getString("albumname"));
                 a.setArtist(rs.getString("artist"));
                 a.setDate(rs.getTimestamp("dateCreated"));
@@ -171,7 +171,7 @@ public class AlbumService implements Service {
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
-            statement.setInt(1, a.getAlbumID());
+            statement.setString(1, a.getAlbumID());
             statement.setString(2, a.getAlbumname());
             statement.setString(3, a.getArtist());
             statement.setString(4, albumname);

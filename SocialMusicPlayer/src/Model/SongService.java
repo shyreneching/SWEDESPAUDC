@@ -27,11 +27,13 @@ public class SongService implements Service{
         PreparedStatement statement2 = connection.prepareStatement(query2);
 
         try {
+            AlbumService as = new AlbumService();
+            Album a = as.getAlbum(s.getAlbum());
             statement.setString(1, s.getSongid());
             statement.setString(2, s.getName());
             statement.setString(3, s.getGenre());
             statement.setString(4, s.getArtist());
-            statement.setString(5, s.getAlbum());
+            statement.setString(5, a.getAlbumID());
             statement.setInt(6, s.getYear());
             statement.setInt(7, s.getTrackNumber());
             statement.setInt(8, s.getLength());
@@ -91,7 +93,7 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
         ObservableList <Object> songs = FXCollections.observableArrayList();
 
-        String query ="SELECT * FROM song";
+        String query ="SELECT * FROM song INNER JOIN album ON song.albumid = album.albumid";
         PreparedStatement statement = connection.prepareStatement(query);
 
         try {
@@ -103,7 +105,7 @@ public class SongService implements Service{
                 s.setName(rs.getString("songname"));
                 s.setGenre(rs.getString("genre"));
                 s.setArtist(rs.getString("artist"));
-                s.setAlbum(rs.getString("album"));
+                s.setAlbum(rs.getString("albumname"));
                 s.setYear(rs.getInt("year"));
                 s.setTrackNumber(rs.getInt("trackNumber"));
                 s.setLength(rs.getInt("length"));
@@ -145,7 +147,9 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
         ObservableList<SongInterface> songs = FXCollections.observableArrayList();
 
-        String query ="SELECT * FROM song INNER JOIN usersong ON song.idsong = usersong.idsong " +
+        String query ="SELECT * FROM song NATURAL JOIN album" +
+                " INNER JOIN usersong " +
+                "ON song.idsong = usersong.idsong " +
                 "WHERE username = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -157,7 +161,7 @@ public class SongService implements Service{
                 s.setName(rs.getString("songname"));
                 s.setGenre(rs.getString("genre"));
                 s.setArtist(rs.getString("artist"));
-                s.setAlbum(rs.getString("album"));
+                s.setAlbum(rs.getString("albumname"));
                 s.setYear(rs.getInt("year"));
                 s.setTrackNumber(rs.getInt("trackNumber"));
                 s.setLength(rs.getInt("length"));
@@ -199,7 +203,8 @@ public class SongService implements Service{
     public File getSongFile(String songid) throws SQLException {
         Connection connection = pool.checkOut();
 
-        String query ="SELECT * FROM song NATURAL JOIN usersong WHERE idsong = '" + songid + "'";
+        String query ="SELECT * FROM song  NATURAL JOIN usersong NATURAL JOIN album " +
+                "WHERE idsong = '" + songid;
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             ResultSet rs = statement.executeQuery();
@@ -232,7 +237,8 @@ public class SongService implements Service{
     public SongInterface getSong(String songid, String username) throws SQLException {
         Connection connection = pool.checkOut();
 
-        String query ="SELECT * FROM song NATURAL JOIN usersong WHERE idsong = '" + songid +
+        String query ="SELECT * FROM song  NATURAL JOIN usersong NATURAL JOIN album " +
+                "WHERE idsong = '" + songid +
                 "' AND username = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -243,7 +249,7 @@ public class SongService implements Service{
                 s.setName(rs.getString("songname"));
                 s.setGenre(rs.getString("genre"));
                 s.setArtist(rs.getString("artist"));
-                s.setAlbum(rs.getString("album"));
+                s.setAlbum(rs.getString("albumname"));
                 s.setYear(rs.getInt("year"));
                 s.setTrackNumber(rs.getInt("trackNumber"));
                 s.setLength(rs.getInt("length"));
@@ -288,7 +294,8 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
         ObservableList<SongInterface> songs = FXCollections.observableArrayList();
 
-        String query ="SELECT * FROM song WHERE songname = '" + songname +
+        String query ="SELECT * FROM song NATURAL JOIN album " +
+                "WHERE songname = '" + songname +
                 "' AND album = '" + album + "' AND artist = '" + artist + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -299,7 +306,7 @@ public class SongService implements Service{
                 s.setName(rs.getString("songname"));
                 s.setGenre(rs.getString("genre"));
                 s.setArtist(rs.getString("artist"));
-                s.setAlbum(rs.getString("album"));
+                s.setAlbum(rs.getString("albumname"));
                 s.setYear(rs.getInt("year"));
                 s.setTrackNumber(rs.getInt("trackNumber"));
                 s.setLength(rs.getInt("length"));
@@ -546,9 +553,4 @@ public class SongService implements Service{
         return null;
     }
 
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> cbad0dbc0d9e477dd6a3be90eed64bd84d2566ad

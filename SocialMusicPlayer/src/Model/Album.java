@@ -3,7 +3,7 @@ package Model;
 import java.sql.Timestamp;
 
 public class Album{
-    private int albumID;
+    private String albumID;
     private String albumname;
     private String artist;
     private Timestamp date;
@@ -14,17 +14,17 @@ public class Album{
 
     }
 
-    public Album(int albumID, String albumname, String artist) {
+    public Album(String albumID, String albumname, String artist) {
         this.albumID = albumID;
         this.albumname = albumname;
         this.artist = artist;
     }
 
-    public int getAlbumID() {
+    public String getAlbumID() {
         return albumID;
     }
 
-    public void setAlbumID(int albumID) {
+    public void setAlbumID(String albumID) {
         this.albumID = albumID;
     }
 

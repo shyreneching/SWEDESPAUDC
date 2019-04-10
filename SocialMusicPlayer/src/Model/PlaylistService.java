@@ -107,7 +107,9 @@ public class PlaylistService implements Service{
 
         String query ="SELECT * FROM playlist";
         PreparedStatement statement = connection.prepareStatement(query);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "NATURAL JOIN album";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -130,7 +132,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -179,7 +181,8 @@ public class PlaylistService implements Service{
 
         String query ="SELECT * FROM playlist WHERE username = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection NATURAL JOIN album " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -202,7 +205,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -253,7 +256,9 @@ public class PlaylistService implements Service{
         PreparedStatement statement = connection.prepareStatement(query);
         String query2 ="SELECT * FROM songcollection NATURAL JOIN song " +
                 "NATURAL JOIN usersong " +
-                "WHERE idplaylist = '" + playlistid + "' AND username = '" + username +"'";
+                "NATURAL JOIN album " +
+                "WHERE idplaylist = '" + playlistid + "' " +
+                "AND username = '" + username +"'";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -273,7 +278,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -324,6 +329,7 @@ public class PlaylistService implements Service{
         PreparedStatement statement = connection.prepareStatement(query);
         String query2 ="SELECT * FROM songcollection NATURAL JOIN song " +
                 "NATURAL JOIN usersong " +
+                "NATURAL JOIN album " +
                 "WHERE playlistname = '" + playlistname + "' AND username = '" + username +"'";
         PreparedStatement statement2 = connection.prepareStatement(query2);
 
@@ -348,7 +354,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -531,7 +537,9 @@ public class PlaylistService implements Service{
                 "ON playlist.idplaylist = followedplaylist.idplaylist " +
                 "WHERE followedplaylist.username = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "NATURAL JOIN album";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -554,7 +562,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -598,7 +606,9 @@ public class PlaylistService implements Service{
                 "AND status = 'public'";
         PreparedStatement statement = connection.prepareStatement(query);
         PreparedStatement statement3 = connection.prepareStatement(query3);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "NATURAL JOIN album";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -633,7 +643,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -677,7 +687,9 @@ public class PlaylistService implements Service{
                 "AND status = 'private'";
         PreparedStatement statement = connection.prepareStatement(query);
         PreparedStatement statement3 = connection.prepareStatement(query3);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "NATURAL JOIN album";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -712,7 +724,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -754,7 +766,9 @@ public class PlaylistService implements Service{
                 "WHERE status = 'public'";
         PreparedStatement statement = connection.prepareStatement(query);
         PreparedStatement statement3 = connection.prepareStatement(query3);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "NATURAL JOIN album";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -789,7 +803,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
@@ -833,7 +847,9 @@ public class PlaylistService implements Service{
                 "AND display = true";
         PreparedStatement statement = connection.prepareStatement(query);
         PreparedStatement statement3 = connection.prepareStatement(query3);
-        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 ="SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "NATURAL JOIN album";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -868,7 +884,7 @@ public class PlaylistService implements Service{
                 s.setName(rs2.getString("songname"));
                 s.setGenre(rs2.getString("genre"));
                 s.setArtist(rs2.getString("artist"));
-                s.setAlbum(rs2.getString("album"));
+                s.setAlbum(rs2.getString("albumname"));
                 s.setYear(rs2.getInt("year"));
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
