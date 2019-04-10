@@ -346,7 +346,7 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
         ObservableList<SongInterface> songs = FXCollections.observableArrayList();
 
-        String query ="SELECT * FROM song NATURAL JOIN usersong WHERE songname = '" + songname +
+        String query ="SELECT * FROM song NATURAL JOIN usersong NATURAL JOIN album WHERE songname = '" + songname +
                 "' AND '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -358,7 +358,7 @@ public class SongService implements Service{
                 s.setName(rs.getString("songname"));
                 s.setGenre(rs.getString("genre"));
                 s.setArtist(rs.getString("artist"));
-                s.setAlbum(rs.getString("album"));
+                s.setAlbum(rs.getString("albumname"));
                 s.setYear(rs.getInt("year"));
                 s.setTrackNumber(rs.getInt("trackNumber"));
                 s.setLength(rs.getInt("length"));
@@ -485,4 +485,68 @@ public class SongService implements Service{
         pool.checkIn(connection);
         return false;
     }
+
+    public ObservableList<SongInterface> search(String search) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<SongInterface> songs = FXCollections.observableArrayList();
+
+        String query = "SELECT *  FROM  song INNER JOIN album ON song.albumid = album.albumid" +
+                " WHERE  song.songname LIKE '%" + search + "%' OR song.genre LIKE '%" + search + "%' OR song.artist LIKE '%"
+                + search + "%' OR album.albumname LIKE '%" + search + "%' OR song.year LIKE '%" + search +
+                "%' OR song.tracknumber LIKE '%" + search + "%' OR song.length LIKE '%" + search + "%' OR song.size LIKE '%"
+                + search + " OR song.dateuploaded LIKE '%" + search;
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        try {
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                SongInterface s = new Song();
+                s.setSongid(rs.getString("idsong"));
+                s.setName(rs.getString("songname"));
+                s.setGenre(rs.getString("genre"));
+                s.setArtist(rs.getString("artist"));
+                s.setAlbum(rs.getString("albumname"));
+                s.setYear(rs.getInt("year"));
+                s.setTrackNumber(rs.getInt("trackNumber"));
+                s.setLength(rs.getInt("length"));
+                s.setSize(rs.getFloat("size"));
+
+                // sets the name to "Artist-title"
+                s.setFilename("src/Music/" + s.getArtist() + "-" + s.getName() + ".mp3");
+
+                /*//gets the song from the databse and make put it in a File datatype
+                File theFile = new File(s.getFilename());
+                OutputStream out = new FileOutputStream(theFile);
+                InputStream input = rs.getBinaryStream("songfile");
+                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
+                while (input.read(buffer) > 0) {
+                    out.write(buffer);
+                }
+                s.setSongfile(theFile);
+                //takes the exact location of the song
+                s.setFilelocation(theFile.getAbsolutePath());*/
+                s.setUser(rs.getString("username"));
+                s.setTimesplayed(rs.getInt("timesplayed"));
+                s.setDate(rs.getTimestamp("dateuploaded"));
+                songs.add(s);
+            }
+            return songs;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } /*catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */ finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
 }
+

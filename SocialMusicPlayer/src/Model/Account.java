@@ -11,6 +11,8 @@ public class Account implements AccountInterface {
     /*Add*/
     protected ObservableList<FollowedPlaylist> followedPlaylist;
     protected ObservableList<AccountInterface> followedPeople;
+    protected ObservableList<AccountInterface> followers;
+
 
     public Account(){
 
