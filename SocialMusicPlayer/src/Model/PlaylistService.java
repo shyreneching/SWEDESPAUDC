@@ -4,13 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class PlaylistService implements Service{
     private JDBCConnectionPool pool;
+    long millis = System.currentTimeMillis();
+    Date date = new Date(millis);
+
+    Timestamp timestamp = new Timestamp(date.getTime());
 
     public PlaylistService() {
         pool = new JDBCConnectionPool();
@@ -21,7 +22,7 @@ public class PlaylistService implements Service{
     //adds playlist class and the account that owns the playlist. Songs in the playlist must already be imported to the database beforehand
     public boolean add(PlaylistInterface p, AccountInterface a) throws SQLException {
         Connection connection = pool.checkOut();
-        String query = "INSERT INTO playlist VALUE (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO playlist VALUE (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         String query2 = "INSERT INTO songcollection VALUE (?, ?)";
         PreparedStatement statement2 = connection.prepareStatement(query2);
@@ -33,6 +34,7 @@ public class PlaylistService implements Service{
             statement.setString(3, a.getUsername());
             statement.setString(4, "private");
             statement.setBoolean(5, false);
+            statement.setTimestamp(6, timestamp);
 
             for(SongInterface s: songs) {
                 statement2.setString(1, p.getPlaylistid());
@@ -121,6 +123,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 
@@ -194,6 +197,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 
@@ -269,6 +273,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
             }
 
             ResultSet rs2 = statement2.executeQuery();
@@ -343,6 +348,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 
@@ -632,6 +638,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 
@@ -713,6 +720,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 
@@ -792,6 +800,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 
@@ -873,6 +882,7 @@ public class PlaylistService implements Service{
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
+                p.setDate(rs.getTimestamp("datecreated"));
                 playlists.add(p);
             }
 

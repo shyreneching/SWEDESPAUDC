@@ -3,6 +3,8 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Timestamp;
+
 public class Playlist implements PlaylistInterface{
     
     private String playlistid, name;
@@ -11,6 +13,7 @@ public class Playlist implements PlaylistInterface{
     private ObservableList<SongInterface> songs;
     //add
     private boolean display;
+    private Timestamp date;
 
     public Playlist() {
         songs = FXCollections.observableArrayList();
@@ -62,5 +65,13 @@ public class Playlist implements PlaylistInterface{
 
     public void setDisplay(boolean display) {
         this.display = display;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 }

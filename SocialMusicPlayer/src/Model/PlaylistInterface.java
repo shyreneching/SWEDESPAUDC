@@ -2,6 +2,8 @@ package Model;
 
 import javafx.collections.ObservableList;
 
+import java.sql.Timestamp;
+
 public interface PlaylistInterface {
 
     public String getPlaylistid();
@@ -27,4 +29,8 @@ public interface PlaylistInterface {
     public boolean isDisplay();
 
     public void setDisplay(boolean display);
+
+    public Timestamp getDate();
+
+    public void setDate(Timestamp date);
 }
