@@ -1,3 +1,8 @@
+SET GLOBAL max_allowed_packet=1073741824;
+
+CREATE DATABASE IF NOT EXISTS MusicPlayer /*!40100 DEFAULT CHARACTER SET utf8*/;
+USE MusicPlayer;
+
 -- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicplayer
