@@ -16,8 +16,11 @@ public interface PlaylistInterface {
 
     public void setSongs(ObservableList<SongInterface> songs);
 
-    public String getStatus();
+    public String getUser();
 
+    public void setUser(String user);
+
+    public String getStatus();
 
     public void setStatus(String status);
 

@@ -4,13 +4,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Account implements AccountInterface {
-    
+
     protected String username, password, name;
     protected ObservableList<PlaylistInterface> playlists;
     protected ObservableList<SongInterface> songs;
     /*Add*/
     protected ObservableList<FollowedPlaylist> followedPlaylist;
     protected ObservableList<AccountInterface> followedPeople;
+    protected ObservableList<AccountInterface> followers;
+
 
     public Account(){
 
@@ -26,7 +28,7 @@ public class Account implements AccountInterface {
         followedPlaylist = FXCollections.observableArrayList();
         followedPeople = FXCollections.observableArrayList();
     }
-    
+
     public String getUsername() {
         return username;
     }

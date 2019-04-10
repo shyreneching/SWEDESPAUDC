@@ -31,8 +31,8 @@ public class PlaylistService implements Service{
             statement.setString(1, p.getPlaylistid());
             statement.setString(2, p.getName());
             statement.setString(3, a.getUsername());
-            statement.setString(4, p.getStatus());
-            statement.setBoolean(5, p.isDisplay());
+            statement.setString(4, "private");
+            statement.setBoolean(5, false);
 
             for(SongInterface s: songs) {
                 statement2.setString(1, p.getPlaylistid());
@@ -46,6 +46,7 @@ public class PlaylistService implements Service{
             e.printStackTrace();
         } finally {
             if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
             if(connection != null)  connection.close();
         }
         pool.checkIn(connection);
@@ -114,6 +115,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new Playlist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -185,6 +187,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new Playlist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -257,6 +260,7 @@ public class PlaylistService implements Service{
             if(rs.next()) {
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -329,6 +333,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new Playlist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -487,6 +492,35 @@ public class PlaylistService implements Service{
         return false;
     }
 
+
+    //add
+    public boolean updateFollowedPlaylist(String playlistid, FollowedPlaylist p) throws SQLException {
+        Connection connection = pool.checkOut();
+
+        String query = "UPDATE followedplaylist, SET " +
+                "status = ?," +
+                "display = ?"
+                + " WHERE idplaylist= ?";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setString(1, p.getStatus());
+            statement.setBoolean(2, p.isDisplay());
+            statement.setString(3, p.getPlaylistid());
+            statement.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+
     //new
     public ObservableList<PlaylistInterface> getFollowedPlaylist(String username) throws SQLException {
         Connection connection = pool.checkOut();
@@ -505,6 +539,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("followedplaylist.username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -546,6 +581,344 @@ public class PlaylistService implements Service{
         }
         pool.checkIn(connection);
         return null;
+    }
+
+    //add
+    public ObservableList<PlaylistInterface> getUserPublicPlaylist(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        ObservableList <SongInterface> songs;
+
+        String query = "SELECT * FROM playlist INNER JOIN followedplaylist " +
+                "ON playlist.idplaylist = followedplaylist.idplaylist " +
+                "WHERE followedplaylist.username = '" + username + "' " +
+                "AND followedplaylist.status = 'public'";
+        String query3 = "SELECT * FROM playlist " +
+                "WHERE username = '" + username + "'" +
+                "AND status = 'public'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        PreparedStatement statement3 = connection.prepareStatement(query3);
+        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                PlaylistInterface p = new FollowedPlaylist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("followedplaylist.username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs3 = statement3.executeQuery();
+            while (rs3.next()){
+                PlaylistInterface p = new Playlist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs2 = statement2.executeQuery();
+            while (rs2.next()){
+                SongInterface s = new Song();
+                String playlistid = rs2.getString("idplaylist");
+                s.setSongid(rs2.getString("idsong"));
+                s.setName(rs2.getString("songname"));
+                s.setGenre(rs2.getString("genre"));
+                s.setArtist(rs2.getString("artist"));
+                s.setAlbum(rs2.getString("album"));
+                s.setYear(rs2.getInt("year"));
+                s.setTrackNumber(rs2.getInt("trackNumber"));
+                s.setLength(rs2.getInt("length"));
+                s.setSize(rs2.getFloat("size"));
+                s.setSize(rs2.getFloat("size"));
+                // sets the name to "Artist-title"
+                s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                for(PlaylistInterface p : playlists){
+                    if(p.getPlaylistid().compareTo(playlistid) == 0) {
+                        songs = p.getSongs();
+                        songs.add(s);
+                        p.setSongs(songs);
+                    }
+                }
+            }
+            return playlists;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    //add
+    public ObservableList<PlaylistInterface> getUserPrivatePlaylist(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        ObservableList <SongInterface> songs;
+
+        String query = "SELECT * FROM playlist INNER JOIN followedplaylist " +
+                "ON playlist.idplaylist = followedplaylist.idplaylist " +
+                "WHERE followedplaylist.username = '" + username + "' " +
+                "AND followedplaylist.status = 'private'";
+        String query3 = "SELECT * FROM playlist " +
+                "WHERE username = '" + username + "'" +
+                "AND status = 'private'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        PreparedStatement statement3 = connection.prepareStatement(query3);
+        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                PlaylistInterface p = new FollowedPlaylist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("followedplaylist.username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs3 = statement3.executeQuery();
+            while (rs3.next()){
+                PlaylistInterface p = new Playlist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs2 = statement2.executeQuery();
+            while (rs2.next()){
+                SongInterface s = new Song();
+                String playlistid = rs2.getString("idplaylist");
+                s.setSongid(rs2.getString("idsong"));
+                s.setName(rs2.getString("songname"));
+                s.setGenre(rs2.getString("genre"));
+                s.setArtist(rs2.getString("artist"));
+                s.setAlbum(rs2.getString("album"));
+                s.setYear(rs2.getInt("year"));
+                s.setTrackNumber(rs2.getInt("trackNumber"));
+                s.setLength(rs2.getInt("length"));
+                s.setSize(rs2.getFloat("size"));
+                s.setSize(rs2.getFloat("size"));
+                // sets the name to "Artist-title"
+                s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                for(PlaylistInterface p : playlists){
+                    if(p.getPlaylistid().compareTo(playlistid) == 0) {
+                        songs = p.getSongs();
+                        songs.add(s);
+                        p.setSongs(songs);
+                    }
+                }
+            }
+            return playlists;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    //add
+    public ObservableList<PlaylistInterface> getPublicPlaylist() throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        ObservableList <SongInterface> songs;
+
+        String query = "SELECT * FROM playlist INNER JOIN followedplaylist " +
+                "ON playlist.idplaylist = followedplaylist.idplaylist " +
+                "WHERE followedplaylist.status = 'public'";
+        String query3 = "SELECT * FROM playlist " +
+                "WHERE status = 'public'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        PreparedStatement statement3 = connection.prepareStatement(query3);
+        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                PlaylistInterface p = new FollowedPlaylist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("followedplaylist.username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs3 = statement3.executeQuery();
+            while (rs3.next()){
+                PlaylistInterface p = new Playlist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs2 = statement2.executeQuery();
+            while (rs2.next()){
+                SongInterface s = new Song();
+                String playlistid = rs2.getString("idplaylist");
+                s.setSongid(rs2.getString("idsong"));
+                s.setName(rs2.getString("songname"));
+                s.setGenre(rs2.getString("genre"));
+                s.setArtist(rs2.getString("artist"));
+                s.setAlbum(rs2.getString("album"));
+                s.setYear(rs2.getInt("year"));
+                s.setTrackNumber(rs2.getInt("trackNumber"));
+                s.setLength(rs2.getInt("length"));
+                s.setSize(rs2.getFloat("size"));
+                s.setSize(rs2.getFloat("size"));
+                // sets the name to "Artist-title"
+                s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                for(PlaylistInterface p : playlists){
+                    if(p.getPlaylistid().compareTo(playlistid) == 0) {
+                        songs = p.getSongs();
+                        songs.add(s);
+                        p.setSongs(songs);
+                    }
+                }
+            }
+            return playlists;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    //add
+    public ObservableList<PlaylistInterface> getUserDisplayedPlaylist(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        ObservableList <SongInterface> songs;
+
+        String query = "SELECT * FROM playlist INNER JOIN followedplaylist " +
+                "ON playlist.idplaylist = followedplaylist.idplaylist " +
+                "WHERE followedplaylist.username = '" + username + "' " +
+                "AND followedplaylist.display = true";
+        String query3 = "SELECT * FROM playlist " +
+                "WHERE username = '" + username + "'" +
+                "AND display = true";
+        PreparedStatement statement = connection.prepareStatement(query);
+        PreparedStatement statement3 = connection.prepareStatement(query3);
+        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                PlaylistInterface p = new FollowedPlaylist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("followedplaylist.username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs3 = statement3.executeQuery();
+            while (rs3.next()){
+                PlaylistInterface p = new Playlist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setUser(rs.getString("username"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs2 = statement2.executeQuery();
+            while (rs2.next()){
+                SongInterface s = new Song();
+                String playlistid = rs2.getString("idplaylist");
+                s.setSongid(rs2.getString("idsong"));
+                s.setName(rs2.getString("songname"));
+                s.setGenre(rs2.getString("genre"));
+                s.setArtist(rs2.getString("artist"));
+                s.setAlbum(rs2.getString("album"));
+                s.setYear(rs2.getInt("year"));
+                s.setTrackNumber(rs2.getInt("trackNumber"));
+                s.setLength(rs2.getInt("length"));
+                s.setSize(rs2.getFloat("size"));
+                s.setSize(rs2.getFloat("size"));
+                // sets the name to "Artist-title"
+                s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                for(PlaylistInterface p : playlists){
+                    if(p.getPlaylistid().compareTo(playlistid) == 0) {
+                        songs = p.getSongs();
+                        songs.add(s);
+                        p.setSongs(songs);
+                    }
+                }
+            }
+            return playlists;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    //add
+    public boolean followPlaylist(String idplaylist, String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        String query = "INSERT INTO playlist VALUE (?, ?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        try {
+            statement.setString(1, idplaylist);
+            statement.setString(2, username);
+            statement.setString(3, "private");
+            statement.setBoolean(4, false);
+
+            boolean added = statement.execute();
+            return added;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
     }
 
 }

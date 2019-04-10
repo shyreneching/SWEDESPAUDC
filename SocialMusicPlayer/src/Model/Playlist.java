@@ -7,7 +7,7 @@ public class Playlist implements PlaylistInterface{
     
     private String playlistid, name;
     //add
-    private String status;
+    private String user, status;
     private ObservableList<SongInterface> songs;
     //add
     private boolean display;
@@ -40,6 +40,13 @@ public class Playlist implements PlaylistInterface{
         this.songs = songs;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public String getStatus() {
         return status;

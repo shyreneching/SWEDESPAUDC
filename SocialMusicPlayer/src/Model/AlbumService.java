@@ -4,6 +4,7 @@ import Model.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.*;
 import java.sql.*;
 
 public class AlbumService implements Service {
@@ -66,6 +67,40 @@ public class AlbumService implements Service {
         } catch (SQLException e){
             e.printStackTrace();
         }finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    //add
+    // gets the song file of the music
+    public File getSongFile(String albumid) throws SQLException {
+        Connection connection = pool.checkOut();
+
+        String query ="SELECT * FROM album WHERE albumid = '" + albumid + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                //gets the song from the databse and make put it in a File datatype
+                File theFile = new File("src/Music/" + rs.getString("artist") + "-"+ rs.getString("albumname")+ ".jpg");
+                OutputStream out = new FileOutputStream(theFile);
+                InputStream input = rs.getBinaryStream("albumart");
+                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
+                while (input.read(buffer) > 0) {
+                    out.write(buffer);
+                }
+                return theFile;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             if(statement != null) statement.close();
             if(connection != null)  connection.close();
         }
