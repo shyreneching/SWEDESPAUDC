@@ -1,9 +1,18 @@
+package Model;
+
+import java.sql.Timestamp;
+
 public class Album{
     private int albumID;
     private String albumname;
     private String artist;
+    private Timestamp date;
     //private File albumArt;
 
+
+    public Album() {
+
+    }
 
     public Album(int albumID, String albumname, String artist) {
         this.albumID = albumID;
@@ -33,5 +42,13 @@ public class Album{
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 }

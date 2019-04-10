@@ -1,25 +1,34 @@
+package Model;
+
 import Model.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class AlbumService implements Service {
+    private JDBCConnectionPool pool;
+    long millis = System.currentTimeMillis();
+    Date date = new Date(millis);
+
+    Timestamp timestamp = new Timestamp(date.getTime());
+
+    public AlbumService() {
+        this.pool = new JDBCConnectionPool();
+    }
 
     public boolean add(Object o) throws SQLException {
         Album a = (Album) o;
 
         // Get a connection:
         Connection connection = pool.checkOut();
-        String query = "INSERT INTO album VALUE (?, ?, ?)";
+        String query = "INSERT INTO album VALUE (?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             statement.setInt(1, a.getAlbumID());
             statement.setString(2, a.getAlbumname());
             statement.setString(3, a.getArtist());
+            statement.setTimestamp(4, timestamp);
 
             boolean added = statement.execute();
 
@@ -39,7 +48,7 @@ public class AlbumService implements Service {
         // Get a connection:
         Connection connection = pool.checkOut();
 
-        ObservableList <Object> accounts = FXCollections.observableArrayList();
+        ObservableList <Object> album = FXCollections.observableArrayList();
         String query ="SELECT * FROM album";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -50,9 +59,10 @@ public class AlbumService implements Service {
                 a.setAlbumID(rs.getInt("albumid"));
                 a.setAlbumname(rs.getString("albumname"));
                 a.setArtist(rs.getString("artist"));
-                accounts.add(a);
+                a.setDate(rs.getTimestamp("dateCreated"));
+                album.add(a);
             }
-            return accounts;
+            return album;
         } catch (SQLException e){
             e.printStackTrace();
         }finally {
@@ -77,7 +87,7 @@ public class AlbumService implements Service {
                 a.setAlbumID(rs.getInt("albumid"));
                 a.setAlbumname(rs.getString("albumname"));
                 a.setArtist(rs.getString("artist"));
-
+                a.setDate(rs.getTimestamp("dateCreated"));
                 return a;
             }
         } catch (SQLException e){

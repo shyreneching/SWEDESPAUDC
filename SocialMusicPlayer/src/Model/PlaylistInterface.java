@@ -15,4 +15,13 @@ public interface PlaylistInterface {
     public ObservableList<SongInterface> getSongs();
 
     public void setSongs(ObservableList<SongInterface> songs);
+
+    public String getStatus();
+
+
+    public void setStatus(String status);
+
+    public boolean isDisplay();
+
+    public void setDisplay(boolean display);
 }

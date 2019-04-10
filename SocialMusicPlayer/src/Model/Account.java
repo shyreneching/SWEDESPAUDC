@@ -9,7 +9,7 @@ public class Account implements AccountInterface {
     protected ObservableList<PlaylistInterface> playlists;
     protected ObservableList<SongInterface> songs;
     /*Add*/
-    protected ObservableList<PlaylistInterface> followedPlaylist;
+    protected ObservableList<FollowedPlaylist> followedPlaylist;
     protected ObservableList<AccountInterface> followedPeople;
 
     public Account(){
@@ -68,12 +68,12 @@ public class Account implements AccountInterface {
     }
 
     //Add
-    public ObservableList<PlaylistInterface> getFollowedPlaylist() {
+    public ObservableList<FollowedPlaylist> getFollowedPlaylist() {
         return followedPlaylist;
     }
 
     //Add
-    public void setFollowedPlaylist(ObservableList<PlaylistInterface> followedPlaylist) {
+    public void setFollowedPlaylist(ObservableList<FollowedPlaylist> followedPlaylist) {
         this.followedPlaylist = followedPlaylist;
     }
 

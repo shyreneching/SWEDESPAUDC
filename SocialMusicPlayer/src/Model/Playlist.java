@@ -6,7 +6,11 @@ import javafx.collections.ObservableList;
 public class Playlist implements PlaylistInterface{
     
     private String playlistid, name;
+    //add
+    private String status;
     private ObservableList<SongInterface> songs;
+    //add
+    private boolean display;
 
     public Playlist() {
         songs = FXCollections.observableArrayList();
@@ -35,6 +39,21 @@ public class Playlist implements PlaylistInterface{
     public void setSongs(ObservableList<SongInterface> songs) {
         this.songs = songs;
     }
-    
-    
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean isDisplay() {
+        return display;
+    }
+
+    public void setDisplay(boolean display) {
+        this.display = display;
+    }
 }

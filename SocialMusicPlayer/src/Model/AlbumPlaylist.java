@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import java.sql.SQLException;
 
 public class AlbumPlaylist implements PlaylistList{
+
     public SongService songService;
 
     public AlbumPlaylist() {

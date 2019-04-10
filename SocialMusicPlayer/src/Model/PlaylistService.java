@@ -21,7 +21,7 @@ public class PlaylistService implements Service{
     //adds playlist class and the account that owns the playlist. Songs in the playlist must already be imported to the database beforehand
     public boolean add(PlaylistInterface p, AccountInterface a) throws SQLException {
         Connection connection = pool.checkOut();
-        String query = "INSERT INTO playlist VALUE (?, ?, ?)";
+        String query = "INSERT INTO playlist VALUE (?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         String query2 = "INSERT INTO songcollection VALUE (?, ?)";
         PreparedStatement statement2 = connection.prepareStatement(query2);
@@ -31,6 +31,8 @@ public class PlaylistService implements Service{
             statement.setString(1, p.getPlaylistid());
             statement.setString(2, p.getName());
             statement.setString(3, a.getUsername());
+            statement.setString(4, p.getStatus());
+            statement.setBoolean(5, p.isDisplay());
 
             for(SongInterface s: songs) {
                 statement2.setString(1, p.getPlaylistid());
@@ -113,6 +115,8 @@ public class PlaylistService implements Service{
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
                 p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
                 playlists.add(p);
             }
 
@@ -132,7 +136,7 @@ public class PlaylistService implements Service{
                 s.setSize(rs2.getFloat("size"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
-                //gets the song from the databse and make put it in a File datatype
+                /*//gets the song from the databse and make put it in a File datatype
                 File theFile = new File(s.getName());
                 OutputStream out = new FileOutputStream(theFile);
                 InputStream input = rs2.getBinaryStream("songfile");
@@ -142,7 +146,7 @@ public class PlaylistService implements Service{
                 }
                 s.setSongfile(theFile);
                 //takes the exact location of the song
-                s.setFilelocation(theFile.getAbsolutePath());
+                s.setFilelocation(theFile.getAbsolutePath());*/
 
                 for(Object p : playlists){
                     if(((Playlist)p).getPlaylistid().compareTo(playlistid) == 0) {
@@ -155,9 +159,9 @@ public class PlaylistService implements Service{
             return playlists;
         } catch (SQLException e){
             e.printStackTrace();
-        } catch (IOException e) {
+        }/* catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        }*/ finally {
             if(statement != null) statement.close();
             if(connection != null)  connection.close();
         }
@@ -182,6 +186,8 @@ public class PlaylistService implements Service{
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
                 p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
                 playlists.add(p);
             }
 
@@ -201,7 +207,7 @@ public class PlaylistService implements Service{
                 s.setSize(rs2.getFloat("size"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
-                //gets the song from the databse and make put it in a File datatype
+               /* //gets the song from the databse and make put it in a File datatype
                 File theFile = new File(s.getName());
                 OutputStream out = new FileOutputStream(theFile);
                 InputStream input = rs2.getBinaryStream("songfile");
@@ -211,7 +217,7 @@ public class PlaylistService implements Service{
                 }
                 s.setSongfile(theFile);
                 //takes the exact location of the song
-                s.setFilelocation(theFile.getAbsolutePath());
+                s.setFilelocation(theFile.getAbsolutePath());*/
                 for(PlaylistInterface p : playlists){
                     if(p.getPlaylistid().compareTo(playlistid) == 0) {
                         songs = p.getSongs();
@@ -223,9 +229,9 @@ public class PlaylistService implements Service{
             return playlists;
         } catch (SQLException e){
             e.printStackTrace();
-        } catch (IOException e) {
+        } /*catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        } */finally {
             if(statement != null) statement.close();
             if(statement2 != null) statement2.close();
             if(connection != null)  connection.close();
@@ -252,6 +258,8 @@ public class PlaylistService implements Service{
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
                 p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
             }
 
             ResultSet rs2 = statement2.executeQuery();
@@ -270,6 +278,7 @@ public class PlaylistService implements Service{
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-" + s.getName() + ".mp3");
                 //gets the song from the database and make put it in a File datatype
+                /* //gets the song from the databse and make put it in a File datatype
                 File theFile = new File(s.getName());
                 OutputStream out = new FileOutputStream(theFile);
                 InputStream input = rs2.getBinaryStream("songfile");
@@ -279,7 +288,7 @@ public class PlaylistService implements Service{
                 }
                 s.setSongfile(theFile);
                 //takes the exact location of the song
-                s.setFilelocation(theFile.getAbsolutePath());
+                s.setFilelocation(theFile.getAbsolutePath());*/
                 s.setTimesplayed(rs2.getInt("timesplayed"));
                 s.setUser(rs2.getString("username"));
                 songs = p.getSongs();
@@ -289,11 +298,11 @@ public class PlaylistService implements Service{
             return p;
         } catch (SQLException e){
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } /*catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        } */finally {
             if(statement != null) statement.close();
             if(connection != null)  connection.close();
         }
@@ -321,6 +330,8 @@ public class PlaylistService implements Service{
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
                 p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
                 playlists.add(p);
             }
 
@@ -340,7 +351,7 @@ public class PlaylistService implements Service{
                 s.setSize(rs2.getFloat("size"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
-                //gets the song from the databse and make put it in a File datatype
+               /* //gets the song from the databse and make put it in a File datatype
                 File theFile = new File(s.getName());
                 OutputStream out = new FileOutputStream(theFile);
                 InputStream input = rs2.getBinaryStream("songfile");
@@ -350,7 +361,7 @@ public class PlaylistService implements Service{
                 }
                 s.setSongfile(theFile);
                 //takes the exact location of the song
-                s.setFilelocation(theFile.getAbsolutePath());
+                s.setFilelocation(theFile.getAbsolutePath());*/
                 s.setTimesplayed(rs2.getInt("timesplayed"));
                 s.setUser(rs2.getString("username"));
 
@@ -365,11 +376,11 @@ public class PlaylistService implements Service{
             return playlists;
         } catch (SQLException e){
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } /*catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        } */finally {
             if(statement != null) statement.close();
             if(connection != null)  connection.close();
         }
@@ -445,13 +456,17 @@ public class PlaylistService implements Service{
 
         PlaylistInterface p = (Playlist) o;
         String query = "UPDATE playlist, SET "
-                + "playlistname = ?,"
-                + " WHERE playlist= ?";
+                + "playlistname = ?," +
+                "status = ?," +
+                "display = ?"
+                + " WHERE idplaylist= ?";
 
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             statement.setString(1, p.getName());
-            statement.setString(2, p.getPlaylistid());
+            statement.setString(2, p.getStatus());
+            statement.setBoolean(3, p.isDisplay());
+            statement.setString(4, p.getPlaylistid());
             statement.executeUpdate();
             updatePlaylistSongs(playlistid, p);
             return true;
@@ -470,6 +485,67 @@ public class PlaylistService implements Service{
         deleteAllSongsInPlaylist(playlistid);
         addSongsPlaylist(p.getSongs(), playlistid);
         return false;
+    }
+
+    //new
+    public ObservableList<PlaylistInterface> getFollowedPlaylist(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        ObservableList <SongInterface> songs;
+
+        String query ="SELECT * FROM playlist INNER JOIN followedplaylist " +
+                "ON playlist.idplaylist = followedplaylist.idplaylist " +
+                "WHERE followedplaylist.username = '" + username + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        String query2 ="SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                PlaylistInterface p = new FollowedPlaylist();
+                p.setPlaylistid(rs.getString("idplaylist"));
+                p.setName(rs.getString("playlistname"));
+                p.setSongs(FXCollections.observableArrayList());
+                p.setStatus(rs.getString("status"));
+                p.setDisplay(rs.getBoolean("display"));
+                playlists.add(p);
+            }
+
+            ResultSet rs2 = statement2.executeQuery();
+            while (rs2.next()){
+                SongInterface s = new Song();
+                String playlistid = rs2.getString("idplaylist");
+                s.setSongid(rs2.getString("idsong"));
+                s.setName(rs2.getString("songname"));
+                s.setGenre(rs2.getString("genre"));
+                s.setArtist(rs2.getString("artist"));
+                s.setAlbum(rs2.getString("album"));
+                s.setYear(rs2.getInt("year"));
+                s.setTrackNumber(rs2.getInt("trackNumber"));
+                s.setLength(rs2.getInt("length"));
+                s.setSize(rs2.getFloat("size"));
+                s.setSize(rs2.getFloat("size"));
+                // sets the name to "Artist-title"
+                s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                for(PlaylistInterface p : playlists){
+                    if(p.getPlaylistid().compareTo(playlistid) == 0) {
+                        songs = p.getSongs();
+                        songs.add(s);
+                        p.setSongs(songs);
+                    }
+                }
+            }
+            return playlists;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
     }
 
 }

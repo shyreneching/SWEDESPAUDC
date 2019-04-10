@@ -25,10 +25,10 @@ public interface AccountInterface {
     public void setSongs(ObservableList<SongInterface> songs);
 
     //Add
-    public ObservableList<PlaylistInterface> getFollowedPlaylist();
+    public ObservableList<FollowedPlaylist> getFollowedPlaylist();
 
     //Add
-    public void setFollowedPlaylist(ObservableList<PlaylistInterface> followedPlaylist);
+    public void setFollowedPlaylist(ObservableList<FollowedPlaylist> followedPlaylist);
 
     //Add
     public ObservableList<AccountInterface> getFollowedPeople();
