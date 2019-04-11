@@ -553,7 +553,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
-                p.setUser(rs.getString("followedplaylist.username"));
+                p.setUser(rs.getString("playlist.username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -622,7 +622,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
-                p.setUser(rs.getString("followedplaylist.username"));
+                p.setUser(rs.getString("playlist.username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -704,7 +704,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
-                p.setUser(rs.getString("followedplaylist.username"));
+                p.setUser(rs.getString("playlist.username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -784,7 +784,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
-                p.setUser(rs.getString("followedplaylist.username"));
+                p.setUser(rs.getString("playlist.username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -866,7 +866,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
-                p.setUser(rs.getString("followedplaylist.username"));
+                p.setUser(rs.getString("playlist.username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -945,6 +945,48 @@ public class PlaylistService implements Service{
         }
         pool.checkIn(connection);
         return false;
+    }
+
+    //add
+    //gets all the accounts in the parameter in an arraylist
+    public ObservableList<AccountInterface> getPlaylistFollower(String playlistid) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+
+        ObservableList <AccountInterface> accounts = FXCollections.observableArrayList();
+        String query ="SELECT * FROM followedplaylist INNER JOIN accounts " +
+                "ON followedplaylist.username = accounts.username " +
+                "WHERE idplaylist = '" + playlistid + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                //Add
+                AccountInterface a;
+                String s = rs.getString("accountType");
+                if(s.equalsIgnoreCase("Listener")){
+                    a = new Listener();
+                }
+                else{
+                    a = new Artist();
+                }
+
+                //AccountInterface a = new Account();
+                a.setUsername(rs.getString("username"));
+                a.setPassword(rs.getString("password"));
+                a.setName(rs.getString("name"));
+                accounts.add(a);
+            }
+            return accounts;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
     }
 
 }
