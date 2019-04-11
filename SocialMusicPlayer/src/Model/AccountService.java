@@ -20,7 +20,7 @@ public class AccountService implements Service{
         // Get a connection:
         Connection connection = pool.checkOut();
         //String query = "INSERT INTO accounts VALUE (?, ?, ?)";
-        String query = "INSERT INTO accounts VALUE (?, ?, ? ?)";
+        String query = "INSERT INTO accounts VALUE (?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             statement.setString(1, a.getUsername());
@@ -282,6 +282,52 @@ public class AccountService implements Service{
         }
         pool.checkIn(connection);
         return null;
+    }
+
+    //add
+    public boolean followPeople(AccountInterface follower, AccountInterface followed) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+        String query = "INSERT INTO followpeople VALUE (?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setString(1, follower.getUsername());
+            statement.setString(2, followed.getUsername());
+
+            boolean added = statement.execute();
+            return added;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        // Return the connection
+        pool.checkIn(connection);
+        return false;
+    }
+
+    //add
+    public boolean unfollowPeople(AccountInterface follower, AccountInterface followed) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+        String query = "DELETE FROM followpeople WHERE follower = ? AND followed = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            statement.setString(1, follower.getUsername());
+            statement.setString(2, followed.getUsername());
+
+            boolean deleted  = statement.execute();
+            return deleted;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
     }
 
 }
