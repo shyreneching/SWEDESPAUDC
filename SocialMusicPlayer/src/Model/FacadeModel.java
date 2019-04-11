@@ -8,10 +8,11 @@ package Model;
 import Mp3agic.InvalidDataException;
 import Mp3agic.NotSupportedException;
 import Mp3agic.UnsupportedTagException;
-import View.View;
+//import View.View;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import javax.swing.text.View;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,11 +24,12 @@ public class FacadeModel {
     private ObservableList<SongInterface> songs;
     private ObservableList<PlaylistInterface> groups;
     private SongInterface currentSong, selectedSong;
-    private PlaylistInterface currentPlaylist, selectedPlaylist;    
+    private PlaylistInterface currentPlaylist, selectedPlaylist;
 
     private Service accountService;
     private Service playlistService;
     private Service songService;
+    private Service recentlyplayedService;
     private AudioParserInterface parser;
     private ObservableList<View> view;
 
@@ -40,6 +42,7 @@ public class FacadeModel {
         songService = new SongService();
         parser = new AudioParser();
         currentPlaylist = new Playlist();
+        recentlyplayedService = new RecentlyPlayedService();
     }
 
     public void attach(View view) {
@@ -48,7 +51,7 @@ public class FacadeModel {
 
     public void update() {
         for (View v : view) {
-            v.update();
+//            v.update();
         }
     }
     
@@ -117,6 +120,8 @@ public class FacadeModel {
                     user = (AccountInterface) temp;
                     user.setPlaylists(getUserPlaylist());
                     user.setSongs(getUserSongs());
+                    user.setFollowedPlaylist(((PlaylistService)playlistService).getFollowedPlaylist(user.getUsername()));
+                    user.setFollowedPeople(getFollowed());
                     update();
                     return true;
                 }
@@ -130,34 +135,44 @@ public class FacadeModel {
         update();
     }
 
-    public void addSongLocally(String filelocation) {
-        if (songs == null) {
-            songs = FXCollections.observableArrayList();
+//    public void addSongLocally(String filelocation) {
+//        if (songs == null) {
+//            songs = FXCollections.observableArrayList();
+//        }
+//        songs.add(CreateSongFromLocal.CreateSong(filelocation));
+//        update();
+//    }
+//
+//    public void removeSongLocally(SongInterface song) {
+//        if (songs != null) {
+//            if (groups != null) {
+//                for (PlaylistInterface s : groups) {
+//                    s.getSongs().remove(song);
+//                }
+//            }
+//            songs.remove(song);
+//        }
+//        update();
+//    }
+//
+//    public void addPlaylistLocally(PlaylistInterface playlist) {
+//        this.groups.add(playlist);
+//        update();
+//    }
+//
+//    public void deletePlaylistLocally(PlaylistInterface playlist) {
+//        this.groups.remove(playlist);
+//        update();
+//    }
+
+    public ObservableList<AccountInterface> getFollowed() throws SQLException {
+        ObservableList<Object> obs;
+        ObservableList<AccountInterface> accounts = FXCollections.observableArrayList();
+        obs = ((AccountService)accountService).getFollowed(user.getUsername());
+        for(Object o : obs) {
+            accounts.add((AccountInterface) o);
         }
-        songs.add(CreateSongFromLocal.CreateSong(filelocation));
-        update();
-    }
-
-    public void removeSongLocally(SongInterface song) {
-        if (songs != null) {
-            if (groups != null) {
-                for (PlaylistInterface s : groups) {
-                    s.getSongs().remove(song);
-                }
-            }
-            songs.remove(song);
-        }
-        update();
-    }
-
-    public void addPlaylistLocally(PlaylistInterface playlist) {
-        this.groups.add(playlist);
-        update();
-    }
-
-    public void deletePlaylistLocally(PlaylistInterface playlist) {
-        this.groups.remove(playlist);
-        update();
+        return accounts;
     }
 
     public void removeSongFromPlaylist(String playlist, SongInterface song) {
@@ -406,16 +421,24 @@ public class FacadeModel {
 
 
     /*Updates the album of the song given the new name and the song that wants to be changed*/
-    public boolean playSong(SongInterface s) throws SQLException {
+//    public boolean playSong(SongInterface s) throws SQLException {
+    public File playSong(SongInterface s) throws SQLException {
         s.setTimesplayed(s.getTimesplayed() + 1);
         setCurrentSong(s);
-        if(user != null) {
-            boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+//        if(user != null) {
+//            boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+            ((SongService) songService).update(s.getSongid(), s, s.getUser());
             user.setSongs(getUserSongs());
-            return b;
-        }
-        update();
-        return true;
+            RecentlyPlayedInterface recentlyPlayed = new RecentlyPlayed();
+            recentlyPlayed.setIdsong(s.getSongid());
+            recentlyPlayed.setUsername(user.getUsername());
+            recentlyplayedService.add(recentlyPlayed);
+            update();
+            return s.getSongfile();
+//            return b;
+//        }
+//        update();
+//        return true;
     }
 
     /*Returns all the songs in the database*/
@@ -655,6 +678,22 @@ public class FacadeModel {
             reverse.add(list.get(i));
         }
         return reverse;
+    }
+
+    public boolean followUser(AccountInterface person) throws SQLException {
+        return ((AccountService)accountService).followPeople(user, person);
+    }
+
+    public boolean unfollowUser(AccountInterface person) throws SQLException {
+        return ((AccountService)accountService).unfollowPeople(user, person);
+    }
+
+    public boolean followPlaylist(PlaylistInterface playlist) throws SQLException {
+        return ((PlaylistService) playlistService).followPlaylist(playlist.getPlaylistid(), user.getUsername());
+    }
+
+    public boolean unfollowPlaylist(PlaylistInterface playlist) throws SQLException {
+        return ((PlaylistService) playlistService).unfollowfollowPlaylist(playlist.getPlaylistid(), user.getUsername());
     }
 
     public SongInterface getSelectedSong() {

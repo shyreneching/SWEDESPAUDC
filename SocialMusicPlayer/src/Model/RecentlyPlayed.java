@@ -2,7 +2,7 @@ package Model;
 
 import java.sql.Timestamp;
 
-public class RecentlyPlayed {
+public class RecentlyPlayed implements RecentlyPlayedInterface{
     private int recentlyplayedid;
     private String idsong, username;
     private Timestamp timeplayed;

@@ -24,7 +24,7 @@ public class RecentlyPlayedService implements Service {
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
-                RecentlyPlayed a = new RecentlyPlayed();
+                RecentlyPlayedInterface a = new RecentlyPlayed();
                 a.setRecentlyplayedid(rs.getInt("recentlyid"));
                 a.setIdsong(rs.getString("idsong"));
                 a.setUsername(rs.getString("username"));
@@ -43,7 +43,7 @@ public class RecentlyPlayedService implements Service {
     }
 
     public boolean add(Object o) throws SQLException {
-        RecentlyPlayed a = (RecentlyPlayed) o;
+        RecentlyPlayedInterface a = (RecentlyPlayed) o;
 
         ObservableList<Object> r = getAll();
 
