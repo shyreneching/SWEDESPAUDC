@@ -948,6 +948,26 @@ public class PlaylistService implements Service{
     }
 
     //add
+    public boolean unfollowfollowPlaylist(String idplaylist, String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        String query2 = "DELETE FROM followedplaylist WHERE idplaylist = ? AND username = ?";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            statement2.setString(1, idplaylist);
+            statement2.setString(2, username);
+            boolean deleted  = statement2.execute();
+            return deleted;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement2 != null) statement2.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+    //add
     //gets all the accounts in the parameter in an arraylist
     public ObservableList<AccountInterface> getPlaylistFollower(String playlistid) throws SQLException {
         // Get a connection:
