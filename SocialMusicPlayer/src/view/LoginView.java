@@ -1,27 +1,36 @@
-package controller;
+package view;
 
+import controller.LoginController;
+import controller.MusicPlayerController;
 import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import model.FacadeModel;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class LoginController {
-    @FXML private MediaView loginVideo;
+public class LoginView {
+    
+    private Stage stage;
+    private Scene scene;
+    private FacadeModel model;
+    private LoginController controller;
+
+    @FXML
+    private MediaView loginVideo;
     @FXML private Button signUpBtn,closeBtn,minimizeBtn,loginBtn,backBtn,registerBtn;
     @FXML private TextField usernameInput,regUsernameInput;
     @FXML private PasswordField passwordInput,regPasswordInput;
@@ -35,6 +44,25 @@ public class LoginController {
 
     private double xOffset = 0;
     private double yOffset = 0;
+
+    public LoginView(Stage stage, FacadeModel model) {
+        this.stage = stage;
+        this.model = model;
+        this.controller = new LoginController(this.model);
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
+        root.setController(this);
+        this.stage.setTitle("wave.");
+        this.stage.initStyle(StageStyle.UNDECORATED);
+        this.stage.setResizable(false);
+        this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/media/waveIcon.png")));
+        try {
+            scene = new Scene(root.load(),1200,790);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.stage.setScene(this.scene);
+        this.stage.show();
+    }
 
     public void initialize(){
 
@@ -57,7 +85,6 @@ public class LoginController {
         moveEnd.setAutoReverse(false);
 
         userTypeChoice.getItems().addAll("artist","listener");
-
 
         MediaPlayer mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/media/loginVideo.mp4").toExternalForm()));
         mediaPlayer.setAutoPlay(true);
@@ -111,21 +138,12 @@ public class LoginController {
                 coverScreen.setOpacity(1);
                 coverScreen.setVisible(true);
                 moveEnd.setOnFinished(event1 -> {
-                    try {
-                        mediaPlayer.stop();
-                        FXMLLoader pane = new FXMLLoader(getClass().getResource("/view/MusicPlayer.fxml"));
-                        Stage stage = (Stage) loginBtn.getScene().getWindow();
-                        Scene scene = new Scene(pane.load());
-                        MusicPlayerController controller = pane.getController();
-                        //controller.setDatabase(DB);
-                        //controller.setUser(user);
-                        stage.setScene(scene);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    mediaPlayer.stop();
+                    Stage stage = (Stage) loginBtn.getScene().getWindow();
+                    MusicPlayerView musicPlayerView = new MusicPlayerView(stage, model);
                 });
                 moveEnd.play();
-            }else {
+            } else {
                 missingLogLbl.setOpacity(1);
             }
         });
@@ -166,7 +184,7 @@ public class LoginController {
 
         registerBtn.setOnAction(event -> {
             if (!regUsernameInput.getText().isEmpty()&&!regPasswordInput.getText().isEmpty()&&userTypeChoice.getValue()!=null
-            &&passwordPattern.matcher(regPasswordInput.getText()).matches()){
+                    &&passwordPattern.matcher(regPasswordInput.getText()).matches()){
                 regUsernameInput.clear();
                 regPasswordInput.clear();
                 moveBack.play();
@@ -191,9 +209,6 @@ public class LoginController {
 
         backBtn.setOnAction(event -> {
             moveBack.play();
-
         });
-
-
     }
 }

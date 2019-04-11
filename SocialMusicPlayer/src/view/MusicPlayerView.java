@@ -1,29 +1,42 @@
-package controller;
+package view;
 
+import controller.FacadeController;
+import controller.MusicPlayerController;
 import javafx.animation.FadeTransition;
 import javafx.animation.PathTransition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.FacadeModel;
 
-public class MusicPlayerController {
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+public class MusicPlayerView implements View {
+
+    private Stage stage;
+    private Scene scene;
+    private FacadeModel model;
+    private FacadeController controller;
+    private MusicPlayerController musicPlayerController;
 
     @FXML
     private Rectangle titleBar;
     @FXML
-    private Button closeBtn, minimizeBtn;
+    private Button closeBtn, minimizeBtn, playlistbtn;
     @FXML
     private Slider slider, volSlider;
     @FXML
@@ -35,18 +48,12 @@ public class MusicPlayerController {
     @FXML
     private AnchorPane transitionPane;
     @FXML
-    private Label titleLbl, artistLbl, titleBtn, artistBtn, albumBtn, genreBtn, yearBtn, timeBtn;
+    private Label titleLbl, artistLbl, titleBtn, artistBtn, albumBtn, genreBtn, yearBtn, timeBtn, currentTime, endTime;
     @FXML
     private Line titleLine, artistLine, albumLine, genreLine, yearLine, timeLine;
 
     private double xOffset = 0;
     private double yOffset = 0;
-
-    private boolean isPlaying;
-    private boolean isShuffled;
-    private boolean isRepeated;
-    private boolean isMuted;
-    private boolean isSongRepeated;
 
     private boolean isTitleSorted;
     private boolean isArtistSorted;
@@ -55,12 +62,35 @@ public class MusicPlayerController {
     private boolean isYearSorted;
     private boolean isTimeSorted;
 
+    private boolean init;
+
+    public MusicPlayerView(Stage stage, FacadeModel model) {
+        this.stage = stage;
+        this.model = model;
+        this.model.attach(this);
+        this.controller = new FacadeController(this.model);
+        this.musicPlayerController = new MusicPlayerController(this.model);
+        this.init = false;
+        FXMLLoader pane = new FXMLLoader(getClass().getResource("/view/MusicPlayer.fxml"));
+        pane.setController(this);
+        try {
+            this.scene = new Scene(pane.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.stage.setScene(this.scene);
+        this.stage.show();
+        musicPlayerController.setTimeSlider(slider);
+        musicPlayerController.setVolumeSlider(volSlider);
+        musicPlayerController.setTimerLabel(currentTime, endTime);
+    }
+
     public void initialize() {
-        isPlaying = false;
+        /*isPlaying = false;
         isShuffled = false;
         isRepeated = false;
         isMuted = false;
-        isSongRepeated = false;
+        isSongRepeated = false;*/
 
         isTitleSorted = false;
         isArtistSorted = false;
@@ -333,31 +363,37 @@ public class MusicPlayerController {
         });
 
         playBtn.setOnMouseEntered(event -> {
-            if (!isPlaying) {
+            if (!musicPlayerController.isPlay()) {
                 playBtn.setImage(new Image(getClass().getResourceAsStream("/media/play_button_hover.png")));
-            } else if (isPlaying) {
+            } else {
                 playBtn.setImage(new Image(getClass().getResourceAsStream("/media/pause_button_hover.png")));
             }
         });
 
         playBtn.setOnMouseExited(event -> {
-            if (!isPlaying) {
+            if (!musicPlayerController.isPlay()) {
                 playBtn.setImage(new Image(getClass().getResourceAsStream("/media/play_button.png")));
-            } else if (isPlaying) {
+            } else {
                 playBtn.setImage(new Image(getClass().getResourceAsStream("/media/pause_button.png")));
             }
         });
 
         playBtn.setOnMouseClicked(event -> {
-            if (!isPlaying) {
-                isPlaying = true;
+            //TESTING
+            model.getCurrentPlaylist().setSongs(model.getSongs());
+            if(!init) {
+                init = true;
+                musicPlayerController.setSong(model.getCurrentPlaylist().getSongs().get(musicPlayerController.returnIndex()).getSongfile());
+            }
+            //TESTING
+
+            if (!musicPlayerController.isPlay()) {
                 playBtn.setImage(new Image(getClass().getResourceAsStream("/media/pause_button_hover.png")));
-            } else if (isPlaying) {
-                isPlaying = false;
+            } else {
                 playBtn.setImage(new Image(getClass().getResourceAsStream("/media/play_button_hover.png")));
             }
+            musicPlayerController.play();
         });
-
 
         nextBtn.setOnMouseEntered(event -> {
             nextBtn.setImage(new Image(getClass().getResourceAsStream("/media/next_button_hover.png")));
@@ -365,6 +401,10 @@ public class MusicPlayerController {
 
         nextBtn.setOnMouseExited(event -> {
             nextBtn.setImage(new Image(getClass().getResourceAsStream("/media/next_button.png")));
+        });
+
+        nextBtn.setOnMouseClicked(event -> {
+            musicPlayerController.next();
         });
 
         prevBtn.setOnMouseEntered(event -> {
@@ -375,102 +415,111 @@ public class MusicPlayerController {
             prevBtn.setImage(new Image(getClass().getResourceAsStream("/media/previous_button.png")));
         });
 
+        prevBtn.setOnMouseClicked(event -> {
+            musicPlayerController.prev();
+        });
+
         shuffleBtn.setOnMouseEntered(event -> {
-            if (!isShuffled) {
+            if (!musicPlayerController.isShuffle()) {
                 shuffleBtn.setImage(new Image(getClass().getResourceAsStream("/media/shuffle_hover.png")));
-            } else if (isShuffled) {
+            } else {
                 shuffleBtn.setImage(new Image(getClass().getResourceAsStream("/media/shuffle_clicked.png")));
             }
         });
 
         shuffleBtn.setOnMouseExited(event -> {
-            if (!isShuffled) {
+            if (!musicPlayerController.isShuffle()) {
                 shuffleBtn.setImage(new Image(getClass().getResourceAsStream("/media/shuffle.png")));
-            } else if (isShuffled) {
+            } else {
                 shuffleBtn.setImage(new Image(getClass().getResourceAsStream("/media/shuffle_clicked.png")));
             }
         });
 
         shuffleBtn.setOnMouseClicked(event -> {
-            if (!isShuffled) {
-                isShuffled = true;
+            if (!musicPlayerController.isShuffle()) {
                 shuffleBtn.setImage(new Image(getClass().getResourceAsStream("/media/shuffle_clicked.png")));
-            } else if (isShuffled) {
-                isShuffled = false;
+            } else {
                 shuffleBtn.setImage(new Image(getClass().getResourceAsStream("/media/shuffle.png")));
             }
+            musicPlayerController.shuffle();
         });
 
         repeatBtn.setOnMouseEntered(event -> {
-            if (!isRepeated) {
+            if (musicPlayerController.getRepeat() == 0) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_hover.png")));
-            } else if (isRepeated) {
+            } else if (musicPlayerController.getRepeat() == 1) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_clicked.png")));
-            }
-            if (isSongRepeated) {
+            } else if (musicPlayerController.getRepeat() == 2) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_song_clicked.png")));
             }
         });
 
         repeatBtn.setOnMouseExited(event -> {
-            if (!isRepeated) {
+            if (musicPlayerController.getRepeat() == 0) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat.png")));
-            } else if (isRepeated) {
+            } else if (musicPlayerController.getRepeat() == 1) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_clicked.png")));
-            }
-            if (isSongRepeated) {
+            } else if (musicPlayerController.getRepeat() == 2) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_song_clicked.png")));
             }
         });
 
         repeatBtn.setOnMouseClicked(event -> {
-            if (!isRepeated || isSongRepeated) {
-                isRepeated = true;
-                isSongRepeated = false;
+            if (musicPlayerController.getRepeat() == 0) {
                 repeatBtn.setFitHeight(20);
                 repeatBtn.setFitWidth(20);
                 repeatBtn.setLayoutY(27);
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_clicked.png")));
-            } else if (isRepeated) {
-                isRepeated = false;
-                isSongRepeated = false;
+            } else if (musicPlayerController.getRepeat() == 1) {
+                repeatBtn.setFitHeight(25);
+                repeatBtn.setFitWidth(35);
+                repeatBtn.setLayoutY(22);
+                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_song_clicked.png")));
+            } else if (musicPlayerController.getRepeat() == 2) {
                 repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat.png")));
             }
-            if (event.getButton().equals(MouseButton.PRIMARY) && !isSongRepeated) {
-                if (event.getClickCount() == 2) {
-                    isSongRepeated = true;
-                    repeatBtn.setFitHeight(25);
-                    repeatBtn.setFitWidth(35);
-                    repeatBtn.setLayoutY(22);
-                    repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_song_clicked.png")));
-                }
-            }
+            musicPlayerController.repeat();
         });
 
         muteBtn.setOnMouseEntered(event -> {
-            if (!isMuted) {
+            if (!musicPlayerController.isMute()) {
                 muteBtn.setImage(new Image(getClass().getResourceAsStream("/media/volume_hover.png")));
-            } else if (isMuted) {
+            } else {
                 muteBtn.setImage(new Image(getClass().getResourceAsStream("/media/mute_clicked.png")));
             }
         });
 
         muteBtn.setOnMouseExited(event -> {
-            if (!isMuted) {
+            if (!musicPlayerController.isMute()) {
                 muteBtn.setImage(new Image(getClass().getResourceAsStream("/media/volume.png")));
-            } else if (isMuted) {
+            } else {
                 muteBtn.setImage(new Image(getClass().getResourceAsStream("/media/mute_clicked.png")));
             }
         });
 
         muteBtn.setOnMouseClicked(event -> {
-            if (!isMuted) {
-                isMuted = true;
+            if (!musicPlayerController.isMute()) {
                 muteBtn.setImage(new Image(getClass().getResourceAsStream("/media/mute_clicked.png")));
-            } else if (isMuted) {
-                isMuted = false;
+            } else if (musicPlayerController.isMute()) {
                 muteBtn.setImage(new Image(getClass().getResourceAsStream("/media/volume_hover.png")));
             }
+            musicPlayerController.mute();
         });
+
+        playlistbtn.setOnAction(event -> {
+            FileChooser file = new FileChooser();
+            List<File> list = file.showOpenMultipleDialog(stage);
+            if (list != null) {
+                for (File f : list) {
+                    System.out.println(f.toURI().toString().substring(6, f.toURI().toString().length()).replaceAll("%20", " ").replaceAll("%5", " "));
+                    model.addSongLocally(f.toURI().toString().substring(6, f.toURI().toString().length()).replaceAll("%20", " ").replaceAll("%5", " "));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void update() {
+
     }
 }
