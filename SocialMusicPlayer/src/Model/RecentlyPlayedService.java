@@ -28,7 +28,7 @@ public class RecentlyPlayedService implements Service {
                 a.setRecentlyplayedid(rs.getInt("recentlyid"));
                 a.setIdsong(rs.getString("idsong"));
                 a.setUsername(rs.getString("username"));
-                a.setTimeplayed(rs.getTimestamp("timeplayed"));
+                a.setTimeplayed(rs.getTimestamp("played"));
                 recentlyplayed.add(a);
             }
             return recentlyplayed;

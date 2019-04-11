@@ -1,5 +1,7 @@
-CREATE DATABASE  IF NOT EXISTS `musicplayer` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `musicplayer`;
+SET GLOBAL max_allowed_packet=1073741824;
+
+CREATE DATABASE IF NOT EXISTS MusicPlayer /*!40100 DEFAULT CHARACTER SET utf8*/;
+USE MusicPlayer;
 -- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicplayer
@@ -162,12 +164,15 @@ DROP TABLE IF EXISTS `recentlyplayed`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `recentlyplayed` (
   `idrecentlyplayed` int(11) NOT NULL,
-  `idsong` varchar(15) NOT NULL,
-  `username` varchar(15) NOT NULL,
-  `timeplayed` datetime NOT NULL,
+  `idsong` varchar(15) DEFAULT NULL,
+  `username` varchar(30) DEFAULT NULL,
+  `timeplayed` datetime DEFAULT NULL,
   PRIMARY KEY (`idrecentlyplayed`),
-  UNIQUE KEY `idrecentlyplayed_UNIQUE` (`idrecentlyplayed`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `songname_fk_idx` (`idsong`),
+  KEY `username_fk_idx` (`username`),
+  CONSTRAINT `songname_fk` FOREIGN KEY (`idsong`) REFERENCES `song` (`idsong`),
+  CONSTRAINT `username_fk` FOREIGN KEY (`username`) REFERENCES `accounts` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,4 +281,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-10 16:06:31
+-- Dump completed on 2019-04-11 11:25:08
