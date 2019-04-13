@@ -1,7 +1,6 @@
 package view;
 
 import controller.LoginController;
-import controller.MusicPlayerController;
 import javafx.animation.PathTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,31 +16,37 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import model.AccountInterface;
 import model.FacadeModel;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class LoginView {
-    
+
+    private static final Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*\\p{Punct})(?=.*[a-zA-z]).{6,20}$");
     private Stage stage;
     private Scene scene;
     private FacadeModel model;
     private LoginController controller;
-
     @FXML
     private MediaView loginVideo;
-    @FXML private Button signUpBtn,closeBtn,minimizeBtn,loginBtn,backBtn,registerBtn;
-    @FXML private TextField usernameInput,regUsernameInput;
-    @FXML private PasswordField passwordInput,regPasswordInput;
-    @FXML private Rectangle titleBar,coverScreen;
-    @FXML private AnchorPane anchorMove;
-    @FXML private Path pathing,pathingback,pathingEnd;
-    @FXML private ChoiceBox userTypeChoice;
-    @FXML private Label missingLbl,missingLogLbl;
-
-    private static final Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*\\p{Punct})(?=.*[a-zA-z]).{6,20}$");
-
+    @FXML
+    private Button signUpBtn, closeBtn, minimizeBtn, loginBtn, backBtn, registerBtn;
+    @FXML
+    private TextField usernameInput, regUsernameInput;
+    @FXML
+    private PasswordField passwordInput, regPasswordInput;
+    @FXML
+    private Rectangle titleBar, coverScreen;
+    @FXML
+    private AnchorPane anchorMove;
+    @FXML
+    private Path pathing, pathingback, pathingEnd;
+    @FXML
+    private ChoiceBox userTypeChoice;
+    @FXML
+    private Label missingLbl, missingLogLbl;
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -56,7 +61,7 @@ public class LoginView {
         this.stage.setResizable(false);
         this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/media/waveIcon.png")));
         try {
-            scene = new Scene(root.load(),1200,790);
+            scene = new Scene(root.load(), 1200, 790);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,7 +69,7 @@ public class LoginView {
         this.stage.show();
     }
 
-    public void initialize(){
+    public void initialize() {
 
         PathTransition move = new PathTransition();
         move.setDuration(Duration.seconds(0.5));
@@ -84,14 +89,15 @@ public class LoginView {
         moveEnd.setNode(coverScreen);
         moveEnd.setAutoReverse(false);
 
-        userTypeChoice.getItems().addAll("artist","listener");
+        userTypeChoice.getItems().addAll("artist", "listener");
+
 
         MediaPlayer mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/media/loginVideo.mp4").toExternalForm()));
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setMute(true);
         mediaPlayer.setCycleCount(mediaPlayer.INDEFINITE);
         loginVideo.setMediaPlayer(mediaPlayer);
-        mediaPlayer.setOnReady(()->{
+        mediaPlayer.setOnReady(() -> {
 
         });
 
@@ -133,16 +139,20 @@ public class LoginView {
         });
 
         loginBtn.setOnAction(event -> {
-            if (!usernameInput.getText().isEmpty()&&!passwordInput.getText().isEmpty()){
-                coverScreen.setDisable(false);
-                coverScreen.setOpacity(1);
-                coverScreen.setVisible(true);
-                moveEnd.setOnFinished(event1 -> {
-                    mediaPlayer.stop();
-                    Stage stage = (Stage) loginBtn.getScene().getWindow();
-                    MusicPlayerView musicPlayerView = new MusicPlayerView(stage, model);
-                });
-                moveEnd.play();
+            if (!usernameInput.getText().isEmpty() && !passwordInput.getText().isEmpty()) {
+                if (controller.login(usernameInput.getText(), passwordInput.getText())) {
+                    coverScreen.setDisable(false);
+                    coverScreen.setOpacity(1);
+                    coverScreen.setVisible(true);
+                    moveEnd.setOnFinished(event1 -> {
+                        mediaPlayer.stop();
+                        Stage stage = (Stage) loginBtn.getScene().getWindow();
+                        MusicPlayerView musicPlayerView = new MusicPlayerView(stage, model);
+                    });
+                    moveEnd.play();
+                } else {
+                    missingLogLbl.setOpacity(1);
+                }
             } else {
                 missingLogLbl.setOpacity(1);
             }
@@ -183,18 +193,25 @@ public class LoginView {
         });
 
         registerBtn.setOnAction(event -> {
-            if (!regUsernameInput.getText().isEmpty()&&!regPasswordInput.getText().isEmpty()&&userTypeChoice.getValue()!=null
-                    &&passwordPattern.matcher(regPasswordInput.getText()).matches()){
-                regUsernameInput.clear();
-                regPasswordInput.clear();
-                moveBack.play();
-            } else if (!passwordPattern.matcher(regPasswordInput.getText()).matches()){
+            if (!regUsernameInput.getText().isEmpty() && !regPasswordInput.getText().isEmpty() && userTypeChoice.getValue() != null
+                    && passwordPattern.matcher(regPasswordInput.getText()).matches()) {
+
+                if (controller.signUp(regUsernameInput.getText(), regPasswordInput.getText(), (String) userTypeChoice.getSelectionModel().getSelectedItem())) {
+                    regUsernameInput.clear();
+                    regPasswordInput.clear();
+                    moveBack.play();
+                } else {
+                    missingLbl.setText("username already taken");
+                    missingLbl.setOpacity(1);
+                }
+            } else if (!passwordPattern.matcher(regPasswordInput.getText()).matches()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning Dialog");
                 alert.setHeaderText("Invalid Password");
                 alert.setContentText("Password Requires at least 1 number, 1 special character, 6-20 characters, 1 alphabetical character");
                 alert.showAndWait();
             } else {
+                missingLbl.setText("missing info detected");
                 missingLbl.setOpacity(1);
             }
         });
