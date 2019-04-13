@@ -9,6 +9,10 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import model.FacadeModel;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Port;
 import java.io.File;
 
 public class MusicPlayerController {
@@ -20,7 +24,7 @@ public class MusicPlayerController {
     private MediaPlayer media;
     private int index;
     private Slider timeSlider, volumeSlider;
-    private Label start, end;
+    private Label start, end, title, artist;
 
     public MusicPlayerController(FacadeModel model) {
         this.model = model;
@@ -32,7 +36,10 @@ public class MusicPlayerController {
     }
 
     public void play() {
-        if(!play) {
+        title.setText(model.getCurrentPlaylist().getSongs().get(index).getName());
+        artist.setText(model.getCurrentPlaylist().getSongs().get(index).getArtist());
+
+        if (!play) {
             play = true;
             media.play();
         } else {
@@ -41,29 +48,31 @@ public class MusicPlayerController {
         }
 
         media.currentTimeProperty().addListener((Observable observable) -> {
-            updateSlider();
+            updateTimeSlider();
         });
 
         media.setOnEndOfMedia(() -> {
-            play = false;
-            if(repeat < 2) {
+            if (repeat < 2) {
+                play = false;
                 media.stop();
                 next();
+            } else {
+                media.seek(Duration.ZERO);
             }
         });
     }
 
     public void next() {
-        if(shuffle) {
+        if (shuffle) {
             getIndex();
             media.stop();
             setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
             play = false;
             play();
         } else {
-            if(repeat >= 0 && index <= model.getCurrentPlaylist().getSongs().size() - 1) {
+            if (repeat > 0 || index < model.getCurrentPlaylist().getSongs().size() - 1) {
                 media.stop();
-                if(index == model.getCurrentPlaylist().getSongs().size() - 1) {
+                if (index == model.getCurrentPlaylist().getSongs().size() - 1) {
                     index = 0;
                 } else {
                     index++;
@@ -76,29 +85,33 @@ public class MusicPlayerController {
     }
 
     public void prev() {
-        if(shuffle) {
+        if (shuffle) {
             getIndex();
             media.stop();
             setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
             play = false;
             play();
         } else {
-            if(repeat >= 0 && index >= 0) {
-                media.stop();
-                if(index == 0) {
-                    index = model.getCurrentPlaylist().getSongs().size() - 1;
-                } else {
-                    index--;
+            if (media.getCurrentTime().toSeconds() >= 5) {
+                media.seek(Duration.ZERO);
+            } else {
+                if (repeat > 0 || index > 0) {
+                    media.stop();
+                    if (index == 0) {
+                        index = model.getCurrentPlaylist().getSongs().size() - 1;
+                    } else {
+                        index--;
+                    }
+                    setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
+                    play = false;
+                    play();
                 }
-                setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
-                play = false;
-                play();
             }
         }
     }
 
     public void repeat() {
-        if(repeat == 2) {
+        if (repeat == 2) {
             repeat = 0;
         } else {
             repeat++;
@@ -112,23 +125,15 @@ public class MusicPlayerController {
     }
 
     public void shuffle() {
-        if(shuffle) {
+        if (shuffle) {
             shuffle = false;
         } else {
             shuffle = true;
         }
     }
 
-    public void jumpFront() {
-
-    }
-
-    public void jumpBack() {
-
-    }
-
     public void mute() {
-        if(mute) {
+        if (mute) {
             mute = false;
             media.setMute(false);
         } else {
@@ -163,6 +168,12 @@ public class MusicPlayerController {
 
     public void setVolumeSlider(Slider volumeSlider) {
         this.volumeSlider = volumeSlider;
+        this.volumeSlider.setValue(20);
+        this.volumeSlider.valueProperty().addListener((Observable observable) -> {
+            if (this.volumeSlider.isPressed() || this.volumeSlider.isValueChanging()) {
+                setVolume((float) this.volumeSlider.getValue() / 100);
+            }
+        });
     }
 
     public void setTimerLabel(Label start, Label end) {
@@ -170,11 +181,32 @@ public class MusicPlayerController {
         this.end = end;
     }
 
-    public void updateSlider() {
+    public void updateTimeSlider() {
         Platform.runLater(() -> {
             start.setText(getDuration((int) media.getCurrentTime().toSeconds()));
             timeSlider.setValue(media.getCurrentTime().divide(media.getMedia().getDuration()).toMillis() * 100);
         });
+    }
+
+    public static void setVolume(Float f) {
+        javax.sound.sampled.Port.Info source = Port.Info.SPEAKER;
+        if (AudioSystem.isLineSupported(source)) {
+            try {
+                Port outline = (Port) AudioSystem.getLine(source);
+                outline.open();
+                FloatControl volumeControl = (FloatControl) outline.getControl(FloatControl.Type.VOLUME);
+                volumeControl.setValue(f);
+            } catch (LineUnavailableException ex) {
+            }
+        }
+    }
+
+    public void setTitle(Label title) {
+        this.title = title;
+    }
+
+    public void setArtist(Label artist) {
+        this.artist = artist;
     }
 
     public String getDuration(int time) {
@@ -204,4 +236,6 @@ public class MusicPlayerController {
     public int returnIndex() {
         return index;
     }
+
+    public MediaPlayer getMedia() { return media; }
 }
