@@ -210,8 +210,8 @@ public class AccountService implements Service{
 
         ObservableList <Object> accounts = FXCollections.observableArrayList();
         String query ="SELECT * FROM accounts INNER JOIN followpeople" +
-                "ON accounts.username = followpeople.followed" +
-                "WHERE followpeople.followed = " +username;
+                " ON accounts.username = followpeople.followed" +
+                " WHERE followpeople.followed = " +username;
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
@@ -250,8 +250,8 @@ public class AccountService implements Service{
 
         ObservableList <Object> accounts = FXCollections.observableArrayList();
         String query ="SELECT * FROM accounts INNER JOIN followpeople" +
-                "ON accounts.username = followpeople.follower" +
-                "WHERE followpeople.follower = " +username;
+                " ON accounts.username = followpeople.follower" +
+                " WHERE followpeople.follower = " +username;
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 

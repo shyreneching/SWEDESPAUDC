@@ -1,6 +1,5 @@
-package Model;
+package model;
 
-import Model.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -56,7 +55,16 @@ public class AlbumService implements Service {
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
-                Album a = new Album();
+                //Add
+                Album a;
+                String s = rs.getString("albumname");
+                if(s.contains("-Single")){
+                    a = new Single();
+                }
+                else {
+                    a = new Album();
+                }
+
                 a.setAlbumID(rs.getString("albumid"));
                 a.setAlbumname(rs.getString("albumname"));
                 a.setArtist(rs.getString("artist"));

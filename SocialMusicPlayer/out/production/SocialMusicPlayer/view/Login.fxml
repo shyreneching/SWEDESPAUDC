@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.shape.HLineTo?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.MoveTo?>
+<?import javafx.scene.shape.Path?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.VLineTo?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="790.0" prefWidth="1200.0" style="-fx-background-color: #252a2c;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MediaView fx:id="loginVideo" fitHeight="790.0" fitWidth="1200.0" preserveRatio="false" />
+      <Button fx:id="signUpBtn" layoutX="450.0" layoutY="630.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="300.0" style="-fx-background-color: #00EAD0;" text="sign up" textFill="#252a2c">
+         <font>
+            <Font name="Brown-Regular" size="30.0" />
+         </font>
+      </Button>
+      <Button fx:id="loginBtn" layoutX="450.0" layoutY="490.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="300.0" style="-fx-background-color: #00EAD0;" text="login" textFill="#252a2c">
+         <font>
+            <Font name="Brown-Regular" size="30.0" />
+         </font>
+      </Button>
+      <Label layoutX="585.0" layoutY="580.0" text="or" textFill="#00ead0">
+         <font>
+            <Font name="Brown-Regular" size="28.0" />
+         </font>
+      </Label>
+      <Line endX="130.0" layoutX="440.0" layoutY="599.0" startX="-60.0" stroke="#00ead0" />
+      <Line endX="130.0" layoutX="690.0" layoutY="599.0" startX="-60.0" stroke="#00ead0" />
+      <Label disable="true" layoutX="431.0" layoutY="90.0" opacity="0.0" text="wave." textFill="#00ead0">
+         <font>
+            <Font name="Brown-Regular" size="120.0" />
+         </font>
+      </Label>
+      <TextField fx:id="usernameInput" layoutX="300.0" layoutY="270.0" prefHeight="70.0" prefWidth="600.0" promptText="username" style="-fx-background-color: #252a2c; -fx-border-color: #00EADC; -fx-border-width: 3.5; -fx-text-fill: #00ead0;">
+         <font>
+            <Font name="Brown-Regular" size="30.0" />
+         </font>
+      </TextField>
+      <PasswordField fx:id="passwordInput" layoutX="300.0" layoutY="370.0" prefHeight="70.0" prefWidth="600.0" promptText="password" style="-fx-background-color: #252a2c; -fx-border-color: #00EAD0; -fx-border-width: 3.5; -fx-text-fill: #00ead0;">
+         <font>
+            <Font name="Brown-Regular" size="30.0" />
+         </font>
+      </PasswordField>
+      <Label fx:id="missingLogLbl" alignment="CENTER" layoutX="461.0" layoutY="455.0" opacity="0.0" text="invalid username/password" textFill="#e82323">
+         <font>
+            <Font name="Brown-Regular" size="23.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="130.0" fitWidth="300.0" layoutX="455.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../media/waveLogoCyan.png" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="anchorMove" disable="true" layoutX="275.0" opacity="0.0" prefHeight="790.0" prefWidth="650.0" style="-fx-background-color: #00ead0;">
+         <children>
+            <TextField fx:id="regUsernameInput" layoutX="25.0" layoutY="150.0" prefHeight="70.0" prefWidth="600.0" style="-fx-background-color: #00ead0; -fx-border-color: #252a2c; -fx-border-width: 3.5; -fx-text-fill: #252a2c; -fx-prompt-text-fill: #252a2c;">
+               <font>
+                  <Font name="Brown-Regular" size="30.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="regPasswordInput" layoutX="25.0" layoutY="290.0" prefHeight="70.0" prefWidth="600.0" style="-fx-background-color: #00ead0; -fx-border-color: #252a2c; -fx-border-width: 3.5; -fx-text-fill: #252a2c; -fx-prompt-text-fill: #252a2c;">
+               <font>
+                  <Font name="Brown-Regular" size="30.0" />
+               </font>
+            </PasswordField>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#252a2c" height="70.0" layoutX="400.0" layoutY="30.0" stroke="#252a2c" strokeType="INSIDE" width="250.0" />
+            <Label layoutX="432.0" layoutY="33.0" text="sign up" textFill="#00ead0">
+               <font>
+                  <Font name="Brown-Regular" size="54.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="userTypeChoice" layoutX="25.0" layoutY="425.0" prefWidth="250.0" style="-fx-background-color: #00ead0; -fx-border-color: #252a2c; -fx-border-width: 3.5; -fx-mark-color: #252a2c;" stylesheets="@../css/LoginCSS.css" />
+            <Label layoutX="25.0" layoutY="95.0" text="username:" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="48.0" />
+               </font>
+            </Label>
+            <Label layoutX="25.0" layoutY="230.0" text="password:" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="48.0" />
+               </font>
+            </Label>
+            <Label layoutX="25.0" layoutY="365.0" text="user type:" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="48.0" />
+               </font>
+            </Label>
+            <Button fx:id="backBtn" layoutX="175.0" layoutY="670.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="300.0" style="-fx-background-color: #252a2c;" text="back" textFill="#00ead0">
+               <font>
+                  <Font name="Brown-Regular" size="30.0" />
+               </font>
+            </Button>
+            <Button fx:id="registerBtn" layoutX="175.0" layoutY="530.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="300.0" style="-fx-background-color: #252a2c;" text="register" textFill="#00ead0">
+               <font>
+                  <Font name="Brown-Regular" size="30.0" />
+               </font>
+            </Button>
+            <Label layoutX="310.0" layoutY="620.0" text="or" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="28.0" />
+               </font>
+            </Label>
+            <Line endX="130.0" layoutX="415.0" layoutY="637.0" startX="-60.0" stroke="#252a2c" />
+            <Line endX="130.0" layoutX="165.0" layoutY="637.0" startX="-60.0" stroke="#252a2c" />
+            <Label fx:id="missingLbl" layoutX="206.0" layoutY="492.0" opacity="0.0" text="missing info detected" textFill="#e82323">
+               <font>
+                  <Font name="Brown-Regular" size="23.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#252a2c" height="70.0" layoutX="385.0" layoutY="30.0" stroke="#252a2c" strokeType="INSIDE" width="8.0" />
+         </children>
+      </AnchorPane>
+      <Path fx:id="pathing" fill="DODGERBLUE" layoutX="220.0" layoutY="-450.0" stroke="BLACK" strokeType="INSIDE">
+         <elements>
+            <MoveTo x="100.0" />
+            <VLineTo y="845.0" />
+         </elements>
+      </Path>
+      <Path fx:id="pathingback" fill="DODGERBLUE" layoutX="220.0" layoutY="-450.0" rotate="180.0" stroke="BLACK" strokeType="INSIDE">
+         <elements>
+            <MoveTo x="100.0" />
+            <VLineTo y="845.0" />
+         </elements>
+      </Path>
+      <Path fx:id="pathingEnd" fill="DODGERBLUE" layoutX="-700.0" layoutY="-55.0" stroke="BLACK" strokeType="INSIDE">
+         <elements>
+            <MoveTo y="450.0" />
+            <HLineTo x="1300.0" />
+         </elements>
+      </Path>
+      <Rectangle fx:id="titleBar" arcHeight="5.0" arcWidth="5.0" fill="#252a2c" height="40.0" opacity="0.0" stroke="#252a2c" strokeType="INSIDE" width="1200.0" />
+      <Button fx:id="closeBtn" layoutX="1160.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #252a2c;" text="X" textFill="#00ead0">
+         <font>
+            <Font name="Brown-Regular" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="minimizeBtn" layoutX="1120.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #252a2c;" text="_" textFill="#00ead0">
+         <font>
+            <Font name="Brown-Regular" size="20.0" />
+         </font>
+      </Button>
+      <Rectangle fx:id="coverScreen" arcHeight="5.0" arcWidth="5.0" fill="#252a2c" height="790.0" opacity="0.0" stroke="#252a2c" strokeType="INSIDE" visible="false" width="1200.0" />
+   </children>
+</AnchorPane>

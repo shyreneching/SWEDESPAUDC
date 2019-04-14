@@ -14,7 +14,7 @@ public class JDBCConnectionPool extends ObjectPool<Connection> {
     private final static String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
     private final static String URL = "jdbc:mysql://localhost:3306/";
     private final static String USERNAME = "root";
-    private final static String PASSWORD = "mysql2018";
+    private final static String PASSWORD = "lodi";
     private final static String DATABASE = "MusicPlayer";
 
     public JDBCConnectionPool() {
