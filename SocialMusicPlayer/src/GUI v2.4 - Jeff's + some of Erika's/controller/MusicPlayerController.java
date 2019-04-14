@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,6 +24,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -35,7 +37,7 @@ public class MusicPlayerController {
     @FXML
     private Rectangle titleBar;
     @FXML
-    private Button closeBtn, minimizeBtn, playListBtn, followBtn, songsBtn, artistsBtn, albumsBtn, genresBtn, yearsBtn, recentsBtn, mostBtn, artistfollowBtn, listenerfollowBtn, profile_icon_btn, notif_closeBtn, testBtn,logoutBtn,albumEnterBtn,albumCancelBtn,uploadEnterBtn,uploadCancelBtn;
+    private Button closeBtn, minimizeBtn, playListBtn, followBtn, songsBtn, artistsBtn, albumsBtn, genresBtn, yearsBtn, recentsBtn, mostBtn, artistfollowBtn, listenerfollowBtn, profile_icon_btn, notif_closeBtn, testBtn,logoutBtn,albumEnterBtn,albumCancelBtn,uploadEnterBtn,uploadCancelBtn, listenerunfollowBtn, artistunfollowBtn;
     @FXML
     private Slider slider, volSlider;
     @FXML
@@ -51,7 +53,7 @@ public class MusicPlayerController {
     @FXML
     private Line titleLine, artistLine, albumLine, genreLine, yearLine, timeLine;
     @FXML
-    private VBox songList, playList,songSearchPane,albumSearchPane,artistSearchPane,playlistSearchPane,profileSearchPane,sortPlaylistScroll;
+    private VBox songList, playList,songSearchPane,albumSearchPane,artistSearchPane,playlistSearchPane,profileSearchPane,sortPlaylistScroll, listener_vbox, artist_vbox;
     @FXML
     private TextField searchBar,albumNameInput;
     @FXML
@@ -850,18 +852,99 @@ public class MusicPlayerController {
             public_playlists_btn.setTextFill(Color.web("#00ead0"));
             prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+
+            listener_vbox.getChildren().clear();
+
+            for (int i = 0; i <= 24; i++) {
+                Label pubplaylist = new Label("Playlist" + i); //insert musicplayerController.getpublicplaylistname or something
+                listener_vbox.getChildren().add(pubplaylist);
+                listener_vbox.setSpacing(24);
+                pubplaylist.setTextFill(Color.web("#FFFFFF"));
+                pubplaylist.setAlignment(Pos.CENTER);
+                pubplaylist.setFont(Font.font(24));
+                pubplaylist.setTextAlignment(TextAlignment.CENTER);
+
+                pubplaylist.setOnMouseEntered(event1 -> {
+                    pubplaylist.setTextFill(Color.web("#00ead0"));
+                });
+
+                pubplaylist.setOnMouseExited(event1 -> {
+                    pubplaylist.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                pubplaylist.setOnMouseClicked(event1 -> {
+                    profile_pane.setVisible(false);
+                    songsPane.setVisible(true);
+                    setSongView();
+                });
+            }
         });
 
         prof_following_btn.setOnMouseClicked(event -> {
             prof_following_btn.setTextFill(Color.web("#00ead0"));
             prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+
+            listener_vbox.getChildren().clear();
+
+            for (int i = 0; i <= 24; i++) {
+                Label followings = new Label("Jungkook " + i); //insert musicplayerController.getpublicplaylistname or something
+                listener_vbox.getChildren().add(followings);
+                listener_vbox.setSpacing(24);
+                followings.setTextFill(Color.web("#FFFFFF"));
+                followings.setAlignment(Pos.CENTER);
+                followings.setFont(Font.font(24));
+                followings.setTextAlignment(TextAlignment.CENTER);
+
+                followings.setOnMouseEntered(event1 -> {
+                    followings.setTextFill(Color.web("#00ead0"));
+                });
+
+                followings.setOnMouseExited(event1 -> {
+                    followings.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                followings.setOnMouseClicked(event1 -> {
+                    profile_pane.setVisible(true);
+                    listenerusername.setText(followings.getText());
+                    listenerunfollowBtn.setVisible(true);
+                    logoutBtn.setVisible(false);
+                });
+            }
         });
 
         prof_followers_btn.setOnMouseClicked(event -> {
             prof_followers_btn.setTextFill(Color.web("#00ead0"));
             public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
             prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+
+            listener_vbox.getChildren().clear();
+
+            for (int i = 0; i <= 24; i++) {
+                Label followers = new Label("Kookie " + i); //insert musicplayerController.getpublicplaylistname or something
+                listener_vbox.getChildren().add(followers);
+                listener_vbox.setSpacing(24);
+                followers.setTextFill(Color.web("#FFFFFF"));
+                followers.setAlignment(Pos.CENTER);
+                followers.setFont(Font.font(24));
+                followers.setTextAlignment(TextAlignment.CENTER);
+
+                followers.setOnMouseEntered(event1 -> {
+                    followers.setTextFill(Color.web("#00ead0"));
+                });
+
+                followers.setOnMouseExited(event1 -> {
+                    followers.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                followers.setOnMouseClicked(event1 -> {
+                    profile_pane.setVisible(true);
+                    listenerusername.setText(followers.getText());
+                    logoutBtn.setVisible(false);
+                    //if following then display unfollow btn otherwise
+                    listenerfollowBtn.setVisible(true);
+                });
+            }
         });
 
         artist_prof_albums_btn.setOnMouseClicked(event -> {
@@ -869,13 +952,30 @@ public class MusicPlayerController {
             artist_prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_following_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
-        });
 
-        artist_prof_albums_btn.setOnMouseClicked(event -> {
-            artist_prof_albums_btn.setTextFill(Color.web("#00ead0"));
-            artist_prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
-            artist_prof_following_btn.setTextFill(Color.web("#FFFFFF"));
-            artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+            for (int i = 0; i <= 24; i++) {
+                Label albums = new Label("Album " + i); //insert musicplayerController.getpublicplaylistname or something
+                artist_vbox.getChildren().add(albums);
+                artist_vbox.setSpacing(24);
+                albums.setTextFill(Color.web("#FFFFFF"));
+                albums.setAlignment(Pos.CENTER);
+                albums.setFont(Font.font(24));
+                albums.setTextAlignment(TextAlignment.CENTER);
+
+                albums.setOnMouseEntered(event1 -> {
+                    albums.setTextFill(Color.web("#00ead0"));
+                });
+
+                albums.setOnMouseExited(event1 -> {
+                    albums.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                albums.setOnMouseClicked(event1 -> {
+                    artist_profile_pane.setVisible(false);
+                    songsPane.setVisible(true);
+                    setSongView();
+                });
+            }
         });
 
         artist_prof_playlists_btn.setOnMouseClicked(event -> {
@@ -883,6 +983,30 @@ public class MusicPlayerController {
             artist_prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_following_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_albums_btn.setTextFill(Color.web("#FFFFFF"));
+
+            for (int i = 0; i <= 24; i++) {
+                Label playlists = new Label("Playlist " + i); //insert musicplayerController.getpublicplaylistname or something
+                artist_vbox.getChildren().add(playlists);
+                artist_vbox.setSpacing(24);
+                playlists.setTextFill(Color.web("#FFFFFF"));
+                playlists.setAlignment(Pos.CENTER);
+                playlists.setFont(Font.font(24));
+                playlists.setTextAlignment(TextAlignment.CENTER);
+
+                playlists.setOnMouseEntered(event1 -> {
+                    playlists.setTextFill(Color.web("#00ead0"));
+                });
+
+                playlists.setOnMouseExited(event1 -> {
+                    playlists.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                playlists.setOnMouseClicked(event1 -> {
+                    artist_profile_pane.setVisible(false);
+                    songsPane.setVisible(true);
+                    setSongView();
+                });
+            }
         });
 
         artist_prof_following_btn.setOnMouseClicked(event -> {
@@ -890,6 +1014,30 @@ public class MusicPlayerController {
             artist_prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_albums_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+
+            for (int i = 0; i <= 24; i++) {
+                Label afollowing = new Label("MAMAMOO " + i); //insert musicplayerController.getpublicplaylistname or something
+                artist_vbox.getChildren().add(afollowing);
+                artist_vbox.setSpacing(24);
+                afollowing.setTextFill(Color.web("#FFFFFF"));
+                afollowing.setAlignment(Pos.CENTER);
+                afollowing.setFont(Font.font(24));
+                afollowing.setTextAlignment(TextAlignment.CENTER);
+
+                afollowing.setOnMouseEntered(event1 -> {
+                    afollowing.setTextFill(Color.web("#00ead0"));
+                });
+
+                afollowing.setOnMouseExited(event1 -> {
+                    afollowing.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                afollowing.setOnMouseClicked(event1 -> {
+                    artist_profile_pane.setVisible(true);
+                    artistunfollowBtn.setVisible(true);
+                    artistfollowBtn.setVisible(false);
+                });
+            }
         });
 
         artist_prof_followers_btn.setOnMouseClicked(event -> {
@@ -897,6 +1045,30 @@ public class MusicPlayerController {
             artist_prof_albums_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_following_btn.setTextFill(Color.web("#FFFFFF"));
             artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+
+            for (int i = 0; i <= 24; i++) {
+                Label afollowers = new Label("Kae " + i); //insert musicplayerController.getplaylistname or something
+                artist_vbox.getChildren().add(afollowers);
+                artist_vbox.setSpacing(24);
+                afollowers.setTextFill(Color.web("#FFFFFF"));
+                afollowers.setAlignment(Pos.CENTER);
+                afollowers.setFont(Font.font(24));
+                afollowers.setTextAlignment(TextAlignment.CENTER);
+
+                afollowers.setOnMouseEntered(event1 -> {
+                    afollowers.setTextFill(Color.web("#00ead0"));
+                });
+
+                afollowers.setOnMouseExited(event1 -> {
+                    afollowers.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                afollowers.setOnMouseClicked(event1 -> {
+                    artist_profile_pane.setVisible(true);
+                    artistunfollowBtn.setVisible(false);
+                    artistfollowBtn.setVisible(true);
+                });
+            }
         });
 
         artistfollowBtn.setOnMouseEntered(event -> {
@@ -913,6 +1085,20 @@ public class MusicPlayerController {
             artistfollowBtn.setLayoutY(88);
         });
 
+        artistunfollowBtn.setOnMouseEntered(event -> {
+            artistunfollowBtn.setPrefWidth(160);
+            artistunfollowBtn.setPrefHeight(55);
+            artistunfollowBtn.setLayoutX(817);
+            artistunfollowBtn.setLayoutY(86);
+        });
+
+        artistunfollowBtn.setOnMouseExited(event -> {
+            artistunfollowBtn.setPrefWidth(150);
+            artistunfollowBtn.setPrefHeight(40);
+            artistunfollowBtn.setLayoutX(822);
+            artistunfollowBtn.setLayoutY(88);
+        });
+
         listenerfollowBtn.setOnMouseEntered(event -> {
             listenerfollowBtn.setPrefWidth(160);
             listenerfollowBtn.setPrefHeight(55);
@@ -925,6 +1111,20 @@ public class MusicPlayerController {
             listenerfollowBtn.setPrefHeight(40);
             listenerfollowBtn.setLayoutX(832);
             listenerfollowBtn.setLayoutY(95);
+        });
+
+        listenerunfollowBtn.setOnMouseEntered(event -> {
+            listenerunfollowBtn.setPrefWidth(160);
+            listenerunfollowBtn.setPrefHeight(55);
+            listenerunfollowBtn.setLayoutX(827);
+            listenerunfollowBtn.setLayoutY(93);
+        });
+
+        listenerunfollowBtn.setOnMouseExited(event -> {
+            listenerunfollowBtn.setPrefWidth(150);
+            listenerunfollowBtn.setPrefHeight(40);
+            listenerunfollowBtn.setLayoutX(832);
+            listenerunfollowBtn.setLayoutY(95);
         });
 
         add_to_queue_btn.setOnMouseEntered(event -> {
@@ -946,6 +1146,8 @@ public class MusicPlayerController {
                 isProfileOpened = true;
                 profile_pane.setVisible(true);
                 listenerfollowBtn.setVisible(false);
+                listenerusername.setText("LadyKae");
+                listenerunfollowBtn.setVisible(false);
             } else if (isProfileOpened) {
                 isProfileOpened = false;
                 profile_pane.setVisible(false);
