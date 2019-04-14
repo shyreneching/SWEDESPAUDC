@@ -60,7 +60,7 @@ public class MusicPlayerView implements View {
     @FXML
     private Line titleLine, artistLine, albumLine, genreLine, yearLine, timeLine;
     @FXML
-    private VBox songList,playList;
+    private VBox songList,playList, listener_vbox, artist_vbox;
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -986,6 +986,30 @@ public class MusicPlayerView implements View {
             public_playlists_btn.setTextFill(Color.web("#00ead0"));
             prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+
+//          for (int i = 0; i < 24; i++) {
+//                Label pubplaylist = new Label("Playlist" + i); //insert musicplayerController.getpublicplaylistname or something
+//                listener_vbox.getChildren().add(pubplaylist);
+//                listener_vbox.setSpacing(24);
+//                pubplaylist.setTextFill(Color.web("#FFFFFF"));
+//                pubplaylist.setAlignment(Pos.CENTER);
+//                pubplaylist.setFont(Font.font(36));
+//                pubplaylist.setTextAlignment(TextAlignment.CENTER);
+//
+//                pubplaylist.setOnMouseEntered(event1 -> {
+//                    pubplaylist.setTextFill(Color.web("#00ead0"));
+//                });
+//
+//                pubplaylist.setOnMouseExited(event1 -> {
+//                    pubplaylist.setTextFill(Color.web("#FFFFFF"));
+//                });
+//
+//                pubplaylist.setOnMouseClicked(event1 -> {
+//                    profile_pane.setVisible(false);
+//                    songsPane.setVisible(true);
+//                    setSongView();
+//                });
+//            }
         });
 
         prof_following_btn.setOnMouseClicked( event -> {
