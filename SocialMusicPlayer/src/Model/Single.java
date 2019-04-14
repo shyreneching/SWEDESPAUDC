@@ -1,4 +1,5 @@
-public class Single extends Album {
+package Model;
 
+public class Single extends Album {
 
 }

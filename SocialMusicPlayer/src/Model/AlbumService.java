@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -197,8 +197,32 @@ public class AlbumService implements Service {
         return false;
     }
 
+    public ObservableList<AlbumInterface> getUserAlbum(String username) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+        ObservableList<AlbumInterface> albums = new Album();
 
+        String query ="SELECT * FROM album WHERE username = " + username;
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
 
-
-
+            ResultSet rs = statement.executeQuery();
+            while(rs.next()) {
+                AlbumInterface a = new Album();
+                a.setAlbumID(rs.getString("albumid"));
+                a.setAlbumname(rs.getString("albumname"));
+                a.setArtist(rs.getString("artist"));
+                a.setDate(rs.getTimestamp("dateCreated"));
+                albums.add(a);
+            }
+            return albums;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
 }

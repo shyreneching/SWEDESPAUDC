@@ -8,11 +8,10 @@ package Model;
 import Mp3agic.InvalidDataException;
 import Mp3agic.NotSupportedException;
 import Mp3agic.UnsupportedTagException;
-//import View.View;
+import view.View;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javax.swing.text.View;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,6 +29,7 @@ public class FacadeModel {
     private Service playlistService;
     private Service songService;
     private Service recentlyplayedService;
+    private Service albumService;
     private AudioParserInterface parser;
     private ObservableList<View> view;
 
@@ -40,6 +40,7 @@ public class FacadeModel {
         accountService = new AccountService();
         playlistService = new PlaylistService();
         songService = new SongService();
+        albumService = new AlbumService();
         parser = new AudioParser();
         currentPlaylist = new Playlist();
         recentlyplayedService = new RecentlyPlayedService();
@@ -617,6 +618,28 @@ public class FacadeModel {
         boolean b = accountService.update(a.getUsername(), a);
         update();
         return b;
+    }
+
+    public boolean createAlbum(String artist, String albumName) throws SQLException{
+        ObservableList<Object> albums = albumService.getAll();
+        AlbumInterface a = new Album();
+        a.setAlbumname(albumName);
+        a.setArtist(artist);
+        if (albums.isEmpty()) {
+            a.setAlbumID("A01");
+            if ((albumService).add(a)) {
+                update();
+                return true;
+            }
+        } else {
+            a.setAlbumID(String.format("A%02d", albums.size() + 1));
+            if (albumService.add(a)) {
+                update();
+                return true;
+            }
+        }
+        update();
+        return false;
     }
 
     public void addUnregisteredSongs() throws SQLException {
