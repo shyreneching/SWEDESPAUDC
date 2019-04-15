@@ -18,7 +18,7 @@ public class AlbumService implements Service {
     }
 
     public boolean add(Object o) throws SQLException {
-        Album a = (Album) o;
+        AlbumInterface a = (Album) o;
 
         // Get a connection:
         Connection connection = pool.checkOut();
@@ -56,7 +56,7 @@ public class AlbumService implements Service {
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
                 //Add
-                Album a;
+                AlbumInterface a;
                 String s = rs.getString("albumname");
                 if(s.contains("-Single")){
                     a = new Single();
@@ -116,17 +116,17 @@ public class AlbumService implements Service {
         return null;
     }
 
-    public Album getAlbum(String albumname) throws SQLException {
+    public AlbumInterface getAlbum(String albumid) throws SQLException {
         // Get a connection:
         Connection connection = pool.checkOut();
 
-        String query ="SELECT * FROM album WHERE albumname = " + albumname;
+        String query ="SELECT * FROM album WHERE albumid = " + albumid;
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
-                Album a = new Album();
+                AlbumInterface a = new Album();
                 a.setAlbumID(rs.getString("albumid"));
                 a.setAlbumname(rs.getString("albumname"));
                 a.setArtist(rs.getString("artist"));
@@ -143,14 +143,14 @@ public class AlbumService implements Service {
         return null;
     }
 
-    public boolean delete(String albumname) throws SQLException {
+    public boolean delete(String albumid) throws SQLException {
         // Get a connection:
         Connection connection = pool.checkOut();
-        String query = "DELETE FROM album WHERE albumname = ?";
+        String query = "DELETE FROM album WHERE albumid = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
-            statement.setString(1, albumname);
+            statement.setString(1, albumid);
 
             boolean deleted  = statement.execute();
             return deleted;
@@ -165,24 +165,24 @@ public class AlbumService implements Service {
     }
 
     //pass the username of the account that wants to be change and an account class with COMPLETE information including the updates
-    public boolean update(String albumname, Object o) throws SQLException {
+    public boolean update(String albumid, Object o) throws SQLException {
         //UPDATE
         // Get a connection:
         Connection connection = pool.checkOut();
 
-        Album a = (Album) o;
+        AlbumInterface a = (Album) o;
         String query = "UPDATE album SET "
                 + "albumid = ?, "
                 + "albumname = ? "
                 + "artist = ? "
-                + "WHERE albumname= ?";
+                + "WHERE albumid= ?";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
             statement.setString(1, a.getAlbumID());
             statement.setString(2, a.getAlbumname());
             statement.setString(3, a.getArtist());
-            statement.setString(4, albumname);
+            statement.setString(4, albumid);
 
             statement.executeUpdate();
 
@@ -200,7 +200,7 @@ public class AlbumService implements Service {
     public ObservableList<AlbumInterface> getUserAlbum(String username) throws SQLException {
         // Get a connection:
         Connection connection = pool.checkOut();
-        ObservableList<AlbumInterface> albums = new Album();
+        ObservableList<AlbumInterface> albums = FXCollections.observableArrayList();
 
         String query ="SELECT * FROM album WHERE username = " + username;
         PreparedStatement statement = connection.prepareStatement(query);

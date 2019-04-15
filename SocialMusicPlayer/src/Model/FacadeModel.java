@@ -642,6 +642,16 @@ public class FacadeModel {
         return false;
     }
 
+    public boolean deleteAlbum(AlbumInterface album) throws SQLException {
+        albumService.delete(album.getAlbumID());
+        return true;
+    }
+
+    public boolean editAlbum(AlbumInterface newalbum) throws SQLException {
+        albumService.update(newalbum.getAlbumID(), newalbum);
+        return true;
+    }
+
     public void addUnregisteredSongs() throws SQLException {
         for(SongInterface ss: songs){
             addSong(ss.getFilelocation());

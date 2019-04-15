@@ -28,7 +28,7 @@ public class SongService implements Service{
 
         try {
             AlbumService as = new AlbumService();
-            Album a = as.getAlbum(s.getAlbum());
+            AlbumInterface a = as.getAlbum(s.getAlbum());
             statement.setString(1, s.getSongid());
             statement.setString(2, s.getName());
             statement.setString(3, s.getGenre());
