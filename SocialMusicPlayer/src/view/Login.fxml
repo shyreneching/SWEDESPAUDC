@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.VLineTo?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="790.0" prefWidth="1200.0" style="-fx-background-color: #252a2c;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="790.0" prefWidth="1200.0" style="-fx-background-color: #252a2c;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MediaView fx:id="loginVideo" fitHeight="790.0" fitWidth="1200.0" preserveRatio="false" />
       <Button fx:id="signUpBtn" layoutX="450.0" layoutY="630.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="300.0" style="-fx-background-color: #00EAD0;" text="sign up" textFill="#252a2c">
@@ -52,14 +52,14 @@
             <Font name="Brown-Regular" size="30.0" />
          </font>
       </PasswordField>
-      <Label fx:id="missingLogLbl" alignment="CENTER" layoutX="461.0" layoutY="455.0" opacity="0.0" text="invalid username/password" textFill="#e82323">
+      <Label fx:id="missingLogLbl" layoutX="450.0" layoutY="455.0" opacity="0.0" text="invalid username/password" textFill="#e82323">
          <font>
             <Font name="Brown-Regular" size="23.0" />
          </font>
       </Label>
       <ImageView fitHeight="130.0" fitWidth="300.0" layoutX="455.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../media/waveLogoCyan.png" />
+            <Image url="@../Media/waveLogoCyan.png" />
          </image>
       </ImageView>
       <AnchorPane fx:id="anchorMove" disable="true" layoutX="275.0" opacity="0.0" prefHeight="790.0" prefWidth="650.0" style="-fx-background-color: #00ead0;">
@@ -80,7 +80,7 @@
                   <Font name="Brown-Regular" size="54.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="userTypeChoice" layoutX="25.0" layoutY="425.0" prefWidth="250.0" style="-fx-background-color: #00ead0; -fx-border-color: #252a2c; -fx-border-width: 3.5; -fx-mark-color: #252a2c;" stylesheets="@../css/LoginCSS.css" />
+            <ChoiceBox fx:id="userTypeChoice" layoutX="25.0" layoutY="425.0" prefWidth="250.0" style="-fx-background-color: #00ead0; -fx-border-color: #252a2c; -fx-border-width: 3.5; -fx-mark-color: #252a2c;" stylesheets="@../CSS/LoginCSS.css" />
             <Label layoutX="25.0" layoutY="95.0" text="username:" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="48.0" />

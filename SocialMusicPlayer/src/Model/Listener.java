@@ -1,7 +1,5 @@
 package Model;
 
-import javafx.collections.FXCollections;
-
 public class Listener extends Account {
 
     public Listener(){}

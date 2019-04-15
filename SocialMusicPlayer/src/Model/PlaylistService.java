@@ -3,7 +3,6 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.*;
 import java.sql.*;
 
 public class PlaylistService implements Service{

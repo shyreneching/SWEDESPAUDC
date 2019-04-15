@@ -1,7 +1,5 @@
 package Model;
 
-import javafx.collections.FXCollections;
-
 public class Artist extends Account {
 
     public Artist(){}

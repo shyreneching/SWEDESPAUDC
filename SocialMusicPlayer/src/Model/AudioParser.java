@@ -5,9 +5,7 @@ import Mp3agic.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
-import java.sql.SQLException;
 
-import jaco.mp3.player.MP3Player;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -180,7 +178,7 @@ public class AudioParser implements AudioParserInterface{
 
 
     /*
-    public static void main(String[] args) {
+    public static void Main(String[] args) {
         AudioParser ap = new AudioParser();
         String fileLocation = "C:/Users/Shyrene/Downloads/Music/Taeyeon - I’m the Greatest.mp3";
 
@@ -320,7 +318,7 @@ public class AudioParser implements AudioParserInterface{
         }
     }*/
     /*
-    public static void main(String args[]) throws SQLException {
+    public static void Main(String args[]) throws SQLException {
         String filelocation = "src/Music/Bea Miller - Fire N Gold.mp3";
         SongInterface song = CreateSongFromLocal.CreateSong(filelocation);
         song.setSongid("S01");

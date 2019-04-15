@@ -3,6 +3,7 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,6 +83,46 @@ public class Queue implements PlaylistInterface {
             trackNo.add(i);
             i++;
         }
+    }
+
+    @Override
+    public String getUser() {
+        return null;
+    }
+
+    @Override
+    public void setUser(String user) {
+
+    }
+
+    @Override
+    public String getStatus() {
+        return null;
+    }
+
+    @Override
+    public void setStatus(String status) {
+
+    }
+
+    @Override
+    public boolean isDisplay() {
+        return false;
+    }
+
+    @Override
+    public void setDisplay(boolean display) {
+
+    }
+
+    @Override
+    public Timestamp getDate() {
+        return null;
+    }
+
+    @Override
+    public void setDate(Timestamp date) {
+
     }
 
     public void setShuffle(boolean shuffle) {

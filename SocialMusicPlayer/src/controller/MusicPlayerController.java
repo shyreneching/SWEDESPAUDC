@@ -1,4 +1,4 @@
-package controller;
+package Controller;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -7,19 +7,19 @@ import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import model.FacadeModel;
-
+import Model.FacadeModel;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Port;
 import java.io.File;
+import java.sql.SQLException;
 
 public class MusicPlayerController {
 
     private FacadeModel model;
 
-    private boolean shuffle, play, mute;
+    private boolean shuffle, play, mute, played;
     private int repeat;
     private MediaPlayer media;
     private int index;
@@ -30,14 +30,37 @@ public class MusicPlayerController {
         this.model = model;
         shuffle = false;
         play = false;
+        played = false;
         mute = false;
         repeat = 0;
         index = 0;
     }
 
+    public static void setVolume(Float f) {
+        javax.sound.sampled.Port.Info source = Port.Info.SPEAKER;
+        if (AudioSystem.isLineSupported(source)) {
+            try {
+                Port outline = (Port) AudioSystem.getLine(source);
+                outline.open();
+                FloatControl volumeControl = (FloatControl) outline.getControl(FloatControl.Type.VOLUME);
+                volumeControl.setValue(f);
+            } catch (LineUnavailableException ex) {
+            }
+        }
+    }
+
     public void play() {
         title.setText(model.getCurrentPlaylist().getSongs().get(index).getName());
         artist.setText(model.getCurrentPlaylist().getSongs().get(index).getArtist());
+
+        try {
+            if (!played) {
+                setSong(model.playSong(model.getCurrentPlaylist().getSongs().get(index)));
+                played = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if (!play) {
             play = true;
@@ -66,8 +89,8 @@ public class MusicPlayerController {
         if (shuffle) {
             getIndex();
             media.stop();
-            setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
             play = false;
+            played = false;
             play();
         } else {
             if (repeat > 0 || index < model.getCurrentPlaylist().getSongs().size() - 1) {
@@ -77,8 +100,8 @@ public class MusicPlayerController {
                 } else {
                     index++;
                 }
-                setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
                 play = false;
+                played = false;
                 play();
             }
         }
@@ -88,8 +111,8 @@ public class MusicPlayerController {
         if (shuffle) {
             getIndex();
             media.stop();
-            setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
             play = false;
+            played = false;
             play();
         } else {
             if (media.getCurrentTime().toSeconds() >= 5) {
@@ -102,8 +125,8 @@ public class MusicPlayerController {
                     } else {
                         index--;
                     }
-                    setSong(model.getCurrentPlaylist().getSongs().get(index).getSongfile());
                     play = false;
+                    played = false;
                     play();
                 }
             }
@@ -144,7 +167,7 @@ public class MusicPlayerController {
 
     public void setSong(File location) {
         media = new MediaPlayer(new Media(location.toURI().toString()));
-        end.setText(getDuration((int) model.getCurrentPlaylist().getSongs().get(index).getLength()));
+        end.setText(getDuration(model.getCurrentPlaylist().getSongs().get(index).getLength()));
     }
 
     public void getIndex() {
@@ -188,19 +211,6 @@ public class MusicPlayerController {
         });
     }
 
-    public static void setVolume(Float f) {
-        javax.sound.sampled.Port.Info source = Port.Info.SPEAKER;
-        if (AudioSystem.isLineSupported(source)) {
-            try {
-                Port outline = (Port) AudioSystem.getLine(source);
-                outline.open();
-                FloatControl volumeControl = (FloatControl) outline.getControl(FloatControl.Type.VOLUME);
-                volumeControl.setValue(f);
-            } catch (LineUnavailableException ex) {
-            }
-        }
-    }
-
     public void setTitle(Label title) {
         this.title = title;
     }
@@ -233,9 +243,15 @@ public class MusicPlayerController {
         return mute;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     public int returnIndex() {
         return index;
     }
 
-    public MediaPlayer getMedia() { return media; }
+    public MediaPlayer getMedia() {
+        return media;
+    }
 }

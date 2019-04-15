@@ -1,6 +1,6 @@
-package controller;
+package Controller;
 
-import model.FacadeModel;
+import Model.FacadeModel;
 
 public class ArtistController extends FacadeController {
 

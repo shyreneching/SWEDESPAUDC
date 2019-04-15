@@ -1,9 +1,8 @@
-package controller;
+package Controller;
 
-import model.*;
+import Model.*;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class LoginController {
 

@@ -1,6 +1,6 @@
-package view;
+package View;
 
-import controller.LoginController;
+import Controller.LoginController;
 import javafx.animation.PathTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,37 +16,30 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.AccountInterface;
-import model.FacadeModel;
+import Model.FacadeModel;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class LoginView {
 
-    private static final Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*\\p{Punct})(?=.*[a-zA-z]).{6,20}$");
     private Stage stage;
     private Scene scene;
     private FacadeModel model;
     private LoginController controller;
-    @FXML
-    private MediaView loginVideo;
-    @FXML
-    private Button signUpBtn, closeBtn, minimizeBtn, loginBtn, backBtn, registerBtn;
-    @FXML
-    private TextField usernameInput, regUsernameInput;
-    @FXML
-    private PasswordField passwordInput, regPasswordInput;
-    @FXML
-    private Rectangle titleBar, coverScreen;
-    @FXML
-    private AnchorPane anchorMove;
-    @FXML
-    private Path pathing, pathingback, pathingEnd;
-    @FXML
-    private ChoiceBox userTypeChoice;
-    @FXML
-    private Label missingLbl, missingLogLbl;
+
+    @FXML private MediaView loginVideo;
+    @FXML private Button signUpBtn,closeBtn,minimizeBtn,loginBtn,backBtn,registerBtn;
+    @FXML private TextField usernameInput,regUsernameInput;
+    @FXML private PasswordField passwordInput,regPasswordInput;
+    @FXML private Rectangle titleBar,coverScreen;
+    @FXML private AnchorPane anchorMove;
+    @FXML private Path pathing,pathingback,pathingEnd;
+    @FXML private ChoiceBox userTypeChoice;
+    @FXML private Label missingLbl,missingLogLbl;
+
+    private static final Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*\\p{Punct})(?=.*[a-zA-z]).{6,20}$");
+
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -54,12 +47,14 @@ public class LoginView {
         this.stage = stage;
         this.model = model;
         this.controller = new LoginController(this.model);
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
         root.setController(this);
         this.stage.setTitle("wave.");
-        this.stage.initStyle(StageStyle.UNDECORATED);
+        if(!this.stage.isShowing()) {
+            this.stage.initStyle(StageStyle.UNDECORATED);
+        }
         this.stage.setResizable(false);
-        this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/media/waveIcon.png")));
+        this.stage.getIcons().add(new Image(getClass().getResourceAsStream("/Media/waveIcon.png")));
         try {
             scene = new Scene(root.load(), 1200, 790);
         } catch (IOException e) {
@@ -89,15 +84,14 @@ public class LoginView {
         moveEnd.setNode(coverScreen);
         moveEnd.setAutoReverse(false);
 
-        userTypeChoice.getItems().addAll("artist", "listener");
+        userTypeChoice.getItems().addAll("artist","listener");
 
-
-        MediaPlayer mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/media/loginVideo.mp4").toExternalForm()));
+        MediaPlayer mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/Media/loginVideo.mp4").toExternalForm()));
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setMute(true);
         mediaPlayer.setCycleCount(mediaPlayer.INDEFINITE);
         loginVideo.setMediaPlayer(mediaPlayer);
-        mediaPlayer.setOnReady(() -> {
+        mediaPlayer.setOnReady(()->{
 
         });
 

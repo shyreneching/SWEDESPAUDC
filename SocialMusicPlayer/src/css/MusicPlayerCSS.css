@@ -61,3 +61,23 @@
     -fx-background-radius: 1em;
 }
 
+@font-face {
+    font-family: 'Brown';
+    src: url("/media/brown-regular.ttf");
+}
+
+.label {
+    -fx-font-family: 'Brown';
+    -fx-font-size: 20;
+}
+
+.choice-box { -fx-text-fill: #00ead0}
+.choice-box .menu-item:focused { -fx-background-color: #252a2c; }
+.choice-box .menu-item:focused > .label { -fx-text-fill: #00ead0; }
+.choice-box .menu-item > .label { -fx-text-fill: #252a2c; }
+.choice-box .menu-item > .label { -fx-font: 20px Brown; }
+.choice-box .context-menu { -fx-background-color: #00ead0; }
+.choice-box .context-menu { -fx-border-color: #252a2c; }
+.choice-box .context-menu { -fx-border-width: 3.5; }
+.choice-box .context-menu { -fx-font: 20px Brown; }
+

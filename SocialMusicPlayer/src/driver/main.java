@@ -1,11 +1,11 @@
-package driver;
+package Driver;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.FacadeModel;
-import view.LoginView;
+import Model.FacadeModel;
+import View.LoginView;
 
-public class main extends Application {
+public class Main extends Application {
 
 
     @Override
