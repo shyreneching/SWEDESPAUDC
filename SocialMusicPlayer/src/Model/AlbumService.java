@@ -29,6 +29,7 @@ public class AlbumService implements Service {
             statement.setString(2, a.getAlbumname());
             statement.setString(3, a.getArtist());
             statement.setTimestamp(4, timestamp);
+            statement.setTimestamp(5, null);
 
             boolean added = statement.execute();
 
@@ -116,11 +117,40 @@ public class AlbumService implements Service {
         return null;
     }
 
+    //add
+    //upload album image
+    public boolean uploadALbumArt(String albumid, File albumart) throws SQLException {
+        Connection connection = pool.checkOut();
+
+        String query = "UPDATE album SET "
+                + "albumart = ? "
+                + "WHERE albumid= ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            //FileInputStream albumImage = new FileInputStream(albumart);
+            //statement.setString(1, albumImage);
+            statement.setString(1, albumart.toString());
+            statement.setString(2, albumid);
+
+            statement.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
     public AlbumInterface getAlbum(String albumid) throws SQLException {
         // Get a connection:
         Connection connection = pool.checkOut();
 
-        String query ="SELECT * FROM album WHERE albumid = " + albumid;
+        String query ="SELECT * FROM album WHERE albumid = '" + albumid + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
@@ -202,7 +232,7 @@ public class AlbumService implements Service {
         Connection connection = pool.checkOut();
         ObservableList<AlbumInterface> albums = FXCollections.observableArrayList();
 
-        String query ="SELECT * FROM album WHERE username = " + username;
+        String query = "SELECT * FROM album WHERE artist = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 

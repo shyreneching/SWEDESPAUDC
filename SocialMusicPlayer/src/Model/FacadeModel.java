@@ -534,6 +534,15 @@ public class FacadeModel {
         return false;
     }
 
+    public ObservableList<AlbumInterface> getUserAlbum(String username) {
+        try {
+            return ((AlbumService)albumService).getUserAlbum(username);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean createAlbum(String artist, String albumName) throws SQLException{
         ObservableList<Object> albums = albumService.getAll();
         AlbumInterface a = new Album();
@@ -568,6 +577,19 @@ public class FacadeModel {
             return true;
         }
         return false;
+    }
+
+    public boolean uploadALbumArt(String albumid, File albumart){
+        try {
+            return ((AlbumService) albumService).uploadALbumArt(albumid, albumart);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public File getAlbumArt(String albumid) throws SQLException{
+        return ((AlbumService) albumService).getAlbumArt(albumid);
     }
 
     /*Adds one song to the playlist*/
