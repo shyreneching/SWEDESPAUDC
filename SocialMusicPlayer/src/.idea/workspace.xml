@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="50880e90-92ac-4d08-98c6-7dd13c78e7c4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../DC1.rar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Controller/AckPacket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Controller/ClientController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Controller/GameController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Controller/RDTPacket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Controller/Serializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Driver/Driver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Driver/Driver1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Driver/Driver2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Driver/Driver3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Model/ClientResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Model/Player.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Model/ServerResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/Model/Words.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/ClueGiver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/Clue_Giver.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/GameView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/Guesser.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/Guesser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/Start.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/StartView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/game.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Client/src/View/start.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Controller/AckPacket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Controller/RDTPacket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Controller/Serializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Controller/ServerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Driver/Driver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Model/ClientResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Model/Game.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Model/Model.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Model/Player.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/Model/ServerResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/View/ServerView.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../NETWORK/Server/src/View/ServerView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/mysql-connector-java-8.0.12.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/tika-core-1.4.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Lib/tika-parsers-1.4.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Account.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AccountInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AccountService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Album.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AlbumPlaylist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AlbumPlaylistConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AlbumService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Artist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/ArtistPlaylist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/ArtistPlaylistConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AudioParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/AudioParserInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/CreateSongFromLocal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/FacadeModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/FollowedPlaylist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/GenrePlaylist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/GenrePlaylistConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/ImportM4A.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/ImportMP3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/ImportSong.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/JDBCConnectionPool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Listener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/M4AConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/MP3ConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/ObjectPool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Playlist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/PlaylistFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/PlaylistInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/PlaylistList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/PlaylistService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Queue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/RecentlyPlayed.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/RecentlyPlayedService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Song.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/SongFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/SongInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/SongService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/UserPlaylist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/UserPlaylistConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/YearPlaylist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/YearPlaylistConcreteFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/AbstractID3v2FrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/AbstractID3v2Tag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/BaseException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/BufferTools.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ByteBufferUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/EncodedText.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/FileWrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3Wrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v1Genres.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v1Tag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v22Tag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v23Tag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v24Frame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v24Tag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2ChapterFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2ChapterTOCFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2CommentFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2Frame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2FrameSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2ObseleteFrame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2ObseletePictureFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2PictureFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2PopmFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2TagFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2TextFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2UrlFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/ID3v2WWWFrameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/InvalidDataException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/Mp3File.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/MpegFrame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/MutableInteger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/NoSuchTagException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/NotSupportedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/UnsupportedTagException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mp3agic/Version.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/controller/LoginController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/controller/MusicPlayerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/css/LoginCSS.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/css/MusicPlayerCSS.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/MusicPlayer Buttons copy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/albumTest.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/fast_forward_button.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/fast_forward_button_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/kebab.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/kebab_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/loginVideo.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/mute.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/mute_clicked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/mute_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/next_button.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/next_button_clicked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/next_button_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/pause_button.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/pause_button_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/play_button.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/play_button_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/previous_button.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/previous_button_clicked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/previous_button_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/repeat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/repeat_clicked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/repeat_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/repeat_song_clicked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/search.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/search_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/shuffle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/shuffle_clicked.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/shuffle_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/volume.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/volume_hover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/waveGif.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/waveGif.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/waveIcon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/media/waveLogoCyan.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/model/main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/view/Login.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/view/MusicPlayer.fxml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1270973718">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="iml" value="1" />
+          <entry key="java" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="IDEA_MODULE" value="1" />
+          <entry key="JAVA" value="5" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/Song.java">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/View/model/main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="15" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-10" />
+    <option name="y" value="-10" />
+    <option name="width" value="1615" />
+    <option name="height" value="879" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="src" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="src" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="View" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="src" type="b2602c69:ProjectViewProjectNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="View" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554961909575" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\erwin\Desktop\SocialMusicPlayer\src" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="50880e90-92ac-4d08-98c6-7dd13c78e7c4" name="Default Changelist" comment="" />
+      <created>1554955239366</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1554955239366</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25340393" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Maven Projects" order="7" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/../SocialMusicPlayer.iml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Account.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/AccountInterface.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Song.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/View/model/main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="15" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>10</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>src</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>10</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

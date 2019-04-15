@@ -501,6 +501,8 @@ public class MusicPlayerController {
 
                 sortPlaylistPane.setVisible(false);
                 songsPane.setVisible(true);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 setSongView();
                 songViewTitle.setText("Songs");
                 songViewCreator.setText("");
@@ -536,6 +538,8 @@ public class MusicPlayerController {
                 mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
                 songsPane.setVisible(false);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 sortPlaylistPane.setVisible(true);
                 setSortPlaylistView("Artists");
             }
@@ -567,6 +571,8 @@ public class MusicPlayerController {
                 mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
                 songsPane.setVisible(false);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 sortPlaylistPane.setVisible(true);
                 setSortPlaylistView("Albums");
             }
@@ -598,6 +604,8 @@ public class MusicPlayerController {
                 mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
                 songsPane.setVisible(false);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 sortPlaylistPane.setVisible(true);
                 setSortPlaylistView("Genres");
             }
@@ -629,6 +637,8 @@ public class MusicPlayerController {
                 mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
                 songsPane.setVisible(false);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 sortPlaylistPane.setVisible(true);
                 setSortPlaylistView("Years");
             }
@@ -661,6 +671,8 @@ public class MusicPlayerController {
 
                 sortPlaylistPane.setVisible(false);
                 songsPane.setVisible(true);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 setSongView();
                 songViewTitle.setText("Recently Played");
                 songViewCreator.setText("");
@@ -697,6 +709,8 @@ public class MusicPlayerController {
 
                 sortPlaylistPane.setVisible(false);
                 songsPane.setVisible(true);
+                profile_pane.setVisible(false);
+                artist_profile_pane.setVisible(false);
                 setSongView();
                 songViewTitle.setText("Most Played");
                 songViewCreator.setText("");
@@ -1148,6 +1162,8 @@ public class MusicPlayerController {
                 listenerfollowBtn.setVisible(false);
                 listenerusername.setText("LadyKae");
                 listenerunfollowBtn.setVisible(false);
+                logoutBtn.setVisible(true);
+                songsPane.setVisible(false);
             } else if (isProfileOpened) {
                 isProfileOpened = false;
                 profile_pane.setVisible(false);
