@@ -175,6 +175,16 @@ public class FacadeModel {
         return accounts;
     }
 
+    public ObservableList<AccountInterface> getFollowers() throws SQLException {
+        ObservableList<Object> obs;
+        ObservableList<AccountInterface> accounts = FXCollections.observableArrayList();
+        obs = ((AccountService)accountService).getFollowers(user.getUsername());
+        for(Object o : obs) {
+            accounts.add((AccountInterface) o);
+        }
+        return accounts;
+    }
+
     public void removeSongFromPlaylist(String playlist, SongInterface song) {
         for (PlaylistInterface s : groups) {
             if (s.getName().equalsIgnoreCase(playlist)) {
