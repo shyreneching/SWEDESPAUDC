@@ -2,7 +2,7 @@ package Model;
 
 import java.sql.Timestamp;
 
-public class Album{
+public class Album implements AlbumInterface{
     private String albumID;
     private String albumname;
     private String artist;
