@@ -173,6 +173,34 @@ public class AlbumService implements Service {
         return null;
     }
 
+    public AlbumInterface getAlbumName(String username, String albumname) throws SQLException {
+        // Get a connection:
+        Connection connection = pool.checkOut();
+
+        String query ="SELECT * FROM album WHERE albumname = '" + albumname + "' AND artist =  '" + username +"'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                AlbumInterface a = new Album();
+                a.setAlbumID(rs.getString("albumid"));
+                a.setAlbumname(rs.getString("albumname"));
+                a.setArtist(rs.getString("artist"));
+                a.setDate(rs.getTimestamp("dateCreated"));
+                return a;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+
     public boolean delete(String albumid) throws SQLException {
         // Get a connection:
         Connection connection = pool.checkOut();
