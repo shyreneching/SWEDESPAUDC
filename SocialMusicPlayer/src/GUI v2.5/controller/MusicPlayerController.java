@@ -37,7 +37,7 @@ public class MusicPlayerController {
     @FXML
     private Rectangle titleBar;
     @FXML
-    private Button closeBtn, minimizeBtn, playListBtn, followBtn, songsBtn, artistsBtn, albumsBtn, genresBtn, yearsBtn, recentsBtn, mostBtn, artistfollowBtn, listenerfollowBtn, profile_icon_btn, notif_closeBtn, testBtn,logoutBtn,albumEnterBtn,albumCancelBtn,uploadEnterBtn,uploadCancelBtn, listenerunfollowBtn, artistunfollowBtn;
+    private Button closeBtn, minimizeBtn, playListBtn, followBtn, songsBtn, artistsBtn, albumsBtn, genresBtn, yearsBtn, recentsBtn, mostBtn, artistfollowBtn, listenerfollowBtn, profile_icon_btn, notif_closeBtn, testBtn,logoutBtn,albumEnterBtn,albumCancelBtn,uploadEnterBtn,uploadCancelBtn, listenerunfollowBtn, artistunfollowBtn, addplaylistenterBtn, addplaylistcancelBtn;
     @FXML
     private Slider slider, volSlider;
     @FXML
@@ -47,7 +47,7 @@ public class MusicPlayerController {
     @FXML
     private Path pathingStart;
     @FXML
-    private AnchorPane transitionPane, song_etc_anchorpane, profile_pane, artist_profile_pane, notif_pane, songsPane,playListKebab,searchPane,welcomePane,createPane,albumCreate,songUpload,mainPane,cancelPane,sortPlaylistPane;
+    private AnchorPane transitionPane, song_etc_anchorpane, profile_pane, artist_profile_pane, notif_pane, songsPane,playListKebab,searchPane,welcomePane,createPane,albumCreate,songUpload,mainPane,cancelPane,sortPlaylistPane, addtoPlaylistPane;
     @FXML
     private Label titleLbl, artistLbl, titleBtn, artistBtn, albumBtn, genreBtn, yearBtn, timeBtn, songsLbl, recentsLbl, mostLbl, artistsLbl, albumsLbl, genresLbl, yearsLbl, public_playlists_btn, prof_following_btn, prof_followers_btn, listenerusername, artist_prof_playlists_btn, artist_prof_albums_btn, artist_prof_following_btn, artist_prof_followers_btn, artist_username, notif_title, notif_lbl, add_to_queue_btn, remove_from_playlist_btn, add_to_playlist_btn, songViewTitle, songViewCreator,deletePlaylistLbl,makePublicLbl,createAlbumBtn,uploadSongBtn,sortPlaylistLbl,currentSong,endTime, choice_list;
     @FXML
@@ -57,7 +57,7 @@ public class MusicPlayerController {
     @FXML
     private TextField searchBar,albumNameInput;
     @FXML
-    private ChoiceBox albumChoice;
+    private ChoiceBox albumChoice, playlistChoice;
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -1258,18 +1258,53 @@ public class MusicPlayerController {
         add_to_playlist_btn.setOnMouseClicked(mouseEvent -> {
             if (!isaddtoplaylistOpened) {
                 System.out.println("OPEN");
-                songUpload.setVisible(true);
-                songUpload.setLayoutX(mouseEvent.getSceneX() - 100);
-                songUpload.setLayoutY((mouseEvent.getSceneY()));
-                songUpload.setDisable(false);
-                songUpload.setOpacity(1);
-                choice_list.setText("Choose a playlist:");
+                addtoPlaylistPane.setVisible(true);
+                addtoPlaylistPane.setLayoutX(mouseEvent.getSceneX() - 150);
+                addtoPlaylistPane.setLayoutY((mouseEvent.getSceneY()));
+                addtoPlaylistPane.setDisable(false);
+                addtoPlaylistPane.setOpacity(1);
+                playlistChoice.getItems().clear();
+                for (int i = 0; i <= 10; i++) {
+                    playlistChoice.getItems().add("Playlist " + i);
+                }
                 isaddtoplaylistOpened = true;
             } else if (isaddtoplaylistOpened) {
                 System.out.println("CLOSE");
-                songUpload.setVisible(false);
+                addtoPlaylistPane.setVisible(false);
                 isaddtoplaylistOpened = false;
             }
+        });
+
+        addplaylistenterBtn.setOnMouseEntered(event -> {
+            addplaylistenterBtn.setStyle("-fx-background-color: #00ffe3;");
+        });
+
+        addplaylistenterBtn.setOnMouseExited(event -> {
+            addplaylistenterBtn.setStyle("-fx-background-color: #00ead0;");
+        });
+
+        addplaylistenterBtn.setOnAction(event -> {
+            if (playlistChoice.getValue()!=null){
+                isaddtoplaylistOpened=false;
+                isKebabOpened=false;
+                addtoPlaylistPane.setVisible(false);
+                song_etc_anchorpane.setVisible(false);
+            }
+        });
+
+        addplaylistcancelBtn.setOnMouseEntered(event -> {
+            addplaylistcancelBtn.setStyle("-fx-background-color: #00ffe3;");
+        });
+
+        addplaylistcancelBtn.setOnMouseExited(event -> {
+            addplaylistcancelBtn.setStyle("-fx-background-color: #00ead0;");
+        });
+
+        addplaylistcancelBtn.setOnAction(event -> {
+            isaddtoplaylistOpened=false;
+            isKebabOpened=true;
+            addtoPlaylistPane.setVisible(false);
+            song_etc_anchorpane.setVisible(true);
         });
 
         profile_icon_btn.setOnAction(event -> {

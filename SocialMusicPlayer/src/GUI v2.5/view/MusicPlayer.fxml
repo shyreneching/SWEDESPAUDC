@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerController">
+<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerController">
    <children>
       <AnchorPane prefHeight="790.0" prefWidth="200.0" style="-fx-background-color: #202020;">
          <children>
@@ -631,27 +631,27 @@
             <ChoiceBox fx:id="albumChoice" layoutX="15.0" layoutY="45.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00ead0; -fx-border-color: #333333; -fx-border-width: 3.5; -fx-mark-color: #333333;" stylesheets="@../css/MusicPlayerCSS.css" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="songUpload1" layoutX="715.0" layoutY="40.0" prefHeight="150.0" prefWidth="230.0" style="-fx-background-color: #333333;" visible="false">
+      <AnchorPane fx:id="addtoPlaylistPane" layoutX="715.0" layoutY="40.0" prefHeight="150.0" prefWidth="230.0" style="-fx-background-color: #333333;" visible="false">
          <effect>
             <DropShadow blurType="GAUSSIAN" />
          </effect>
          <children>
-            <Label fx:id="choice_list1" layoutX="15.0" layoutY="8.0" prefHeight="35.0" prefWidth="170.0" text="Choose an album:" textFill="#c6c6c6">
+            <Label fx:id="choice_list1" layoutX="15.0" layoutY="8.0" prefHeight="35.0" prefWidth="170.0" text="Choose an playlist:" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Button fx:id="uploadEnterBtn1" layoutX="15.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="enter" textFill="#252a2c">
+            <Button fx:id="addplaylistenterBtn" layoutX="15.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="enter" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="uploadCancelBtn1" layoutX="125.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="cancel" textFill="#252a2c">
+            <Button fx:id="addplaylistcancelBtn" layoutX="125.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="cancel" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="18.0" />
                </font>
             </Button>
-            <ChoiceBox fx:id="albumChoice1" layoutX="15.0" layoutY="45.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00ead0; -fx-border-color: #333333; -fx-border-width: 3.5; -fx-mark-color: #333333;" stylesheets="@../css/MusicPlayerCSS.css" />
+            <ChoiceBox fx:id="playlistChoice" layoutX="15.0" layoutY="45.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00ead0; -fx-border-color: #333333; -fx-border-width: 3.5; -fx-mark-color: #333333;" stylesheets="@../css/MusicPlayerCSS.css" />
          </children>
       </AnchorPane>
    </children>
