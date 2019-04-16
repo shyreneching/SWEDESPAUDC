@@ -204,7 +204,7 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
 
         String query ="SELECT * FROM song  NATURAL JOIN usersong NATURAL JOIN album " +
-                "WHERE idsong = '" + songid;
+                "WHERE idsong = '" + songid + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             ResultSet rs = statement.executeQuery();
@@ -446,12 +446,13 @@ public class SongService implements Service{
                 + "songname = ?, "
                 + "genre = ?, "
                 + "artist = ?, "
-                + "album = ?, "
+                //+ "album = ?, "
+                + "albumid = ?, "
                 + "year = ?, "
                 + "trackNumber = ?, "
                 + "length = ?, "
-                + "size = ?, "
-                + "songfile = ? "
+                + "size = ? "
+                //+ "songfile = ? "
                 + " WHERE idsong = ?";
 
         String query2 = "UPDATE usersong SET "
@@ -460,19 +461,23 @@ public class SongService implements Service{
         PreparedStatement statement = connection.prepareStatement(query);
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
+			//add
+			AlbumService as = new AlbumService();
+            AlbumInterface a = as.getAlbumName(s.getArtist(), s.getAlbum());
+			
             statement.setString(1, s.getName());
             statement.setString(2, s.getGenre());
             statement.setString(3, s.getArtist());
-            statement.setString(4, s.getAlbum());
+            //statement.setString(4, s.getAlbum());
+			statement.setString(4, a.getAlbumID());
             statement.setInt(5, s.getYear());
             statement.setInt(6, s.getTrackNumber());
             statement.setInt(7, s.getLength());
             statement.setDouble(8, s.getSize());
-            // Write the file into the database
+           /* // Write the file into the database
             FileInputStream songfile = new FileInputStream(s.getSongfile());
-            statement.setBinaryStream(9, songfile);
-            statement.setString(10, songid)
-            ;
+            statement.setBinaryStream(9, songfile);*/
+            statement.setString(9, songid);
             statement2.setInt(1, s.getTimesplayed());
             statement2.setString(2, username);
 
@@ -481,9 +486,9 @@ public class SongService implements Service{
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } /*catch (FileNotFoundException e) {
             e.printStackTrace();
-        } finally {
+        } */finally {
             if(statement != null) statement.close();
             if(connection != null)  connection.close();
         }

@@ -315,7 +315,7 @@ public class FacadeModel {
         boolean exist = false;
         String id = null;
         s.setAlbum(albumid);
-        s.setAlbum(user.getUsername());
+        s.setArtist(user.getUsername());
 
         if (songs.size() == 0) {
             s.setSongid("S01");
@@ -479,8 +479,9 @@ public class FacadeModel {
         recentlyPlayed.setIdsong(s.getSongid());
         recentlyPlayed.setUsername(user.getUsername());
         recentlyplayedService.add(recentlyPlayed);
-        update();
-        return s.getSongfile();
+        /*update();*/
+        /*return s.getSongfile();*/
+        return ((SongService)songService).getSongFile(s.getSongid());
 //            return b;
 //        }
 //        update();
@@ -517,20 +518,20 @@ public class FacadeModel {
 
         if (playlists.isEmpty()) {
             p.setPlaylistid("P01");
-            if (((PlaylistService) playlistService).add(p, (AccountInterface) user)) {
+            if (((PlaylistService) playlistService).add(p, /*(AccountInterface)*/ user)) {
                 user.setPlaylists(getUserPlaylist());
-                update();
+                /*update();*/
                 return true;
             }
         } else {
             p.setPlaylistid(String.format("P%02d", playlists.size() + 1));
-            if (((PlaylistService) playlistService).add(p, (AccountInterface) user)) {
+            if (((PlaylistService) playlistService).add(p, /*(AccountInterface)*/ user)) {
                 user.setPlaylists(getUserPlaylist());
-                update();
+                /*update();*/
                 return true;
             }
         }
-        update();
+        /*update();*/
         return false;
     }
 
@@ -631,6 +632,7 @@ public class FacadeModel {
         ObservableList<PlaylistInterface> playlists = playlistFactory.playlistFactoryMethod(user.getUsername(), null);
         if (playlists != null) {
             user.setPlaylists(playlists);
+            System.out.println(playlists.size());
             return playlists;
         }
         return null;

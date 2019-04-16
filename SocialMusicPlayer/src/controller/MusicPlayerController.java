@@ -2,8 +2,11 @@ package Controller;
 
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -25,6 +28,7 @@ public class MusicPlayerController {
     private int index;
     private Slider timeSlider, volumeSlider;
     private Label start, end, title, artist;
+    private ImageView playBtn;
 
     public MusicPlayerController(FacadeModel model) {
         this.model = model;
@@ -50,9 +54,6 @@ public class MusicPlayerController {
     }
 
     public void play() {
-        title.setText(model.getCurrentPlaylist().getSongs().get(index).getName());
-        artist.setText(model.getCurrentPlaylist().getSongs().get(index).getArtist());
-
         try {
             if (!played) {
                 setSong(model.playSong(model.getCurrentPlaylist().getSongs().get(index)));
@@ -64,6 +65,7 @@ public class MusicPlayerController {
 
         if (!play) {
             play = true;
+            playBtn.setImage(new Image(getClass().getResourceAsStream("/Media/pause_button.png")));
             media.play();
         } else {
             play = false;
@@ -75,11 +77,20 @@ public class MusicPlayerController {
         });
 
         media.setOnEndOfMedia(() -> {
-            if (repeat < 2) {
+            System.out.println("music end");
+            playBtn.setImage(new Image(getClass().getResourceAsStream("/Media/play_button.png")));
+            if(repeat == 0) {
+                play = false;
+                played = false;
+                media.stop();
+                if(index < model.getCurrentPlaylist().getSongs().size() - 1) {
+                    next();
+                }
+            } else if (repeat == 1) {
                 play = false;
                 media.stop();
                 next();
-            } else {
+            } else if (repeat == 2){
                 media.seek(Duration.ZERO);
             }
         });
@@ -93,7 +104,7 @@ public class MusicPlayerController {
             played = false;
             play();
         } else {
-            if (repeat > 0 || index < model.getCurrentPlaylist().getSongs().size() - 1) {
+            if ((repeat > 0 || index < model.getCurrentPlaylist().getSongs().size()) && model.getCurrentPlaylist().getSongs().size() > 1) {
                 media.stop();
                 if (index == model.getCurrentPlaylist().getSongs().size() - 1) {
                     index = 0;
@@ -118,7 +129,7 @@ public class MusicPlayerController {
             if (media.getCurrentTime().toSeconds() >= 5) {
                 media.seek(Duration.ZERO);
             } else {
-                if (repeat > 0 || index > 0) {
+                if ((repeat > 0 || index > 0) && model.getCurrentPlaylist().getSongs().size() > 1) {
                     media.stop();
                     if (index == 0) {
                         index = model.getCurrentPlaylist().getSongs().size() - 1;
@@ -165,8 +176,20 @@ public class MusicPlayerController {
         }
     }
 
+    public void stop() {
+        media.stop();
+        play = false;
+        played = false;
+    }
+
+    public void setButton(ImageView playBtn) {
+        this.playBtn = playBtn;
+    }
+
     public void setSong(File location) {
         media = new MediaPlayer(new Media(location.toURI().toString()));
+        title.setText(model.getCurrentPlaylist().getSongs().get(index).getName());
+        artist.setText(model.getCurrentPlaylist().getSongs().get(index).getArtist());
         end.setText(getDuration(model.getCurrentPlaylist().getSongs().get(index).getLength()));
     }
 

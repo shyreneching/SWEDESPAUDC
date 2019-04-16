@@ -41,8 +41,10 @@ public class PlaylistService implements Service{
 
                 statement2.execute();
             }
-            boolean added = statement.execute();
-            return added;
+            /*boolean added = statement.execute();
+            return added;*/
+            statement.execute();
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         } finally {

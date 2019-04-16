@@ -13,6 +13,10 @@ public class RecentlyPlayedService implements Service {
 
     Timestamp timestamp = new Timestamp(date.getTime());
 
+    public RecentlyPlayedService() {
+        pool = new JDBCConnectionPool();
+    }
+
     public ObservableList<Object> getAll() throws SQLException {
         Connection connection = pool.checkOut();
 
@@ -24,10 +28,10 @@ public class RecentlyPlayedService implements Service {
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
                 RecentlyPlayedInterface a = new RecentlyPlayed();
-                a.setRecentlyplayedid(rs.getInt("recentlyid"));
+                a.setRecentlyplayedid(rs.getInt("idrecentlyplayed"));
                 a.setIdsong(rs.getString("idsong"));
                 a.setUsername(rs.getString("username"));
-                a.setTimeplayed(rs.getTimestamp("played"));
+                a.setTimeplayed(rs.getTimestamp("timeplayed"));
                 recentlyplayed.add(a);
             }
             return recentlyplayed;
@@ -48,7 +52,7 @@ public class RecentlyPlayedService implements Service {
 
         // Get a connection:
         Connection connection = pool.checkOut();
-        String query = "INSERT INTO album VALUE (?, ?, ?, ?)";
+        String query = "INSERT INTO recentlyplayed VALUE (?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
             statement.setInt(1, r.size()+1);

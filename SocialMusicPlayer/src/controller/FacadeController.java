@@ -1,8 +1,6 @@
 package Controller;
 
-import Model.AccountInterface;
-import Model.FacadeModel;
-import Model.SongInterface;
+import Model.*;
 
 import java.sql.SQLException;
 
@@ -31,6 +29,7 @@ public class FacadeController {
     }
 
     public boolean deleteSong(SongInterface song) {
+
         return false;
     }
 
@@ -40,6 +39,31 @@ public class FacadeController {
     }
 
     public boolean unfollowPlaylist() {
+
+        return false;
+    }
+
+    public boolean createPlaylist(String name) {
+        PlaylistInterface p = new Playlist();
+        p.setName(name);
+        try {
+            if(model.addPlaylist(p)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean createAlbum(String name) {
+        try {
+            if(model.createAlbum(model.getUser().getUsername(), name)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -62,6 +86,24 @@ public class FacadeController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean isInFollowing(String username) {
+        try {
+            for(AccountInterface acc : model.getFollowed()) {
+                if(acc.getUsername().equalsIgnoreCase(username)) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isInFollowers(String username) {
+
         return false;
     }
 }
