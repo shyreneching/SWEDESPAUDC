@@ -91,7 +91,7 @@ public class AudioParser implements AudioParserInterface{
                 return outputfile;
             }
             else{
-                File file = new File("src/files/album_art.png");
+                File file = new File("src/Media/default_album_art.png");
                 byte[] defaultImage = Files.readAllBytes(file.toPath());
                 BufferedImage img = ImageIO.read(new ByteArrayInputStream(defaultImage));
                 ImageIO.write(img, "jpg", outputfile);

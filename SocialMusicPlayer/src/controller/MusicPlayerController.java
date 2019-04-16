@@ -1,8 +1,10 @@
 package Controller;
 
+import Mp3agic.InvalidDataException;
+import Mp3agic.NotSupportedException;
+import Mp3agic.UnsupportedTagException;
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -16,6 +18,9 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Port;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class MusicPlayerController {
@@ -28,7 +33,7 @@ public class MusicPlayerController {
     private int index;
     private Slider timeSlider, volumeSlider;
     private Label start, end, title, artist;
-    private ImageView playBtn;
+    private ImageView playBtn, songPicture;
 
     public MusicPlayerController(FacadeModel model) {
         this.model = model;
@@ -186,11 +191,24 @@ public class MusicPlayerController {
         this.playBtn = playBtn;
     }
 
+    public void setPicture(ImageView songPicture) {
+        this.songPicture = songPicture;
+    }
+
     public void setSong(File location) {
         media = new MediaPlayer(new Media(location.toURI().toString()));
-        title.setText(model.getCurrentPlaylist().getSongs().get(index).getName());
-        artist.setText(model.getCurrentPlaylist().getSongs().get(index).getArtist());
-        end.setText(getDuration(model.getCurrentPlaylist().getSongs().get(index).getLength()));
+        model.setCurrentSong(model.getCurrentPlaylist().getSongs().get(index));
+        title.setText(model.getCurrentSong().getName());
+        artist.setText(model.getCurrentSong().getArtist());
+        end.setText(getDuration(model.getCurrentSong().getLength()));
+        try {
+            File file = model.getSongArt(model.getCurrentSong());
+            if(file != null) {
+                songPicture.setImage(new Image(getClass().getResourceAsStream(file.toURI().toString())));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void getIndex() {

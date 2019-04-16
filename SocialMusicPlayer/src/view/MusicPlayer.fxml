@@ -475,7 +475,7 @@
                   <Font name="Brown-Regular" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="endTime" layoutX="650.0" layoutY="29.0" text="04:13" textFill="#bbbbbb">
+            <Label fx:id="endTime" layoutX="650.0" layoutY="29.0" text="00:00" textFill="#bbbbbb">
                <font>
                   <Font name="Brown-Regular" size="18.0" />
                </font>
@@ -498,7 +498,7 @@
             <Font name="Brown-Regular" size="20.0" />
          </font>
       </Button>
-      <AnchorPane fx:id="transitionPane" prefHeight="790.0" prefWidth="1200.0" style="-fx-background-color: #252a2c;">
+      <AnchorPane fx:id="transitionPane" prefHeight="790.0" prefWidth="1200.0" style="-fx-background-color: #252a2c;" visible="false">
          <children>
             <ImageView fx:id="transitionGif" fitHeight="300.0" fitWidth="600.0" layoutX="301.0" layoutY="245.0" pickOnBounds="true" preserveRatio="true" />
          </children>

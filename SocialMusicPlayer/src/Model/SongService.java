@@ -482,6 +482,7 @@ public class SongService implements Service{
             statement2.setString(2, username);
 
             statement.executeUpdate();
+            statement2.executeUpdate();
             return true;
 
         } catch (SQLException e) {

@@ -43,6 +43,42 @@ public class FacadeController {
         return false;
     }
 
+    public boolean addSongToPlaylist(SongInterface song, String playlist) {
+        PlaylistInterface p = null;
+        for(PlaylistInterface pp : model.getUser().getPlaylists()) {
+            if(pp.getName().equalsIgnoreCase(playlist)) {
+                p = pp;
+                break;
+            }
+        }
+        try {
+            if(model.addSongToPlaylist(song, p)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean removeFromPlaylist(SongInterface song, String playlist) {
+        PlaylistInterface p = null;
+        for(PlaylistInterface pp : model.getUser().getPlaylists()) {
+            if(pp.getName().equalsIgnoreCase(playlist)) {
+                p = pp;
+                break;
+            }
+        }
+        try {
+            if(model.deleteSongToPlaylist(song, p)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean createPlaylist(String name) {
         PlaylistInterface p = new Playlist();
         p.setName(name);

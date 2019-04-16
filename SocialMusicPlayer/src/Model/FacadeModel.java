@@ -100,6 +100,20 @@ public class FacadeModel {
         update();
     }
 
+    public ObservableList<AccountInterface> getAllUsers() {
+        ObservableList<Object> list = FXCollections.observableArrayList();
+        ObservableList<AccountInterface> accs = FXCollections.observableArrayList();
+        try {
+             list = accountService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(Object o : list) {
+            accs.add((AccountInterface)o);
+        }
+        return accs;
+    }
+
     public ObservableList<SongInterface> getSongs() {
         return songs;
     }
@@ -219,18 +233,18 @@ public class FacadeModel {
         return accounts;
     }
 
-//    public void removeSongFromPlaylist(String playlist, SongInterface song) {
-    public boolean removeSongFromPlaylist(String playlist, SongInterface song) throws SQLException{
-        boolean success = false;
+    public File getSongArt(SongInterface s) throws SQLException{
+        return getAlbumArt(s.getAlbum());
+    }
+
+    /*public void removeSongFromPlaylist(String playlist, SongInterface song) {
         for (PlaylistInterface s : groups) {
             if (s.getName().equalsIgnoreCase(playlist)) {
                 s.getSongs().remove(song);
-                success = ((PlaylistService)playlistService).deleteSongInPlaylist(song.getSongid(), s.getPlaylistid());
             }
         }
         update();
-        return success;
-    }
+    }*/
 
     public PlaylistInterface getStarredSongs() throws SQLException {
         ObservableList<PlaylistInterface> playlists = getUserPlaylist();
@@ -593,6 +607,77 @@ public class FacadeModel {
         return false;
     }
 
+    public ObservableList<SongInterface> searchSong(String key) {
+        ObservableList<Object> temp = FXCollections.observableArrayList();
+        ObservableList<SongInterface> list = FXCollections.observableArrayList();
+        try {
+            temp = songService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        /*try {
+            list = ((SongService)songService).search(key);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }*/
+        for(Object o : temp) {
+            if(((SongInterface)o).getName().toLowerCase().contains(key.toLowerCase())) {
+                list.add((SongInterface)o);
+            }
+        }
+        return list;
+    }
+
+    public ObservableList<AccountInterface> searchArtist(String key) {
+        ObservableList<Object> temp = FXCollections.observableArrayList();
+        ObservableList<AccountInterface> list = FXCollections.observableArrayList();
+        try {
+            temp = accountService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(Object o : temp) {
+            if(o instanceof Artist) {
+                if(((AccountInterface)o).getUsername().toLowerCase().contains(key.toLowerCase())) {
+                    list.add((AccountInterface)o);
+                }
+            }
+        }
+        return list;
+    }
+
+    public ObservableList<PlaylistInterface> searchPlaylist(String key) {
+        ObservableList<Object> temp = FXCollections.observableArrayList();
+        ObservableList<PlaylistInterface> list = FXCollections.observableArrayList();
+        try {
+            temp = playlistService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(Object o : temp) {
+            if(((PlaylistInterface)o).getName().toLowerCase().contains(key.toLowerCase())) {
+                list.add((PlaylistInterface)o);
+            }
+        }
+        return list;
+    }
+
+    public ObservableList<AlbumInterface> searchAlbum(String key) {
+        ObservableList<Object> temp = FXCollections.observableArrayList();
+        ObservableList<AlbumInterface> list = FXCollections.observableArrayList();
+        try {
+            temp = albumService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(Object o : temp) {
+            if(((AlbumInterface)o).getAlbumname().toLowerCase().contains(key.toLowerCase())) {
+                list.add((AlbumInterface)o);
+            }
+        }
+        return list;
+    }
+
     public File getAlbumArt(String albumid) throws SQLException{
         return ((AlbumService) albumService).getAlbumArt(albumid);
     }
@@ -610,18 +695,17 @@ public class FacadeModel {
             }
         }
 
-        boolean b = ((PlaylistService) playlistService).addSongPlaylist(s, p.getPlaylistid());
+        ((PlaylistService) playlistService).addSongPlaylist(s, p.getPlaylistid());
         user.setPlaylists(getUserPlaylist());
-        update();
-        return b;
+        return true;
     }
 
     /*Deletes one song in the playlist*/
     public boolean deleteSongToPlaylist(SongInterface s, PlaylistInterface p) throws SQLException {
-        boolean b = ((PlaylistService) playlistService).deleteSongInPlaylist(s.getSongid(), p.getPlaylistid());
+        ((PlaylistService) playlistService).deleteSongInPlaylist(s.getSongid(), p.getPlaylistid());
         user.setPlaylists(getUserPlaylist());
-        update();
-        return b;
+        /*update();*/
+        return true;
     }
 
     /*Takes specifc playlist*/
@@ -692,6 +776,10 @@ public class FacadeModel {
         } else {
             return playlistFactory.playlistFactoryMethod(null, songs);
         }
+    }
+
+    public AccountInterface getPlaylistOwner(String playlistID) {
+        return null;
     }
 
     /*Deletes the playlist in the database*/
