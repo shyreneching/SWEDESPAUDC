@@ -219,13 +219,17 @@ public class FacadeModel {
         return accounts;
     }
 
-    public void removeSongFromPlaylist(String playlist, SongInterface song) {
+//    public void removeSongFromPlaylist(String playlist, SongInterface song) {
+    public boolean removeSongFromPlaylist(String playlist, SongInterface song) throws SQLException{
+        boolean success = false;
         for (PlaylistInterface s : groups) {
             if (s.getName().equalsIgnoreCase(playlist)) {
                 s.getSongs().remove(song);
+                success = ((PlaylistService)playlistService).deleteSongInPlaylist(song.getSongid(), s.getPlaylistid());
             }
         }
         update();
+        return success;
     }
 
     public PlaylistInterface getStarredSongs() throws SQLException {
