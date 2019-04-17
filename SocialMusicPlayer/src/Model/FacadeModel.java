@@ -607,6 +607,10 @@ public class FacadeModel {
         return false;
     }
 
+    public AlbumInterface getAlbumFromName(String albumName, String artist)throws SQLException{
+        return ((AlbumService)albumService).getAlbumName(artist, albumName);
+    }
+
     public ObservableList<SongInterface> searchSong(String key) {
         ObservableList<Object> temp = FXCollections.observableArrayList();
         ObservableList<SongInterface> list = FXCollections.observableArrayList();
@@ -824,10 +828,6 @@ public class FacadeModel {
         boolean b = accountService.update(a.getUsername(), a);
         update();
         return b;
-    }
-
-    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
-       return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
     }
 
     /*public void addUnregisteredSongs() throws SQLException {
