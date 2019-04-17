@@ -845,6 +845,18 @@ public class FacadeModel {
         }
     }*/
 
+    public ObservableList<PlaylistInterface> getPublicPlaylist() throws SQLException {
+        return ((PlaylistService)playlistService).getPublicPlaylist();
+    }
+
+    public ObservableList<PlaylistInterface> getUserPublicPlaylist() throws SQLException {
+        return ((PlaylistService) playlistService).getUserPublicPlaylist(user.getUsername());
+    }
+
+    public ObservableList<PlaylistInterface> getUserPrivatePlaylist() throws SQLException {
+        return ((PlaylistService) playlistService).getUserPrivatePlaylist(user.getUsername());
+    }
+
     /*Register/sign-up a new user and saves it to the database
      * Needs to pass account data type with*/
     public boolean createUser(Account a) throws SQLException {
