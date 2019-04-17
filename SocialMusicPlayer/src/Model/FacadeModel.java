@@ -826,6 +826,10 @@ public class FacadeModel {
         return b;
     }
 
+    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
+       return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
+    }
+
     /*public void addUnregisteredSongs() throws SQLException {
         for (SongInterface ss : songs) {
             addSong(ss.getFilelocation());
