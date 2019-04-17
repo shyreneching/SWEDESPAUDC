@@ -777,6 +777,17 @@ public class FacadeModel {
             return playlistFactory.playlistFactoryMethod(null, songs);
         }
     }
+    /*Returns list of playlists that user follows*/
+    public ObservableList<PlaylistInterface> getFollowedPlaylistList() throws SQLException{
+        PlaylistFactory playlistFactory = new FollowedPlaylistListConcreteFactory();
+        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
+    }
+
+    /*Returns list of playlists that user can see*/
+    public ObservableList<PlaylistInterface> getPlaylistUserCanFollow() throws SQLException {
+        PlaylistFactory playlistFactory = new PlaylistUserCanFollowConcreteFactory();
+        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
+    }
 
     public AccountInterface getPlaylistOwner(String playlistID) {
         return null;
