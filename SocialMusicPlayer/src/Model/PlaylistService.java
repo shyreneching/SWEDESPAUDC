@@ -183,10 +183,11 @@ public class PlaylistService implements Service{
         ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
         ObservableList <SongInterface> songs;
 
-        String query ="SELECT * FROM playlist WHERE username = '" + username + "'";
+        String query = "SELECT * FROM playlist WHERE username = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
-        String query2 ="SELECT * FROM songcollection NATURAL JOIN album " +
-                "INNER JOIN song ON songcollection.idsong = song.idsong";
+        String query2 = "SELECT * FROM songcollection " +
+                "INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "INNER JOIN album ON song.albumid = album.albumid";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
@@ -215,7 +216,7 @@ public class PlaylistService implements Service{
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
                 s.setSize(rs2.getFloat("size"));
-                s.setSize(rs2.getFloat("size"));
+                s.setDate(rs2.getTimestamp("dateuploaded"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
                /* //gets the song from the databse and make put it in a File datatype
@@ -326,23 +327,32 @@ public class PlaylistService implements Service{
     }
 
     //get playlist with the same name
-    public ObservableList<PlaylistInterface> getPlaylistName(String playlistname, String username) throws SQLException {
+    /*public ObservableList<PlaylistInterface> getPlaylistName(String playlistname, String username) throws SQLException {*/
+    public PlaylistInterface getPlaylistName(String playlistname, String username) throws SQLException {
         Connection connection = pool.checkOut();
-        ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
+        /*ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();*/
         ObservableList <SongInterface> songs;
 
-        String query ="SELECT * FROM playlist WHERE playlistname = '" + playlistname + "'";
+        String query ="SELECT * FROM playlist WHERE playlistname = '" + playlistname.trim() +
+                "' AND playlist.username = '" + username.trim() + "'";
         PreparedStatement statement = connection.prepareStatement(query);
-        String query2 ="SELECT * FROM songcollection NATURAL JOIN song " +
+        /*String query2 ="SELECT * FROM songcollection NATURAL JOIN song " +
                 "NATURAL JOIN usersong " +
                 "NATURAL JOIN album " +
-                "WHERE playlistname = '" + playlistname + "' AND username = '" + username +"'";
+                "WHERE playlistname = '" + playlistname + "' AND username = '" + username +"'";*/
+        String query2 = "SELECT * FROM songcollection INNER JOIN song ON songcollection.idsong = song.idsong " +
+                "INNER JOIN usersong ON song.idsong = usersong.idsong " +
+                "INNER JOIN playlist ON songcollection.idplaylist = playlist.idplaylist " +
+                "INNER JOIN album ON song.albumid = album.albumid " +
+                "WHERE playlist.playlistname = '" + playlistname.trim() + "' AND playlist.username = '" + username.trim() + "'";
         PreparedStatement statement2 = connection.prepareStatement(query2);
 
+        PlaylistInterface p = new Playlist();
         try {
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
-                PlaylistInterface p = new Playlist();
+            /*while (rs.next()){*/
+            if(rs.next()) {
+                /*PlaylistInterface p = new Playlist();*/
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
                 p.setUser(rs.getString("username"));
@@ -350,7 +360,7 @@ public class PlaylistService implements Service{
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
                 p.setDate(rs.getTimestamp("datecreated"));
-                playlists.add(p);
+                /*playlists.add(p);*/
             }
 
             ResultSet rs2 = statement2.executeQuery();
@@ -366,7 +376,7 @@ public class PlaylistService implements Service{
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
                 s.setSize(rs2.getFloat("size"));
-                s.setSize(rs2.getFloat("size"));
+                s.setDate(rs2.getTimestamp("dateuploaded"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
                /* //gets the song from the databse and make put it in a File datatype
@@ -383,15 +393,16 @@ public class PlaylistService implements Service{
                 s.setTimesplayed(rs2.getInt("timesplayed"));
                 s.setUser(rs2.getString("username"));
 
-                for(PlaylistInterface p : playlists){
+                /*for(PlaylistInterface p : playlists){*/
                     if(p.getPlaylistid().compareTo(playlistid) == 0) {
                         songs = p.getSongs();
                         songs.add(s);
                         p.setSongs(songs);
                     }
-                }
+                /*}*/
             }
-            return playlists;
+            /*return playlists;*/
+            return p;
         } catch (SQLException e){
             e.printStackTrace();
         } /*catch (FileNotFoundException e) {

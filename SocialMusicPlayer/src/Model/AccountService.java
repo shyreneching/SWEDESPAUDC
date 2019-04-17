@@ -93,7 +93,7 @@ public class AccountService implements Service{
         // Get a connection:
         Connection connection = pool.checkOut();
 
-        String query ="SELECT * FROM accounts WHERE username = " + username;
+        String query ="SELECT * FROM accounts WHERE username = '" + username + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
@@ -210,8 +210,8 @@ public class AccountService implements Service{
 
         ObservableList <Object> accounts = FXCollections.observableArrayList();
         String query ="SELECT * FROM accounts INNER JOIN followpeople" +
-                " ON accounts.username = followpeople.followed" +
-                " WHERE followpeople.followed = '" + username + "'";
+                " ON accounts.username = followpeople.follower" +
+                " WHERE followpeople.followed = '" + username.trim() + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
@@ -247,11 +247,10 @@ public class AccountService implements Service{
     public ObservableList<Object> getFollowed(String username) throws SQLException {
         // Get a connection:
         Connection connection = pool.checkOut();
-
         ObservableList <Object> accounts = FXCollections.observableArrayList();
         String query ="SELECT * FROM accounts INNER JOIN followpeople" +
-                " ON accounts.username = followpeople.follower" +
-                " WHERE followpeople.follower = '" + username + "'";
+                " ON accounts.username = followpeople.followed" +
+                " WHERE followpeople.follower = '" + username.trim() + "'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
@@ -330,4 +329,103 @@ public class AccountService implements Service{
         return false;
     }
 
+    public ObservableList<AccountInterface> searchArtist(String search) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<AccountInterface> artists = FXCollections.observableArrayList();
+
+        String query = "SELECT *  FROM  accounts" +
+                " WHERE  username LIKE '%" + search + "%' AND accountType = 'Artists'";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        try {
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                AccountInterface a = new Account();
+                a.setUsername(rs.getString("username"));
+                a.setPassword(rs.getString("password"));
+                a.setName(rs.getString("name"));
+                artists.add(a);
+
+                /*//gets the song from the databse and make put it in a File datatype
+                File theFile = new File(s.getFilename());
+                OutputStream out = new FileOutputStream(theFile);
+                InputStream input = rs.getBinaryStream("songfile");
+                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
+                while (input.read(buffer) > 0) {
+                    out.write(buffer);
+                }
+                s.setSongfile(theFile);
+                //takes the exact location of the song
+                s.setFilelocation(theFile.getAbsolutePath());*/
+
+
+            }
+            return artists;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } /*catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */ finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+
+    }
+
+    public ObservableList<AccountInterface> searchListener(String search) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<AccountInterface> listener = FXCollections.observableArrayList();
+
+        String query = "SELECT *  FROM  accounts" +
+                " WHERE  username LIKE '%" + search + "%' AND accountType = 'Listener'";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        try {
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                AccountInterface a = new Account();
+                a.setUsername(rs.getString("username"));
+                a.setPassword(rs.getString("password"));
+                a.setName(rs.getString("name"));
+                listener.add(a);
+
+                /*//gets the song from the databse and make put it in a File datatype
+                File theFile = new File(s.getFilename());
+                OutputStream out = new FileOutputStream(theFile);
+                InputStream input = rs.getBinaryStream("songfile");
+                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
+                while (input.read(buffer) > 0) {
+                    out.write(buffer);
+                }
+                s.setSongfile(theFile);
+                //takes the exact location of the song
+                s.setFilelocation(theFile.getAbsolutePath());*/
+
+
+            }
+            return listener;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } /*catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */ finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+
+    }
 }

@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
 
@@ -140,6 +141,21 @@ public class FacadeController {
 
     public boolean isInFollowers(String username) {
 
+        return false;
+    }
+
+    public boolean validAlbum(String name) {
+        ObservableList<AlbumInterface> list = model.getUserAlbum(model.getUser().getUsername());
+        for(AlbumInterface a : list) {
+            if(a.getAlbumname().equals(name)) {
+                if(a.getAlbumname().contains("- Single")) {
+                    if(model.getAlbumSize(a.getAlbumname()) == 1) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         return false;
     }
 }

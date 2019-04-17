@@ -2,6 +2,9 @@ package View;
 
 import Controller.FacadeController;
 import Controller.MusicPlayerController;
+import Mp3agic.InvalidDataException;
+import Mp3agic.NotSupportedException;
+import Mp3agic.UnsupportedTagException;
 import javafx.animation.FadeTransition;
 import javafx.animation.PathTransition;
 import javafx.application.Platform;
@@ -33,6 +36,7 @@ import Model.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,12 +54,17 @@ public class MusicPlayerView implements View {
     private ObservableList<AccountInterface> artistSearchList = FXCollections.observableArrayList();
     private ObservableList<PlaylistInterface> playlistSearchList = FXCollections.observableArrayList();
     private ObservableList<AlbumInterface> albumSearchList = FXCollections.observableArrayList();
-    /*private ObservableList<SongInterface> songSearchList = FXCollections.observableArrayList(); for profile*/
+    private ObservableList<AccountInterface> listenerSearchList = FXCollections.observableArrayList();
+    private ObservableList<String> songCreator = FXCollections.observableArrayList();
+    private ObservableList<String> albumCreator = FXCollections.observableArrayList();
+    private ObservableList<String> playlistCreator = FXCollections.observableArrayList();
+
+    private String[] month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     @FXML
     private Rectangle titleBar;
     @FXML
-    private Button closeBtn, minimizeBtn, playListBtn, followBtn, songsBtn, artistsBtn, albumsBtn, genresBtn, yearsBtn, recentsBtn, mostBtn, artistfollowBtn, listenerfollowBtn, profile_icon_btn, notif_closeBtn, testBtn, logoutBtn, albumEnterBtn, albumCancelBtn, uploadEnterBtn, uploadCancelBtn, listenerunfollowBtn, artistunfollowBtn, addplaylistenterBtn, addplaylistcancelBtn;
+    private Button closeBtn, minimizeBtn, playListBtn, followBtn, songsBtn, artistsBtn, albumsBtn, genresBtn, yearsBtn, recentsBtn, mostBtn, artistfollowBtn, listenerfollowBtn, profile_icon_btn, notif_closeBtn, testBtn, logoutBtn, albumEnterBtn, albumCancelBtn, uploadEnterBtn, uploadCancelBtn, listenerunfollowBtn, artistunfollowBtn, addplaylistenerBtn, addplaylistcancelBtn, editConfirmBtn, editCancelBtn, logoutBtnArtist;
     @FXML
     private Slider slider, volSlider;
     @FXML
@@ -65,15 +74,15 @@ public class MusicPlayerView implements View {
     @FXML
     private Path pathingStart;
     @FXML
-    private AnchorPane transitionPane, song_etc_anchorpane, profile_pane, artist_profile_pane, notif_pane, songsPane, playListKebab, searchPane, welcomePane, createPane, albumCreate, songUpload, mainPane, cancelPane, sortPlaylistPane, addtoPlaylistPane, leftTab;
+    private AnchorPane transitionPane, song_etc_anchorpane, profile_pane, artist_profile_pane, notif_pane, songsPane, playListKebab, searchPane, welcomePane, createPane, albumCreate, songUpload, mainPane, cancelPane, sortPlaylistPane, editSongPane, addtoPlaylistPane, albumKebab;
     @FXML
-    private Label titleLbl, artistLbl, titleBtn, artistBtn, albumBtn, genreBtn, yearBtn, timeBtn, songsLbl, recentsLbl, mostLbl, artistsLbl, albumsLbl, genresLbl, yearsLbl, public_playlists_btn, prof_following_btn, prof_followers_btn, listenerusername, artist_prof_playlists_btn, artist_prof_albums_btn, artist_prof_following_btn, artist_prof_followers_btn, artist_username, notif_title, notif_lbl, add_to_queue_btn, remove_from_playlist_btn, add_to_playlist_btn, songViewTitle, songViewCreator, deletePlaylistLbl, makePublicLbl, createAlbumBtn, uploadSongBtn, sortPlaylistLbl, currentTime, endTime, choice_list, user_label;
+    private Label titleLbl, artistLbl, titleBtn, artistBtn, albumBtn, genreBtn, yearBtn, timeBtn, songsLbl, recentsLbl, mostLbl, artistsLbl, albumsLbl, genresLbl, yearsLbl, public_playlists_btn, prof_following_btn, prof_followers_btn, prof_favourites_btn, prof_highlight_btn, listenerusername, artist_prof_playlists_btn, artist_prof_albums_btn, artist_prof_following_btn, artist_prof_followers_btn, artist_username, notif_title, notif_lbl, add_to_queue_btn, remove_from_playlist_btn, add_to_playlist_btn, songViewTitle, songViewCreator, deletePlaylistLbl, makePublicLbl, createAlbumBtn, uploadSongBtn, sortPlaylistLbl, currentTime, endTime, choice_list, likeSongBtn, highLightPlaylist, editSongBtn, editPlaylistName, dateUploadedBtn, editAlbumNameBtn, editAlbumArtBtn, deleteAlbumBtn, user_label, invalidAlbum;
     @FXML
-    private Line titleLine, artistLine, albumLine, genreLine, yearLine, timeLine;
+    private Line titleLine, artistLine, albumLine, genreLine, yearLine, timeLine, dateUploadedLine;
     @FXML
     private VBox songList, playList, songSearchPane, albumSearchPane, artistSearchPane, playlistSearchPane, profileSearchPane, sortPlaylistScroll, listener_vbox, artist_vbox;
     @FXML
-    private TextField searchBar, albumNameInput;
+    private TextField searchBar, albumNameInput, editTitleBar, editAlbumBar, editGenreBar, editYearBar;
     @FXML
     private ChoiceBox albumChoice, playlistChoice;
     @FXML
@@ -86,6 +95,7 @@ public class MusicPlayerView implements View {
     private boolean isArtistsSelected;
     private boolean isAlbumsSelected;
     private boolean isGenresSelected;
+    private boolean isDateUploadedSelected;
     private boolean isYearsSelected;
     private boolean isRecentsSelected;
     private boolean isMostSelected;
@@ -94,6 +104,7 @@ public class MusicPlayerView implements View {
     private boolean isArtistSorted;
     private boolean isAlbumSorted;
     private boolean isGenreSorted;
+    private boolean isDateUploadedSorted;
     private boolean isYearSorted;
     private boolean isTimeSorted;
 
@@ -106,6 +117,9 @@ public class MusicPlayerView implements View {
     private boolean isCreateAlbumOpened;
     private boolean isUploadSongOpened;
     private boolean isaddtoplaylistOpened;
+    private boolean isAlbumKebabOpened;
+    private boolean isAlbumOpen;
+    private boolean isPlaylistOpen;
 
     private int previousSong;
     private int nextSong;
@@ -134,6 +148,7 @@ public class MusicPlayerView implements View {
         musicPlayerController.setArtist(artistLbl);
         musicPlayerController.setButton(playBtn);
         musicPlayerController.setPicture(songPicture);
+        update();
     }
 
     public void initialize() {
@@ -141,6 +156,7 @@ public class MusicPlayerView implements View {
         isArtistsSelected = false;
         isAlbumsSelected = false;
         isGenresSelected = false;
+        isDateUploadedSelected = false;
         isYearsSelected = false;
         isRecentsSelected = false;
         isMostSelected = false;
@@ -149,6 +165,7 @@ public class MusicPlayerView implements View {
         isArtistSorted = false;
         isAlbumSorted = false;
         isGenreSorted = false;
+        isDateUploadedSorted = false;
         isYearSorted = false;
         isTimeSorted = false;
 
@@ -160,6 +177,10 @@ public class MusicPlayerView implements View {
         isCreateOpened = false;
         isCreateAlbumOpened = false;
         isUploadSongOpened = false;
+        isaddtoplaylistOpened = false;
+        isAlbumKebabOpened = false;
+        isAlbumOpen = false;
+        isPlaylistOpen = false;
 
         nextSong = 0;
         previousSong = 0;
@@ -171,10 +192,11 @@ public class MusicPlayerView implements View {
         /*albumChoice.getItems().addAll("album1", "album2", "album3", "album4", "album5");*/
 
         /*setPlaylistView();*/
-        try {
-            setPlaylistView(model.getUserPlaylist());
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        if (model.getUser() instanceof Artist) {
+            createBtn.setVisible(true);
+        } else if (model.getUser() instanceof Listener) {
+            createBtn.setVisible(false);
         }
 
         Path tempPath = new Path();
@@ -206,14 +228,6 @@ public class MusicPlayerView implements View {
                 transitionPane.setOpacity(0);
                 transitionPane.setDisable(true);
             });
-        });
-
-        leftTab.setOnMouseClicked(event -> {
-            createPane.setVisible(false);
-            albumCreate.setVisible(false);
-            songUpload.setVisible(false);
-            addtoPlaylistPane.setVisible(false);
-            song_etc_anchorpane.setVisible(false);
         });
 
         welcomePane.setOnMouseClicked(event -> {
@@ -278,6 +292,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 titleBtn.setTextFill(Color.web("#00ead0"));
@@ -288,6 +303,8 @@ public class MusicPlayerView implements View {
                 albumLine.setStroke(Color.web("#FFFFFF"));
                 genreBtn.setTextFill(Color.web("#FFFFFF"));
                 genreLine.setStroke(Color.web("#FFFFFF"));
+                dateUploadedBtn.setTextFill(Color.web("#FFFFFF"));
+                dateUploadedLine.setStroke(Color.web("#FFFFFF"));
                 yearBtn.setTextFill(Color.web("#FFFFFF"));
                 yearLine.setStroke(Color.web("#FFFFFF"));
                 timeBtn.setTextFill(Color.web("#FFFFFF"));
@@ -297,6 +314,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 titleBtn.setTextFill(Color.web("#FFFFFF"));
@@ -310,6 +328,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = true;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 artistBtn.setTextFill(Color.web("#00ead0"));
@@ -320,6 +339,8 @@ public class MusicPlayerView implements View {
                 albumLine.setStroke(Color.web("#FFFFFF"));
                 genreBtn.setTextFill(Color.web("#FFFFFF"));
                 genreLine.setStroke(Color.web("#FFFFFF"));
+                dateUploadedBtn.setTextFill(Color.web("#FFFFFF"));
+                dateUploadedLine.setStroke(Color.web("#FFFFFF"));
                 yearBtn.setTextFill(Color.web("#FFFFFF"));
                 yearLine.setStroke(Color.web("#FFFFFF"));
                 timeBtn.setTextFill(Color.web("#FFFFFF"));
@@ -329,6 +350,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 artistBtn.setTextFill(Color.web("#FFFFFF"));
@@ -342,6 +364,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = true;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 albumBtn.setTextFill(Color.web("#00ead0"));
@@ -352,6 +375,8 @@ public class MusicPlayerView implements View {
                 artistLine.setStroke(Color.web("#FFFFFF"));
                 genreBtn.setTextFill(Color.web("#FFFFFF"));
                 genreLine.setStroke(Color.web("#FFFFFF"));
+                dateUploadedBtn.setTextFill(Color.web("#FFFFFF"));
+                dateUploadedLine.setStroke(Color.web("#FFFFFF"));
                 yearBtn.setTextFill(Color.web("#FFFFFF"));
                 yearLine.setStroke(Color.web("#FFFFFF"));
                 timeBtn.setTextFill(Color.web("#FFFFFF"));
@@ -361,6 +386,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 albumBtn.setTextFill(Color.web("#FFFFFF"));
@@ -374,6 +400,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = true;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 genreBtn.setTextFill(Color.web("#00ead0"));
@@ -384,6 +411,8 @@ public class MusicPlayerView implements View {
                 artistLine.setStroke(Color.web("#FFFFFF"));
                 albumBtn.setTextFill(Color.web("#FFFFFF"));
                 albumLine.setStroke(Color.web("#FFFFFF"));
+                dateUploadedBtn.setTextFill(Color.web("#FFFFFF"));
+                dateUploadedLine.setStroke(Color.web("#FFFFFF"));
                 yearBtn.setTextFill(Color.web("#FFFFFF"));
                 yearLine.setStroke(Color.web("#FFFFFF"));
                 timeBtn.setTextFill(Color.web("#FFFFFF"));
@@ -393,10 +422,49 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 genreBtn.setTextFill(Color.web("#FFFFFF"));
                 genreLine.setStroke(Color.web("#FFFFFF"));
+            }
+        });
+
+        dateUploadedBtn.setOnMouseClicked(event -> {
+            if (!isDateUploadedSorted) {
+                isTitleSorted = false;
+                isArtistSorted = false;
+                isAlbumSorted = false;
+                isGenreSorted = false;
+                isDateUploadedSorted = true;
+                isYearSorted = false;
+                isTimeSorted = false;
+
+                dateUploadedBtn.setTextFill(Color.web("#00ead0"));
+                dateUploadedLine.setStroke(Color.web("#00ead0"));
+
+                titleBtn.setTextFill(Color.web("#FFFFFF"));
+                titleLine.setStroke(Color.web("#FFFFFF"));
+                artistBtn.setTextFill(Color.web("#FFFFFF"));
+                artistLine.setStroke(Color.web("#FFFFFF"));
+                albumBtn.setTextFill(Color.web("#FFFFFF"));
+                albumLine.setStroke(Color.web("#FFFFFF"));
+                genreBtn.setTextFill(Color.web("#FFFFFF"));
+                genreLine.setStroke(Color.web("#FFFFFF"));
+                yearBtn.setTextFill(Color.web("#FFFFFF"));
+                yearLine.setStroke(Color.web("#FFFFFF"));
+                timeBtn.setTextFill(Color.web("#FFFFFF"));
+                timeLine.setStroke(Color.web("#FFFFFF"));
+            } else if (isDateUploadedSorted) {
+                isTitleSorted = false;
+                isArtistSorted = false;
+                isAlbumSorted = false;
+                isGenreSorted = false;
+                isDateUploadedSorted = false;
+                isYearSorted = false;
+                isTimeSorted = false;
+                dateUploadedBtn.setTextFill(Color.web("#FFFFFF"));
+                dateUploadedLine.setStroke(Color.web("#FFFFFF"));
             }
         });
 
@@ -406,6 +474,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = true;
                 isYearSorted = true;
                 isTimeSorted = false;
                 yearBtn.setTextFill(Color.web("#00ead0"));
@@ -416,6 +485,8 @@ public class MusicPlayerView implements View {
                 artistLine.setStroke(Color.web("#FFFFFF"));
                 albumBtn.setTextFill(Color.web("#FFFFFF"));
                 albumLine.setStroke(Color.web("#FFFFFF"));
+                dateUploadedBtn.setTextFill(Color.web("#00ead0"));
+                dateUploadedLine.setStroke(Color.web("#00ead0"));
                 genreBtn.setTextFill(Color.web("#FFFFFF"));
                 genreLine.setStroke(Color.web("#FFFFFF"));
                 timeBtn.setTextFill(Color.web("#FFFFFF"));
@@ -425,6 +496,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 yearBtn.setTextFill(Color.web("#FFFFFF"));
@@ -438,6 +510,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = true;
                 timeBtn.setTextFill(Color.web("#00ead0"));
@@ -450,6 +523,8 @@ public class MusicPlayerView implements View {
                 albumLine.setStroke(Color.web("#FFFFFF"));
                 genreBtn.setTextFill(Color.web("#FFFFFF"));
                 genreLine.setStroke(Color.web("#FFFFFF"));
+                dateUploadedBtn.setTextFill(Color.web("#FFFFFF"));
+                dateUploadedLine.setStroke(Color.web("#FFFFFF"));
                 yearBtn.setTextFill(Color.web("#FFFFFF"));
                 yearLine.setStroke(Color.web("#FFFFFF"));
             } else if (isTimeSorted) {
@@ -457,6 +532,7 @@ public class MusicPlayerView implements View {
                 isArtistSorted = false;
                 isAlbumSorted = false;
                 isGenreSorted = false;
+                isDateUploadedSorted = false;
                 isYearSorted = false;
                 isTimeSorted = false;
                 timeBtn.setTextFill(Color.web("#FFFFFF"));
@@ -484,10 +560,23 @@ public class MusicPlayerView implements View {
             if (!searchBar.getText().isEmpty()) {
                 searchPane.setVisible(true);
 
+                isSongsSelected = false;
+                isArtistsSelected = false;
+                isAlbumsSelected = false;
+                isGenresSelected = false;
+                isYearsSelected = false;
+                isRecentsSelected = false;
+                isMostSelected = false;
+
+                sortPlaylistPane.setVisible(false);
                 artist_profile_pane.setVisible(false);
                 profile_pane.setVisible(false);
                 songsPane.setVisible(false);
                 isQueueOpened = false;
+
+                songCreator.clear();
+                albumCreator.clear();
+                playlistCreator.clear();
 
                 setSearchView("song", songSearchPane);
                 setSearchView("artist", artistSearchPane);
@@ -551,12 +640,19 @@ public class MusicPlayerView implements View {
         });
 
         playListMore.setOnMouseClicked(event -> {
-            if (!isPlayListKebabOpened) {
+            if (!isPlayListKebabOpened && isPlaylistOpen) {
                 isPlayListKebabOpened = true;
                 playListKebab.setVisible(true);
-            } else if (isPlayListKebabOpened) {
+            } else if (isPlayListKebabOpened && isPlaylistOpen) {
                 isPlayListKebabOpened = false;
                 playListKebab.setVisible(false);
+            }
+            if (!isAlbumKebabOpened && isAlbumOpen) {
+                isAlbumKebabOpened = true;
+                albumKebab.setVisible(true);
+            } else if (isAlbumKebabOpened && isAlbumOpen) {
+                isAlbumKebabOpened = false;
+                albumKebab.setVisible(false);
             }
         });
 
@@ -572,6 +668,67 @@ public class MusicPlayerView implements View {
         });
         deletePlaylistLbl.setOnMouseExited(event -> {
             deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        highLightPlaylist.setOnMouseEntered(event -> {
+            highLightPlaylist.setTextFill(Color.web("#FFFFFF"));
+        });
+        highLightPlaylist.setOnMouseExited(event -> {
+            highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        editPlaylistName.setOnMouseEntered(event -> {
+            editPlaylistName.setTextFill(Color.web("#FFFFFF"));
+        });
+        editPlaylistName.setOnMouseExited(event -> {
+            editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        editPlaylistName.setOnMouseClicked(event -> {
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("");
+            dialog.setHeaderText("Edit Playlist Name");
+            dialog.setContentText("New Playlist Name:");
+            dialog.setGraphic(null);
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                System.out.println("New Playlist name: " + result.get());
+            }
+        });
+
+        deleteAlbumBtn.setOnMouseEntered(event -> {
+            deleteAlbumBtn.setTextFill(Color.web("#FFFFFF"));
+        });
+        deleteAlbumBtn.setOnMouseExited(event -> {
+            deleteAlbumBtn.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        editAlbumNameBtn.setOnMouseEntered(event -> {
+            editAlbumNameBtn.setTextFill(Color.web("#FFFFFF"));
+        });
+        editAlbumNameBtn.setOnMouseExited(event -> {
+            editAlbumNameBtn.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        editAlbumNameBtn.setOnMouseClicked(event -> {
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("");
+            dialog.setHeaderText("Edit Album Name");
+            dialog.setContentText("New Album Name:");
+            dialog.setGraphic(null);
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                System.out.println("New Album name: " + result.get());
+            }
+        });
+
+        editAlbumArtBtn.setOnMouseEntered(event -> {
+            editAlbumArtBtn.setTextFill(Color.web("#FFFFFF"));
+        });
+        editAlbumArtBtn.setOnMouseExited(event -> {
+            editAlbumArtBtn.setTextFill(Color.web("#C6C6C6"));
         });
 
         songsBtn.setOnAction(event -> {
@@ -599,6 +756,7 @@ public class MusicPlayerView implements View {
                 mostLbl.setTextFill(Color.web("#AAAAAA"));
                 mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
+                isQueueOpened = false;
                 welcomePane.setVisible(false);
                 isProfileOpened = false;
                 artist_profile_pane.setVisible(false);
@@ -808,6 +966,7 @@ public class MusicPlayerView implements View {
                 mostLbl.setTextFill(Color.web("#AAAAAA"));
                 mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
+                isQueueOpened = false;
                 welcomePane.setVisible(false);
                 artist_profile_pane.setVisible(false);
                 isProfileOpened = false;
@@ -853,6 +1012,7 @@ public class MusicPlayerView implements View {
                 recentsLbl.setTextFill(Color.web("#AAAAAA"));
                 recentsBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
 
+                isQueueOpened = false;
                 isProfileOpened = false;
                 welcomePane.setVisible(false);
                 artist_profile_pane.setVisible(false);
@@ -980,14 +1140,17 @@ public class MusicPlayerView implements View {
                 repeatBtn.setFitHeight(20);
                 repeatBtn.setFitWidth(20);
                 repeatBtn.setLayoutY(27);
-                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/Media/repeat_clicked.png")));
+                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_clicked.png")));
             } else if (musicPlayerController.getRepeat() == 1) {
                 repeatBtn.setFitHeight(25);
                 repeatBtn.setFitWidth(35);
                 repeatBtn.setLayoutY(22);
-                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/Media/repeat_song_clicked.png")));
+                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat_song_clicked.png")));
             } else if (musicPlayerController.getRepeat() == 2) {
-                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/Media/repeat.png")));
+                repeatBtn.setFitHeight(20);
+                repeatBtn.setFitWidth(20);
+                repeatBtn.setLayoutY(27);
+                repeatBtn.setImage(new Image(getClass().getResourceAsStream("/media/repeat.png")));
             }
             if (musicPlayerController.getMedia() != null) {
                 musicPlayerController.repeat();
@@ -1023,6 +1186,8 @@ public class MusicPlayerView implements View {
             public_playlists_btn.setTextFill(Color.web("#00ead0"));
             prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_favourites_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_highlight_btn.setTextFill(Color.web("#FFFFFF"));
 
             listener_vbox.getChildren().clear();
 
@@ -1046,6 +1211,9 @@ public class MusicPlayerView implements View {
                     });
 
                     pubplaylist.setOnMouseClicked(event1 -> {
+                        isAlbumOpen = false;
+                        isPlaylistOpen = true;
+                        isQueueOpened = false;
                         isProfileOpened = false;
                         profile_pane.setVisible(false);
                         songsPane.setVisible(true);
@@ -1065,6 +1233,8 @@ public class MusicPlayerView implements View {
             prof_following_btn.setTextFill(Color.web("#00ead0"));
             prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
             public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_favourites_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_highlight_btn.setTextFill(Color.web("#FFFFFF"));
 
             listener_vbox.getChildren().clear();
 
@@ -1089,14 +1259,15 @@ public class MusicPlayerView implements View {
 
                     followings.setOnMouseClicked(event1 -> {
                         viewUser = model.getUser(followings.getText());
-                        if(viewUser instanceof Artist) {
+                        if (viewUser instanceof Artist) {
                             showArtistProfilePane(followings.getText());
+                            artistunfollowBtn.setVisible(true);
+                            listenerunfollowBtn.setVisible(false);
                         } else if (viewUser instanceof Listener) {
                             showListenerProfilePane(followings.getText());
+                            listenerunfollowBtn.setVisible(true);
+                            artistunfollowBtn.setVisible(false);
                         }
-                        public_playlists_btn.fireEvent(event1);
-                        prof_followers_btn.fireEvent(event1);
-                        prof_following_btn.fireEvent(event1);
                         logoutBtn.setVisible(false);
                     });
                 }
@@ -1108,6 +1279,8 @@ public class MusicPlayerView implements View {
             prof_followers_btn.setTextFill(Color.web("#00ead0"));
             public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
             prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_favourites_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_highlight_btn.setTextFill(Color.web("#FFFFFF"));
 
             listener_vbox.getChildren().clear();
 
@@ -1132,19 +1305,76 @@ public class MusicPlayerView implements View {
 
                     followers.setOnMouseClicked(event1 -> {
                         viewUser = model.getUser(followers.getText());
-                        if(viewUser instanceof Artist) {
+                        if (viewUser instanceof Artist) {
                             showArtistProfilePane(followers.getText());
                         } else if (viewUser instanceof Listener) {
                             showListenerProfilePane(followers.getText());
                         }
-                        public_playlists_btn.fireEvent(event1);
-                        prof_followers_btn.fireEvent(event1);
-                        prof_following_btn.fireEvent(event1);
+
+                        if (controller.isInFollowing(viewUser.getName())) {
+                            listenerunfollowBtn.setVisible(true);
+                            listenerfollowBtn.setVisible(false);
+                        } else {
+                            listenerunfollowBtn.setVisible(false);
+                            listenerfollowBtn.setVisible(true);
+                        }
                         //if following then display unfollow btn otherwise
                         //listenerfollowBtn.setVisible(true);
                     });
                 }
             } catch (SQLException sq) {
+            }
+        });
+
+        prof_favourites_btn.setOnMouseClicked(event -> {
+            prof_favourites_btn.setTextFill(Color.web("#00ead0"));
+            public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_highlight_btn.setTextFill(Color.web("#FFFFFF"));
+
+            //put method here
+            setFaveSongView();
+        });
+
+        prof_highlight_btn.setOnMouseClicked(event -> {
+            prof_highlight_btn.setTextFill(Color.web("#00ead0"));
+            public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
+            prof_favourites_btn.setTextFill(Color.web("#FFFFFF"));
+
+            listener_vbox.getChildren().clear();
+
+            for (int i = 0; i <= 24; i++) {
+                Label highlight = new Label("currently on my mind " + i); //insert musicplayerController.getpublicplaylistname or something
+                listener_vbox.getChildren().add(highlight);
+                listener_vbox.setSpacing(24);
+                highlight.setTextFill(Color.web("#FFFFFF"));
+                highlight.setAlignment(Pos.CENTER);
+                highlight.setFont(Font.font(24));
+                highlight.setTextAlignment(TextAlignment.CENTER);
+
+                highlight.setOnMouseEntered(event1 -> {
+                    highlight.setTextFill(Color.web("#00ead0"));
+                });
+
+                highlight.setOnMouseExited(event1 -> {
+                    highlight.setTextFill(Color.web("#FFFFFF"));
+                });
+
+                highlight.setOnMouseClicked(event1 -> {
+                    isQueueOpened = false;
+                    isProfileOpened = false;
+                    profile_pane.setVisible(false);
+                    songsPane.setVisible(true);
+//                    setSongView();
+                    songViewTitle.setText(highlight.getText());
+                    songViewCreator.setText("created by: ");
+                    followBtn.setVisible(true);
+                    playListMore.setVisible(true);
+                    playListBtn.setVisible(true);
+                });
             }
         });
 
@@ -1155,9 +1385,11 @@ public class MusicPlayerView implements View {
             artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
 
             artist_vbox.getChildren().clear();
+            ObservableList<AlbumInterface> albumList = albumList = model.getUserAlbum(viewUser.getUsername());
 
-            for (int i = 0; i <= 24; i++) {
-                Label albums = new Label("Album " + i); //insert musicplayerController.getpublicplaylistname or something
+            for (int i = 0; i < albumList.size(); i++) {
+                AlbumInterface alb = albumList.get(i);
+                Label albums = new Label(alb.getAlbumname()); //insert musicplayerController.getpublicplaylistname or something
                 artist_vbox.getChildren().add(albums);
                 artist_vbox.setSpacing(24);
                 albums.setTextFill(Color.web("#FFFFFF"));
@@ -1174,9 +1406,19 @@ public class MusicPlayerView implements View {
                 });
 
                 albums.setOnMouseClicked(event1 -> {
-                    artist_profile_pane.setVisible(false);
+                    isQueueOpened = false;
+                    isAlbumOpen = true;
+                    isPlaylistOpen = false;
                     songsPane.setVisible(true);
-//                    setSongView();
+                    sortPlaylistPane.setVisible(false);
+                    artist_profile_pane.setVisible(false);
+                    setSongView(model.getAlbumSong(alb.getAlbumname()));
+                    songViewTitle.setText(alb.getAlbumname());
+                    songViewCreator.setText("created by: " + alb.getArtist());
+                    songViewCreator.setVisible(true);
+                    followBtn.setVisible(false);
+                    playListMore.setVisible(false);
+                    playListBtn.setVisible(false);
                 });
             }
         });
@@ -1188,9 +1430,16 @@ public class MusicPlayerView implements View {
             artist_prof_albums_btn.setTextFill(Color.web("#FFFFFF"));
 
             artist_vbox.getChildren().clear();
+            ObservableList<PlaylistInterface> listPlaylist = FXCollections.observableArrayList();
+            try {
+                listPlaylist = model.getUserPlaylist(viewUser.getUsername());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-            for (int i = 0; i <= 24; i++) {
-                Label playlists = new Label("Playlist " + i); //insert musicplayerController.getpublicplaylistname or something
+            for (int i = 0; i < listPlaylist.size(); i++) {
+                PlaylistInterface p = listPlaylist.get(i);
+                Label playlists = new Label(p.getName()); //insert musicplayerController.getpublicplaylistname or something
                 artist_vbox.getChildren().add(playlists);
                 artist_vbox.setSpacing(24);
                 playlists.setTextFill(Color.web("#FFFFFF"));
@@ -1207,9 +1456,22 @@ public class MusicPlayerView implements View {
                 });
 
                 playlists.setOnMouseClicked(event1 -> {
+                    isQueueOpened = false;
+                    isSongsSelected = false;
+                    isArtistsSelected = false;
+                    isAlbumsSelected = false;
+                    isGenresSelected = false;
+                    isYearsSelected = false;
+                    isRecentsSelected = false;
+                    isMostSelected = false;
                     artist_profile_pane.setVisible(false);
                     songsPane.setVisible(true);
-//                    setSongView();
+                    setSongView(p.getSongs());
+                    songViewTitle.setText(p.getName());
+                    songViewCreator.setText("created by: " + p.getUser());
+                    followBtn.setVisible(true);
+                    playListMore.setVisible(true);
+                    playListBtn.setVisible(true);
                 });
             }
         });
@@ -1221,9 +1483,16 @@ public class MusicPlayerView implements View {
             artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
 
             artist_vbox.getChildren().clear();
+            ObservableList<AccountInterface> following = FXCollections.observableArrayList();
+            try {
+                following = model.getFollowed(viewUser.getUsername().trim());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-            for (int i = 0; i <= 24; i++) {
-                Label afollowing = new Label("MAMAMOO " + i); //insert musicplayerController.getpublicplaylistname or something
+            for (int i = 0; i < following.size(); i++) {
+                AccountInterface acc = following.get(i);
+                Label afollowing = new Label(acc.getUsername()); //insert musicplayerController.getpublicplaylistname or something
                 artist_vbox.getChildren().add(afollowing);
                 artist_vbox.setSpacing(24);
                 afollowing.setTextFill(Color.web("#FFFFFF"));
@@ -1240,9 +1509,13 @@ public class MusicPlayerView implements View {
                 });
 
                 afollowing.setOnMouseClicked(event1 -> {
-                    showArtistProfilePane(afollowing.getText());
-                    artistunfollowBtn.setVisible(true);
-                    artistfollowBtn.setVisible(false);
+                    AccountInterface a = model.getUser(afollowing.getText());
+                    viewUser = a;
+                    if (a instanceof Artist) {
+                        showArtistProfilePane(a.getUsername());
+                    } else if (a instanceof Listener) {
+                        showListenerProfilePane(a.getUsername());
+                    }
                 });
             }
         });
@@ -1254,9 +1527,16 @@ public class MusicPlayerView implements View {
             artist_prof_playlists_btn.setTextFill(Color.web("#FFFFFF"));
 
             artist_vbox.getChildren().clear();
+            ObservableList<AccountInterface> followers = FXCollections.observableArrayList();
+            try {
+                followers = model.getFollowers(viewUser.getUsername().trim());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-            for (int i = 0; i <= 24; i++) {
-                Label afollowers = new Label("Kae " + i); //insert musicplayerController.getplaylistname or something
+            for (int i = 0; i < followers.size(); i++) {
+                AccountInterface acc = followers.get(i);
+                Label afollowers = new Label(acc.getUsername()); //insert musicplayerController.getplaylistname or something
                 artist_vbox.getChildren().add(afollowers);
                 artist_vbox.setSpacing(24);
                 afollowers.setTextFill(Color.web("#FFFFFF"));
@@ -1273,9 +1553,12 @@ public class MusicPlayerView implements View {
                 });
 
                 afollowers.setOnMouseClicked(event1 -> {
-                    showListenerProfilePane(afollowers.getText());
-                    artistunfollowBtn.setVisible(false);
-                    artistfollowBtn.setVisible(true);
+                    AccountInterface a = model.getUser(afollowers.getText());
+                    if (a instanceof Artist) {
+                        showArtistProfilePane(a.getUsername());
+                    } else if (a instanceof Listener) {
+                        showListenerProfilePane(a.getUsername());
+                    }
                 });
             }
         });
@@ -1294,6 +1577,19 @@ public class MusicPlayerView implements View {
             artistfollowBtn.setLayoutY(88);
         });
 
+        artistfollowBtn.setOnAction(event -> {
+            AccountInterface acc = model.getUser(viewUser.getUsername().trim());
+            if (controller.followUser(acc)) {
+                artistfollowBtn.setVisible(false);
+                artistunfollowBtn.setVisible(true);
+                if (artist_profile_pane.isVisible()) {
+                    artist_prof_followers_btn.fireEvent(event);
+                } else if (isProfileOpened) {
+                    prof_followers_btn.fireEvent(event);
+                }
+            }
+        });
+
         artistunfollowBtn.setOnMouseEntered(event -> {
             artistunfollowBtn.setPrefWidth(160);
             artistunfollowBtn.setPrefHeight(55);
@@ -1306,6 +1602,19 @@ public class MusicPlayerView implements View {
             artistunfollowBtn.setPrefHeight(40);
             artistunfollowBtn.setLayoutX(822);
             artistunfollowBtn.setLayoutY(88);
+        });
+
+        artistunfollowBtn.setOnAction(event -> {
+            AccountInterface acc = model.getUser(viewUser.getUsername().trim());
+            if (controller.unfollowUser(acc)) {
+                artistfollowBtn.setVisible(true);
+                artistunfollowBtn.setVisible(false);
+                if (artist_profile_pane.isVisible()) {
+                    artist_prof_followers_btn.fireEvent(event);
+                } else if (isProfileOpened) {
+                    prof_followers_btn.fireEvent(event);
+                }
+            }
         });
 
         listenerfollowBtn.setOnMouseEntered(event -> {
@@ -1322,6 +1631,19 @@ public class MusicPlayerView implements View {
             listenerfollowBtn.setLayoutY(95);
         });
 
+        listenerfollowBtn.setOnAction(event -> {
+            AccountInterface acc = model.getUser(viewUser.getUsername().trim());
+            if (controller.followUser(acc)) {
+                listenerfollowBtn.setVisible(false);
+                listenerunfollowBtn.setVisible(true);
+                if (artist_profile_pane.isVisible()) {
+                    artist_prof_followers_btn.fireEvent(event);
+                } else if (isProfileOpened) {
+                    prof_followers_btn.fireEvent(event);
+                }
+            }
+        });
+
         listenerunfollowBtn.setOnMouseEntered(event -> {
             listenerunfollowBtn.setPrefWidth(160);
             listenerunfollowBtn.setPrefHeight(55);
@@ -1336,11 +1658,30 @@ public class MusicPlayerView implements View {
             listenerunfollowBtn.setLayoutY(95);
         });
 
+        listenerunfollowBtn.setOnAction(event -> {
+            AccountInterface acc = model.getUser(viewUser.getUsername().trim());
+            if (controller.unfollowUser(acc)) {
+                listenerfollowBtn.setVisible(true);
+                listenerunfollowBtn.setVisible(false);
+                if (artist_profile_pane.isVisible()) {
+                    artist_prof_followers_btn.fireEvent(event);
+                } else if (isProfileOpened) {
+                    prof_followers_btn.fireEvent(event);
+                }
+            }
+        });
+
         add_to_queue_btn.setOnMouseEntered(event -> {
             add_to_queue_btn.setTextFill(Color.web("#FFFFFF"));
         });
         add_to_queue_btn.setOnMouseExited(event -> {
             add_to_queue_btn.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        add_to_queue_btn.setOnMouseClicked(event -> {
+            if (isSongsSelected) {
+                model.getCurrentPlaylist().getSongs().add(model.getUser().getSongs().get(nextSong));
+            }
         });
 
         remove_from_playlist_btn.setOnMouseEntered(event -> {
@@ -1351,7 +1692,7 @@ public class MusicPlayerView implements View {
         });
 
         remove_from_playlist_btn.setOnMouseClicked(event -> {
-            if(controller.removeFromPlaylist(model.getUser().getSongs().get(nextSong), songViewTitle.getText().trim())) {
+            if (controller.removeFromPlaylist(model.getUser().getSongs().get(nextSong), songViewTitle.getText().trim())) {
                 try {
                     setSongView(model.getUserPlaylist().get(nextPlaylist).getSongs());
                 } catch (SQLException e) {
@@ -1383,7 +1724,8 @@ public class MusicPlayerView implements View {
                     for (int i = 0; i < model.getUserPlaylist().size(); i++) {
                         playlistChoice.getItems().add(model.getUserPlaylist().get(i).getName());
                     }
-                } catch (SQLException sq) { }
+                } catch (SQLException sq) {
+                }
                 isaddtoplaylistOpened = true;
             } else if (isaddtoplaylistOpened) {
                 System.out.println("CLOSE");
@@ -1392,19 +1734,19 @@ public class MusicPlayerView implements View {
             }
         });
 
-        addplaylistenterBtn.setOnMouseEntered(event -> {
-            addplaylistenterBtn.setStyle("-fx-background-color: #00ffe3;");
+        addplaylistenerBtn.setOnMouseEntered(event -> {
+            addplaylistenerBtn.setStyle("-fx-background-color: #00ffe3;");
         });
 
-        addplaylistenterBtn.setOnMouseExited(event -> {
-            addplaylistenterBtn.setStyle("-fx-background-color: #00ead0;");
+        addplaylistenerBtn.setOnMouseExited(event -> {
+            addplaylistenerBtn.setStyle("-fx-background-color: #00ead0;");
         });
 
-        addplaylistenterBtn.setOnAction(event -> {
-            if (playlistChoice.getValue()!=null){
-                isaddtoplaylistOpened=false;
-                isKebabOpened=false;
-                if(controller.addSongToPlaylist(model.getUser().getSongs().get(nextSong), playlistChoice.getValue().toString())) {
+        addplaylistenerBtn.setOnAction(event -> {
+            if (playlistChoice.getValue() != null) {
+                isaddtoplaylistOpened = false;
+                isKebabOpened = false;
+                if (controller.addSongToPlaylist(model.getUser().getSongs().get(nextSong), playlistChoice.getValue().toString())) {
                     update();
                 }
                 addtoPlaylistPane.setVisible(false);
@@ -1421,20 +1763,140 @@ public class MusicPlayerView implements View {
         });
 
         addplaylistcancelBtn.setOnAction(event -> {
-            isaddtoplaylistOpened=false;
-            isKebabOpened=true;
+            isaddtoplaylistOpened = false;
+            isKebabOpened = true;
             addtoPlaylistPane.setVisible(false);
             song_etc_anchorpane.setVisible(true);
+        });
+
+        likeSongBtn.setOnMouseEntered(event -> {
+            likeSongBtn.setTextFill(Color.web("#FFFFFF"));
+        });
+        likeSongBtn.setOnMouseExited(event -> {
+            likeSongBtn.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        editSongBtn.setOnMouseEntered(event -> {
+            editSongBtn.setTextFill(Color.web("#FFFFFF"));
+        });
+        editSongBtn.setOnMouseExited(event -> {
+            editSongBtn.setTextFill(Color.web("#C6C6C6"));
+        });
+
+        editSongBtn.setOnMouseClicked(event -> {
+            invalidAlbum.setVisible(false);
+            editSongPane.setVisible(true);
+            song_etc_anchorpane.setVisible(false);
+            editTitleBar.setText(model.getUser().getSongs().get(nextSong).getName());
+            editAlbumBar.setText(model.getUser().getSongs().get(nextSong).getAlbum());
+            editGenreBar.setText(model.getUser().getSongs().get(nextSong).getGenre());
+            editYearBar.setText("" + model.getUser().getSongs().get(nextSong).getYear());
+        });
+
+        editAlbumBar.setOnKeyPressed(event -> {
+            invalidAlbum.setVisible(false);
+        });
+
+        editConfirmBtn.setOnMouseEntered(event -> {
+            editConfirmBtn.setStyle("-fx-background-color: #00ffe3;");
+        });
+
+        editConfirmBtn.setOnMouseExited(event -> {
+            editConfirmBtn.setStyle("-fx-background-color: #00ead0;");
+        });
+
+        editConfirmBtn.setOnAction(event -> {
+            SongInterface song = model.getUser().getSongs().get(nextSong);
+            if (!editTitleBar.getText().isEmpty() && !editAlbumBar.getText().isEmpty()
+                    && !editGenreBar.getText().isEmpty() && !editYearBar.getText().isEmpty()) {
+                if (!controller.validAlbum(editAlbumBar.getText().trim())) {
+                    editAlbumBar.clear();
+                    invalidAlbum.setVisible(true);
+                } else {
+                    if (!editTitleBar.getText().trim().equalsIgnoreCase(song.getName().trim()) &&
+                            !editAlbumBar.getText().trim().equalsIgnoreCase(song.getAlbum().trim()) &&
+                            !editGenreBar.getText().trim().equalsIgnoreCase(song.getGenre().trim()) &&
+                            Integer.parseInt(editYearBar.getText().trim()) != song.getYear()) {
+                        try {
+                            if (model.updateSongName(editTitleBar.getText().trim(), song) &&
+                                    model.updateSongAlbum(editAlbumBar.getText().trim(), song) &&
+                                    model.updateSongGenre(editGenreBar.getText().trim(), song) &&
+                                    model.updateSongYear(Integer.parseInt(editYearBar.getText().trim()), song)) {
+                                setSongView(model.getUserSongs());
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedTagException e) {
+                            e.printStackTrace();
+                        } catch (NotSupportedException e) {
+                            e.printStackTrace();
+                        } catch (InvalidDataException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    isKebabOpened = false;
+                    editSongPane.setVisible(false);
+                }
+            } else {
+                isKebabOpened = false;
+                editSongPane.setVisible(false);
+            }
+        });
+
+        editCancelBtn.setOnMouseEntered(event -> {
+            editCancelBtn.setStyle("-fx-background-color: #00ffe3;");
+        });
+
+        editCancelBtn.setOnMouseExited(event -> {
+            editCancelBtn.setStyle("-fx-background-color: #00ead0;");
+        });
+
+        editCancelBtn.setOnAction(event -> {
+            isKebabOpened = false;
+            editSongPane.setVisible(false);
         });
 
         profile_icon_btn.setOnAction(event -> {
             if (!isProfileOpened) {
                 viewUser = model.getUser();
-                showProfilePane(viewUser.getName());
+                if (model.getUser() instanceof Listener) {
+                    showProfilePane(model.getUser().getName());
+                    artist_profile_pane.setVisible(false);
+                } else if (model.getUser() instanceof Artist) {
+                    showArtistProfilePane(model.getUser().getName());
+                    artist_vbox.getChildren().clear();
+                    artistfollowBtn.setVisible(false);
+                    artistunfollowBtn.setVisible(false);
+                    logoutBtnArtist.setVisible(true);
+                    profile_pane.setVisible(false);
+                    songsPane.setVisible(false);
+                    sortPlaylistPane.setVisible(false);
+                    isProfileOpened = true;
+                }
             } else if (isProfileOpened) {
-                isProfileOpened = false;
-                profile_pane.setVisible(false);
-                welcomePane.setVisible(true);
+                if (!profile_pane.isVisible() || !artist_profile_pane.isVisible()) {
+                    viewUser = model.getUser();
+                    if (model.getUser() instanceof Listener) {
+                        showProfilePane(model.getUser().getName());
+                        artist_profile_pane.setVisible(false);
+                    } else if (model.getUser() instanceof Artist) {
+                        showArtistProfilePane(model.getUser().getName());
+                        artist_vbox.getChildren().clear();
+                        artistfollowBtn.setVisible(false);
+                        artistunfollowBtn.setVisible(false);
+                        logoutBtnArtist.setVisible(true);
+                        profile_pane.setVisible(false);
+                        songsPane.setVisible(false);
+                        sortPlaylistPane.setVisible(false);
+                        isProfileOpened = true;
+                    }
+                } else {
+                    isProfileOpened = false;
+                    profile_pane.setVisible(false);
+                    welcomePane.setVisible(true);
+                }
             }
         });
 
@@ -1487,7 +1949,7 @@ public class MusicPlayerView implements View {
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
-                if(controller.createPlaylist(result.get())) {
+                if (controller.createPlaylist(result.get())) {
                     try {
                         setPlaylistView(model.getUserPlaylist());
                     } catch (SQLException e) {
@@ -1514,6 +1976,35 @@ public class MusicPlayerView implements View {
         });
 
         logoutBtn.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("");
+            alert.setHeaderText("Logout");
+            alert.setContentText("Are you sure you want to logout?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Stage stage = (Stage) logoutBtn.getScene().getWindow();
+                LoginView loginView = new LoginView(stage, this.model);
+            }
+        });
+
+        logoutBtnArtist.setOnMouseEntered(event -> {
+            logoutBtnArtist.setStyle("-fx-background-color: #00ffe3;");
+            logoutBtnArtist.setPrefWidth(140);
+            logoutBtnArtist.setPrefHeight(60);
+            logoutBtnArtist.setLayoutX(835);
+            logoutBtnArtist.setLayoutY(90);
+        });
+
+        logoutBtnArtist.setOnMouseExited(event -> {
+            logoutBtnArtist.setStyle("-fx-background-color: #00ead0;");
+            logoutBtnArtist.setPrefWidth(130);
+            logoutBtnArtist.setPrefHeight(50);
+            logoutBtnArtist.setLayoutX(840);
+            logoutBtnArtist.setLayoutY(95);
+        });
+
+        logoutBtnArtist.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("");
             alert.setHeaderText("Logout");
@@ -1611,13 +2102,13 @@ public class MusicPlayerView implements View {
                 isCreateOpened = false;
                 albumCreate.setVisible(false);
                 createPane.setVisible(false);
-                if(singleChoice.isSelected()) {
-                    if(controller.createAlbum(albumNameInput.getText().trim() + " - Single")) {
+                if (singleChoice.isSelected()) {
+                    if (controller.createAlbum(albumNameInput.getText().trim() + " - Single")) {
                         albumNameInput.clear();
                         updateAlbumList();
                     }
                 } else {
-                    if(controller.createAlbum(albumNameInput.getText().trim())) {
+                    if (controller.createAlbum(albumNameInput.getText().trim())) {
                         albumNameInput.clear();
                         updateAlbumList();
                     }
@@ -1654,20 +2145,34 @@ public class MusicPlayerView implements View {
                 isCreateOpened = false;
                 songUpload.setVisible(false);
                 createPane.setVisible(false);
-                FileChooser file = new FileChooser();
-                List<File> list = file.showOpenMultipleDialog(stage);
-                if (list != null) {
-                    int i = 0;
-                    while (i < list.size()) {
-                        String location = list.get(i).toURI().toString().substring(6, list.get(i).toURI().toString().length()).replaceAll("%20", " ").replaceAll("%5", " ");
+                if (albumChoice.getValue().toString().contains("- Single")) {
+                    if (model.getAlbumSize(albumChoice.getValue().toString().trim()) == 0) {
+                        FileChooser file = new FileChooser();
+                        File temp = file.showOpenDialog(stage);
+                        String location = temp.toURI().toString().substring(6).replaceAll("%20", " ").replaceAll("%5", " ");
                         System.out.println(location);
                         System.out.println(albumChoice.getValue().toString());
                         if (controller.addSong(location, albumChoice.getValue().toString())) {
-                            i++;
+                            System.out.println("Single album created");
                         }
                     }
+                    songsBtn.fire();
+                } else {
+                    FileChooser file = new FileChooser();
+                    List<File> list = file.showOpenMultipleDialog(stage);
+                    if (list != null) {
+                        int i = 0;
+                        while (i < list.size()) {
+                            String location = list.get(i).toURI().toString().substring(6).replaceAll("%20", " ").replaceAll("%5", " ");
+                            System.out.println(location);
+                            System.out.println(albumChoice.getValue().toString());
+                            if (controller.addSong(location, albumChoice.getValue().toString())) {
+                                i++;
+                            }
+                        }
+                    }
+                    songsBtn.fire();
                 }
-                songsBtn.fire();
             }
         });
 
@@ -1704,6 +2209,8 @@ public class MusicPlayerView implements View {
         });
 
         homeBtn.setOnMouseClicked(event -> {
+            welcomePane.setVisible(true);
+            song_etc_anchorpane.setVisible(false);
             isProfileOpened = false;
             isCreateOpened = false;
             isSongsSelected = false;
@@ -1713,14 +2220,15 @@ public class MusicPlayerView implements View {
             isYearsSelected = false;
             isRecentsSelected = false;
             isMostSelected = false;
+            isQueueOpened = false;
             profile_pane.setVisible(false);
             songsPane.setVisible(false);
             createPane.setVisible(false);
             searchPane.setVisible(false);
             artist_profile_pane.setVisible(false);
-
-            welcomePane.setVisible(true);
             sortPlaylistPane.setVisible(false);
+            editSongPane.setVisible(false);
+
             mostLbl.setTextFill(Color.web("#AAAAAA"));
             mostBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
             songsLbl.setTextFill(Color.web("#AAAAAA"));
@@ -1754,7 +2262,6 @@ public class MusicPlayerView implements View {
         rectangles.clear();
         anchors.clear();
 
-
         for (int i = 0; i < numSongs; i++) {
             SongInterface ss = songs.get(i);
             songStack.add(new StackPane());
@@ -1772,27 +2279,33 @@ public class MusicPlayerView implements View {
             kebab.setOpacity(0.0);
             kebab.setDisable(true);
             kebab.setOnMouseEntered(event -> {
-                kebab.setImage(new Image(getClass().getResourceAsStream("/Media/kebab_hover.png")));
+                kebab.setImage(new Image(getClass().getResourceAsStream("/media/kebab_hover.png")));
             });
-            kebab.setOnMouseExited(new EventHandler<>() {
+            kebab.setOnMouseExited(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    kebab.setImage(new Image(getClass().getResourceAsStream("/Media/kebab.png")));
+                    kebab.setImage(new Image(getClass().getResourceAsStream("/media/kebab.png")));
                 }
             });
             int finalI1 = i;
             kebab.setOnMouseClicked(mouseEvent -> {
                 if (!isKebabOpened) {
                     System.out.println("OPEN");
+                    if (isSongsSelected) {
+                        likeSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        likeSongBtn.setDisable(true);
+                        likeSongBtn.setVisible(true);
+                        editSongBtn.setVisible(true);
+                    } else if (!isSongsSelected) {
+                        likeSongBtn.setTextFill(Color.web("#C6C6C6"));
+                        likeSongBtn.setDisable(false);
+                        editSongBtn.setVisible(false);
+                    }
                     song_etc_anchorpane.setVisible(true);
                     song_etc_anchorpane.setLayoutX(kebab.getLayoutX());
                     song_etc_anchorpane.setLayoutY((mouseEvent.getSceneY()));
                     remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
-                    if(isSongsSelected) {
-                        remove_from_playlist_btn.setDisable(true);
-                    } else {
-                        remove_from_playlist_btn.setDisable(false);
-                    }
+                    remove_from_playlist_btn.setDisable(false);
                     song_etc_anchorpane.setDisable(false);
                     song_etc_anchorpane.setOpacity(1);
                     isKebabOpened = true;
@@ -1806,7 +2319,7 @@ public class MusicPlayerView implements View {
             });
 
             Label title = new Label(ss.getName());
-            title.setMaxWidth(255);
+            title.setMaxWidth(165);
             title.setTextFill(Color.web("#FFFFFF"));
             title.setFont(new Font("Brown", 20));
             title.setLayoutX(25);
@@ -1815,20 +2328,26 @@ public class MusicPlayerView implements View {
             artist.setMaxWidth(165);
             artist.setTextFill(Color.web("#FFFFFF"));
             artist.setFont(new Font("Brown", 20));
-            artist.setLayoutX(300);
+            artist.setLayoutX(210);
             artist.setLayoutY(10);
             Label album = new Label(ss.getAlbum());
             album.setMaxWidth(165);
             album.setTextFill(Color.web("#FFFFFF"));
             album.setFont(new Font("Brown", 20));
-            album.setLayoutX(485);
+            album.setLayoutX(395);
             album.setLayoutY(10);
             Label genre = new Label(ss.getGenre());
             genre.setMaxWidth(110);
             genre.setTextFill(Color.web("#FFFFFF"));
             genre.setFont(new Font("Brown", 20));
-            genre.setLayoutX(670);
+            genre.setLayoutX(580);
             genre.setLayoutY(10);
+            Label dateUploaded = new Label(convertDate(ss.getDate()));
+            dateUploaded.setMaxWidth(110);
+            dateUploaded.setTextFill(Color.web("#FFFFFF"));
+            dateUploaded.setFont(new Font("Brown", 20));
+            dateUploaded.setLayoutX(700);
+            dateUploaded.setLayoutY(10);
             Label date = new Label("" + ss.getYear());
             date.setMaxWidth(55);
             date.setTextFill(Color.web("#FFFFFF"));
@@ -1841,10 +2360,10 @@ public class MusicPlayerView implements View {
             time.setFont(new Font("Brown", 20));
             time.setLayoutX(875);
             time.setLayoutY(10);
-            anchors.get(i).getChildren().addAll(kebab, title, artist, album, genre, date, time);
+            anchors.get(i).getChildren().addAll(kebab, title, artist, album, genre, dateUploaded, date, time);
             int finalI = i;
             anchors.get(i).setOnMouseClicked(event -> {
-                if(event.getClickCount() == 1) {
+                if (event.getClickCount() == 1) {
                     previousSong = nextSong;
                     nextSong = finalI;
                     for (Node node : anchors.get(previousSong).getChildren()) {
@@ -1857,11 +2376,11 @@ public class MusicPlayerView implements View {
                             ((Label) node).setTextFill(Color.web("#00ead0"));
                         }
                     }
-                } else if(event.getClickCount() == 2) {
-                    if(isSongsSelected) {
-                        if(musicPlayerController.getMedia() != null) {
-                            if(musicPlayerController.getMedia().getStatus().equals(MediaPlayer.Status.PLAYING) ||
-                                musicPlayerController.getMedia().getStatus().equals(MediaPlayer.Status.PAUSED)) {
+                } else if (event.getClickCount() == 2) {
+                    if (isSongsSelected) {
+                        if (musicPlayerController.getMedia() != null) {
+                            if (musicPlayerController.getMedia().getStatus().equals(MediaPlayer.Status.PLAYING) ||
+                                    musicPlayerController.getMedia().getStatus().equals(MediaPlayer.Status.PAUSED)) {
                                 musicPlayerController.stop();
                             }
                         }
@@ -1937,6 +2456,13 @@ public class MusicPlayerView implements View {
                 kebab.setDisable(true);
                 kebab.setOpacity(0.0);
             });
+
+            if (isQueueOpened) {
+                songStack.get(i).setDisable(true);
+            } else if (!isQueueOpened) {
+                songStack.get(i).setDisable(false);
+            }
+
             songStack.get(i).getChildren().addAll(anchors.get(i));
             songList.getChildren().add(songStack.get(i));
         }
@@ -1985,11 +2511,15 @@ public class MusicPlayerView implements View {
                 for (Node node : anchorPane.get(nextPlaylist).getChildren()) {
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(Color.web("#00ead0"));
+                        isPlaylistOpen = true;
+                        isAlbumOpen = false;
+                        isQueueOpened = false;
                         isProfileOpened = false;
                         songsPane.setVisible(true);
                         sortPlaylistPane.setVisible(false);
                         profile_pane.setVisible(false);
                         isSongsSelected = false;
+                        artist_profile_pane.setVisible(false);
                         setSongView(pp.getSongs());
                         songViewTitle.setText(pp.getName());
                         songViewCreator.setText("created by: " + model.getUser().getUsername());
@@ -2035,16 +2565,17 @@ public class MusicPlayerView implements View {
         ObservableList<PlaylistInterface> sortedPlaylist = FXCollections.observableArrayList();
 
         try {
-            if(label.equalsIgnoreCase("artists")) {
+            if (label.equalsIgnoreCase("artists")) {
                 sortedPlaylist = model.getArtistPlaylist();
-            } else if(label.equalsIgnoreCase("albums")) {
+            } else if (label.equalsIgnoreCase("albums")) {
                 sortedPlaylist = model.getAlbumPlaylist();
-            } else if(label.equalsIgnoreCase("genres")) {
+            } else if (label.equalsIgnoreCase("genres")) {
                 sortedPlaylist = model.getGenrePlaylist();
-            } else if(label.equalsIgnoreCase("years")) {
+            } else if (label.equalsIgnoreCase("years")) {
                 sortedPlaylist = model.getYearPlaylist();
             }
-        } catch (SQLException sq) {}
+        } catch (SQLException sq) {
+        }
 
         int numPlaylist = sortedPlaylist.size();
 
@@ -2084,23 +2615,37 @@ public class MusicPlayerView implements View {
                 for (Node node : anchorPane.get(nextPlaylist).getChildren()) {
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(Color.web("#00ead0"));
-                        if(label.equalsIgnoreCase("artists")) {
+                        if (label.equalsIgnoreCase("artists")) {
                             isArtistsSelected = false;
-                        } else if(label.equalsIgnoreCase("albums")) {
+                            isAlbumOpen = false;
+                            isPlaylistOpen = true;
+                        } else if (label.equalsIgnoreCase("albums")) {
                             isAlbumsSelected = false;
-                        } else if(label.equalsIgnoreCase("genres")) {
+                            isAlbumOpen = true;
+                            isPlaylistOpen = false;
+                        } else if (label.equalsIgnoreCase("genres")) {
                             isGenresSelected = false;
-                        } else if(label.equalsIgnoreCase("years")) {
+                            isAlbumOpen = false;
+                            isPlaylistOpen = true;
+                        } else if (label.equalsIgnoreCase("years")) {
                             isYearsSelected = false;
+                            isAlbumOpen = false;
+                            isPlaylistOpen = true;
                         }
+                        isQueueOpened = false;
                         songsPane.setVisible(true);
                         sortPlaylistPane.setVisible(false);
                         setSongView(pp.getSongs());
                         songViewTitle.setText(pp.getName());
-                        songViewCreator.setText("created by: " + pp.getUser());
-                        followBtn.setVisible(true);
-                        playListMore.setVisible(true);
-                        playListBtn.setVisible(true);
+                        if (label.equalsIgnoreCase("albums")) {
+                            songViewCreator.setText("created by: " + pp.getUser());
+                            songViewCreator.setVisible(true);
+                        } else {
+                            songViewCreator.setVisible(false);
+                        }
+                        followBtn.setVisible(false);
+                        playListMore.setVisible(false);
+                        playListBtn.setVisible(false);
                     }
                 }
             });
@@ -2138,21 +2683,23 @@ public class MusicPlayerView implements View {
         AccountInterface ac = null;
         AlbumInterface aa = null;
         PlaylistInterface pp = null;
+        AccountInterface al = null;
 
-        if(label.equalsIgnoreCase("song")) {
+        if (label.equalsIgnoreCase("song")) {
             songSearchList = model.searchSong(searchBar.getText().trim());
             numPlaylist = songSearchList.size();
-        } else if(label.equalsIgnoreCase("artist")) {
+        } else if (label.equalsIgnoreCase("artist")) {
             artistSearchList = model.searchArtist(searchBar.getText().trim());
             numPlaylist = artistSearchList.size();
-        } else if(label.equalsIgnoreCase("album")) {
+        } else if (label.equalsIgnoreCase("album")) {
             albumSearchList = model.searchAlbum(searchBar.getText().trim());
             numPlaylist = albumSearchList.size();
-        } else if(label.equalsIgnoreCase("playlist")) {
+        } else if (label.equalsIgnoreCase("playlist")) {
             playlistSearchList = model.searchPlaylist(searchBar.getText().trim());
             numPlaylist = playlistSearchList.size();
-        } else if(label.equalsIgnoreCase("profile")) {
-            //NOT YET IMPLEMENTED
+        } else if (label.equalsIgnoreCase("profile")) {
+            listenerSearchList = model.searchListener(searchBar.getText().trim());
+            numPlaylist = listenerSearchList.size();
         }
 
         playList.getChildren().clear();
@@ -2161,16 +2708,16 @@ public class MusicPlayerView implements View {
         anchorPane.clear();
 
         for (int i = 0; i < numPlaylist; i++) {
-            if(label.equalsIgnoreCase("song")) {
+            if (label.equalsIgnoreCase("song")) {
                 ss = songSearchList.get(i);
-            } else if(label.equalsIgnoreCase("artist")) {
+            } else if (label.equalsIgnoreCase("artist")) {
                 ac = artistSearchList.get(i);
-            } else if(label.equalsIgnoreCase("album")) {
+            } else if (label.equalsIgnoreCase("album")) {
                 aa = albumSearchList.get(i);
-            } else if(label.equalsIgnoreCase("playlist")) {
+            } else if (label.equalsIgnoreCase("playlist")) {
                 pp = playlistSearchList.get(i);
-            } else if(label.equalsIgnoreCase("profile")) {
-                //NOT YET IMPLEMENTED
+            } else if (label.equalsIgnoreCase("profile")) {
+                al = listenerSearchList.get(i);
             }
 
             playlistStack.add(new StackPane());
@@ -2182,43 +2729,60 @@ public class MusicPlayerView implements View {
             boxes.get(i).setFill(Color.web("#202020"));
             playlistStack.get(i).getChildren().add(boxes.get(i));
             anchorPane.add(new AnchorPane());
+
             Label title = new Label();
-            if(label.equalsIgnoreCase("song")) {
+            if (label.equalsIgnoreCase("song")) {
                 title.setText(ss.getName().trim());
-            } else if(label.equalsIgnoreCase("artist")) {
-                title.setText(ac.getName().trim());
-            } else if(label.equalsIgnoreCase("album")) {
-                title.setText(aa.getAlbumname().trim());
-            } else if(label.equalsIgnoreCase("playlist")) {
-                title.setText(pp.getName().trim());
-            } else if(label.equalsIgnoreCase("profile")) {
-                //NOT YET IMPLEMENTED
-                title.setText("Profile");
+            } else if (label.equalsIgnoreCase("artist")) {
+                title.setText(ac.getName().trim() + "  ");
+            } else if (label.equalsIgnoreCase("album")) {
+                title.setText(aa.getAlbumname().trim() + "   ");
+            } else if (label.equalsIgnoreCase("playlist")) {
+                title.setText(pp.getName().trim() + "    ");
+            } else if (label.equalsIgnoreCase("profile")) {
+                title.setText(al.getName().trim() + "     ");
             }
-            title.setMaxWidth(195);
+            title.setMaxWidth(180);
             title.setTextFill(Color.web("#FFFFFF"));
             title.setFont(new Font("Brown", 20));
             title.setLayoutX(15);
-            title.setLayoutY(10);
-            anchorPane.get(i).getChildren().addAll(title);
+            title.setLayoutY(8);
+            Label creator = new Label();
+            if (label.equalsIgnoreCase("song")) {
+                creator.setText("by: " + ss.getArtist());
+                songCreator.add(ss.getArtist());
+            } else if (label.equalsIgnoreCase("album")) {
+                creator.setText("by: " + aa.getArtist());
+                albumCreator.add(aa.getArtist());
+            } else if (label.equalsIgnoreCase("playlist")) {
+                creator.setText("by: " + pp.getUser());
+                playlistCreator.add(pp.getUser());
+            }
+            creator.setMaxWidth(180);
+            creator.setTextFill(Color.web("#7b7b7b"));
+            creator.setFont(new Font("Brown", 12));
+            creator.setLayoutX(15);
+            creator.setLayoutY(30);
+            creator.setStyle("-fx-font-size: 12;");
+            anchorPane.get(i).getChildren().addAll(title, creator);
             int finalX = i;
 
             if (label.equalsIgnoreCase("song")) {
                 System.out.println("KEBAB");
-                ImageView kebab = new ImageView(new Image(getClass().getResourceAsStream("/Media/kebab.png")));
+                ImageView kebab = new ImageView(new Image(getClass().getResourceAsStream("/media/kebab.png")));
                 kebab.setFitWidth(25);
                 kebab.setFitHeight(7);
-                kebab.setLayoutX(150);
-                kebab.setLayoutY(25);
+                kebab.setLayoutX(155);
+                kebab.setLayoutY(23);
                 kebab.setVisible(false);
                 kebab.setOnMouseEntered(event -> {
-                    kebab.setImage(new Image(getClass().getResourceAsStream("/Media/kebab_hover.png")));
+                    kebab.setImage(new Image(getClass().getResourceAsStream("/media/kebab_hover.png")));
                 });
-                kebab.setOnMouseExited(new EventHandler<>() {
+                kebab.setOnMouseExited(new EventHandler<MouseEvent>() {
 
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        kebab.setImage(new Image(getClass().getResourceAsStream("/Media/kebab.png")));
+                        kebab.setImage(new Image(getClass().getResourceAsStream("/media/kebab.png")));
                     }
                 });
                 int finalI1 = i;
@@ -2230,6 +2794,7 @@ public class MusicPlayerView implements View {
                         song_etc_anchorpane.setLayoutY((mouseEvent.getSceneY()));
                         song_etc_anchorpane.setDisable(false);
                         song_etc_anchorpane.setOpacity(1);
+                        editSongBtn.setVisible(false);
                         remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
                         remove_from_playlist_btn.setDisable(true);
                         isaddtoplaylistOpened = false;
@@ -2237,6 +2802,7 @@ public class MusicPlayerView implements View {
                     } else if (isKebabOpened) {
                         System.out.println("CLOSE");
                         song_etc_anchorpane.setVisible(false);
+
                         isKebabOpened = false;
                     }
                 });
@@ -2251,6 +2817,9 @@ public class MusicPlayerView implements View {
                     kebab.setVisible(false);
                 });
             }
+            if (label.equalsIgnoreCase("artist") || label.equalsIgnoreCase("profile")) {
+                creator.setVisible(false);
+            }
             anchorPane.get(i).setOnMouseClicked(event -> {
                 previousPlaylist = nextPlaylist;
                 nextPlaylist = finalX;
@@ -2261,19 +2830,50 @@ public class MusicPlayerView implements View {
                     }
                 }
                 for (Node node : anchorPane.get(nextPlaylist).getChildren()) {
+                    String selectedCreator = null;
+                    if (!label.equalsIgnoreCase("artist") && !label.equalsIgnoreCase("profile")) {
+                        selectedCreator = playlistCreator.get(nextPlaylist);
+                    }
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(Color.web("#00ead0"));
                         //searchPane.setVisible(true);
-                        if (((Label) node).getText().equalsIgnoreCase("artist")) {
-                            showArtistProfilePane(((Label) node).getText());
-                        } else if (((Label) node).getText().equalsIgnoreCase("profile")) {
-                            showListenerProfilePane(((Label) node).getText());
-                        } else if (((Label) node).getText().equalsIgnoreCase("album")) {
-//                            setSongView();
+                        if (((Label) node).getText().contains("     ")) { //profile
+                            viewUser = model.getUser(((Label) node).getText().trim());
+                            showListenerProfilePane(((Label) node).getText().trim());
+                        } else if (((Label) node).getText().contains("    ")) { //playlist
+                            PlaylistInterface ppp = null;
+                            try {
+                                ppp = model.getPlaylistFromUser(((Label) node).getText().trim(), selectedCreator);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            setSongView(ppp.getSongs());
+                            songViewTitle.setText(ppp.getName());
+                            songViewCreator.setText("created by: " + ppp.getUser());
+                            isQueueOpened = false;
+                            isProfileOpened = false;
                             songsPane.setVisible(true);
-                        } else if (((Label) node).getText().equalsIgnoreCase("playlist")) {
-//                            setSongView();
+                            sortPlaylistPane.setVisible(false);
+                            profile_pane.setVisible(false);
+                            isSongsSelected = false;
+                            followBtn.setVisible(true);
+                            playListMore.setVisible(true);
+                            playListBtn.setVisible(true);
+                        } else if (((Label) node).getText().contains("   ")) { //album
+                            isQueueOpened = false;
+
+                            setSongView(model.getAlbumSong(((Label) node).getText().trim()));
+                            songViewTitle.setText(((Label) node).getText().trim());
+
+                            isQueueOpened = false;
+                            isProfileOpened = false;
                             songsPane.setVisible(true);
+                            sortPlaylistPane.setVisible(false);
+                            profile_pane.setVisible(false);
+                            isSongsSelected = false;
+                        } else if (((Label) node).getText().contains("  ")) { //artist
+                            viewUser = model.getUser(((Label) node).getText().trim());
+                            showArtistProfilePane(((Label) node).getText().trim());
                         }
                     }
                 }
@@ -2294,6 +2894,10 @@ public class MusicPlayerView implements View {
     }
 
     public void showProfilePane(String username) {
+        prof_followers_btn.setTextFill(Color.web("#FFFFFF"));
+        public_playlists_btn.setTextFill(Color.web("#FFFFFF"));
+        prof_following_btn.setTextFill(Color.web("#FFFFFF"));
+
         isProfileOpened = true;
         isSongsSelected = false;
         isArtistsSelected = false;
@@ -2303,7 +2907,7 @@ public class MusicPlayerView implements View {
         isRecentsSelected = false;
         isMostSelected = true;
         profile_pane.setVisible(true);
-        if(model.getUser() instanceof Artist) {
+        if (model.getUser() instanceof Artist) {
             user_label.setText("artist");
         } else if (model.getUser() instanceof Listener) {
             user_label.setText("listener");
@@ -2349,9 +2953,10 @@ public class MusicPlayerView implements View {
         profile_pane.setVisible(true);
         listenerusername.setText(username);
         logoutBtn.setVisible(false);
+        listener_vbox.getChildren().clear();
 
         //if (following, show unfollow button) else
-        if(controller.isInFollowing(username)) {
+        if (controller.isInFollowing(username)) {
             listenerunfollowBtn.setVisible(true);
             listenerfollowBtn.setVisible(false);
         } else {
@@ -2382,14 +2987,13 @@ public class MusicPlayerView implements View {
         yearsBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
         recentsLbl.setTextFill(Color.web("#AAAAAA"));
         recentsBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
-
     }
 
     public void showArtistProfilePane(String artistusername) {
         artist_profile_pane.setVisible(true);
         user_label.setText("artist");
         //if follow= true, show artistunfollowBtn; else
-        if(controller.isInFollowing(artistusername)) {
+        if (controller.isInFollowing(artistusername)) {
             artistunfollowBtn.setVisible(true);
             artistfollowBtn.setVisible(false);
         } else {
@@ -2397,6 +3001,8 @@ public class MusicPlayerView implements View {
             artistfollowBtn.setVisible(true);
         }
         artist_username.setText(artistusername);
+        logoutBtnArtist.setVisible(false);
+        artist_vbox.getChildren().clear();
 
         isProfileOpened = true;
         isSongsSelected = false;
@@ -2433,11 +3039,161 @@ public class MusicPlayerView implements View {
 
     }
 
+    public void setFaveSongView(/*ArrayList<Song> songList*/) {
+        ArrayList<StackPane> songStack = new ArrayList<>();
+        ArrayList<Rectangle> rectangles = new ArrayList<>();
+        ArrayList<AnchorPane> anchors = new ArrayList<>();
+
+        int numSongs = 15;
+
+        songsPane.setVisible(false);
+        searchPane.setVisible(false);
+        welcomePane.setVisible(false);
+
+        listener_vbox.getChildren().clear();
+        songStack.clear();
+        rectangles.clear();
+        anchors.clear();
+
+        listener_vbox.setSpacing(0);
+        for (int i = 0; i < numSongs; i++) {
+            songStack.add(new StackPane());
+            rectangles.add(new Rectangle());
+            rectangles.get(i).setWidth(1000);
+            rectangles.get(i).setHeight(50);
+            rectangles.get(i).setFill(Color.web("#292929"));
+            songStack.get(i).getChildren().add(rectangles.get(i));
+            anchors.add(new AnchorPane());
+            ImageView kebab = new ImageView(new Image(getClass().getResourceAsStream("/media/kebab.png")));
+            kebab.setFitWidth(25);
+            kebab.setFitHeight(7);
+            kebab.setLayoutX(870);
+            kebab.setLayoutY(20);
+            kebab.setOpacity(0.0);
+            kebab.setDisable(true);
+            kebab.setOnMouseEntered(event -> {
+                kebab.setImage(new Image(getClass().getResourceAsStream("/media/kebab_hover.png")));
+            });
+            kebab.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    kebab.setImage(new Image(getClass().getResourceAsStream("/media/kebab.png")));
+                }
+            });
+            int finalI1 = i;
+            kebab.setOnMouseClicked(mouseEvent -> {
+                if (!isKebabOpened) {
+                    System.out.println("OPEN");
+                    song_etc_anchorpane.setVisible(true);
+                    song_etc_anchorpane.setLayoutX(kebab.getLayoutX());
+                    song_etc_anchorpane.setLayoutY((mouseEvent.getSceneY()));
+                    remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                    remove_from_playlist_btn.setDisable(true);
+                    editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                    editSongBtn.setDisable(true);
+                    likeSongBtn.setTextFill(Color.web("#7b7b7b"));
+                    likeSongBtn.setDisable(true);
+                    likeSongBtn.setVisible(true);
+                    song_etc_anchorpane.setDisable(false);
+                    song_etc_anchorpane.setOpacity(1);
+                    editSongBtn.setVisible(true);
+                    isKebabOpened = true;
+                } else if (isKebabOpened) {
+                    System.out.println("CLOSE");
+                    song_etc_anchorpane.setVisible(false);
+                    song_etc_anchorpane.setDisable(true);
+                    song_etc_anchorpane.setOpacity(0);
+                    isKebabOpened = false;
+                }
+            });
+
+            Label title = new Label("title");
+            title.setMaxWidth(100);
+            title.setTextFill(Color.web("#FFFFFF"));
+            title.setFont(new Font("Brown", 14));
+            title.setLayoutX(25);
+            title.setLayoutY(10);
+            Label artist = new Label("artist");
+            artist.setMaxWidth(80);
+            artist.setTextFill(Color.web("#FFFFFF"));
+            artist.setFont(new Font("Brown", 14));
+            artist.setLayoutX(250);
+            artist.setLayoutY(10);
+            Label album = new Label("album");
+            album.setMaxWidth(85);
+            album.setTextFill(Color.web("#FFFFFF"));
+            album.setFont(new Font("Brown", 14));
+            album.setLayoutX(395);
+            album.setLayoutY(10);
+            Label genre = new Label("genre");
+            genre.setMaxWidth(80);
+            genre.setTextFill(Color.web("#FFFFFF"));
+            genre.setFont(new Font("Brown", 14));
+            genre.setLayoutX(575);
+            genre.setLayoutY(10);
+            Label date = new Label("year");
+            date.setMaxWidth(55);
+            date.setTextFill(Color.web("#FFFFFF"));
+            date.setFont(new Font("Brown", 14));
+            date.setLayoutX(690);
+            date.setLayoutY(10);
+            Label time = new Label("time");
+            time.setMaxWidth(55);
+            time.setTextFill(Color.web("#FFFFFF"));
+            time.setFont(new Font("Brown", 14));
+            time.setLayoutX(790);
+            time.setLayoutY(10);
+            anchors.get(i).getChildren().addAll(kebab, title, artist, album, genre, date, time);
+            int finalI = i;
+            anchors.get(i).setOnMouseClicked(event -> {
+                int z = 0, c = 0;
+                previousSong = nextSong;
+                nextSong = finalI;
+
+                for (Node node : anchors.get(previousSong).getChildren()) {
+                    if (node instanceof Label) {
+                        ((Label) node).setTextFill(Color.web("#FFFFFF"));
+                    }
+                }
+                for (Node node : anchors.get(nextSong).getChildren()) {
+                    if (node instanceof Label) {
+                        ((Label) node).setTextFill(Color.web("#00ead0"));
+                        z = 1;
+                    }
+                }
+            });
+
+            anchors.get(i).setOnMouseEntered(event -> {
+                rectangles.get(finalI).setFill(Color.web("#323232"));
+                kebab.setDisable(false);
+                kebab.setOpacity(1.0);
+            });
+            anchors.get(i).setOnMouseExited(event -> {
+                rectangles.get(finalI).setFill(Color.web("#292929"));
+                kebab.setDisable(true);
+                kebab.setOpacity(0.0);
+            });
+
+            if (isQueueOpened) {
+                songStack.get(i).setDisable(true);
+            } else if (!isQueueOpened) {
+                songStack.get(i).setDisable(false);
+            }
+
+            songStack.get(i).getChildren().addAll(anchors.get(i));
+            listener_vbox.getChildren().add(songStack.get(i));
+        }
+    }
+
+    public String convertDate(Timestamp time) {
+        return month[time.toLocalDateTime().getMonthValue() - 1] + " " + time.toLocalDateTime().getYear();
+    }
+
     public void updateAlbumList() {
         albumChoice.getItems().clear();
-        if(model.getUserAlbum(model.getUser().getUsername()) != null) {
+        if (model.getUserAlbum(model.getUser().getUsername()) != null) {
             ObservableList<String> names = FXCollections.observableArrayList();
-            for(AlbumInterface al : model.getUserAlbum(model.getUser().getUsername())) {
+            for (AlbumInterface al : model.getUserAlbum(model.getUser().getUsername())) {
                 names.add(al.getAlbumname());
             }
             albumChoice.setItems(names);

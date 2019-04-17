@@ -24,29 +24,31 @@ public class AlbumPlaylist implements PlaylistList{
         boolean added = false; 
         
         for(SongInterface s: songs){
-            if (playlists == null){
+            if (playlists.isEmpty()){
                 ObservableList<SongInterface> temp = FXCollections.observableArrayList();
                 PlaylistInterface p = new Playlist();
                 p.setName(s.getAlbum());
+                p.setUser(s.getArtist());
                 temp.add(s);
                 p.setSongs(temp);
                 playlists.add(p);
-            }
-            for(PlaylistInterface play: playlists){
-                if(play.getName().equals(s.getAlbum())){
-                    ObservableList<SongInterface> temp = play.getSongs();
-                    temp.add(s);
-                    play.setSongs(temp);
-                    added = true;
+            } else {
+                for(PlaylistInterface play: playlists){
+                    if(play.getName().equals(s.getAlbum())){
+                        ObservableList<SongInterface> temp = play.getSongs();
+                        temp.add(s);
+                        play.setSongs(temp);
+                        added = true;
+                    }
                 }
-            }
-            if(!added){
-                ObservableList<SongInterface> temp = FXCollections.observableArrayList();
-                PlaylistInterface p = new Playlist();
-                p.setName(s.getAlbum());
-                temp.add(s);
-                p.setSongs(temp);
-                playlists.add(p);
+                if(!added){
+                    ObservableList<SongInterface> temp = FXCollections.observableArrayList();
+                    PlaylistInterface p = new Playlist();
+                    p.setName(s.getAlbum());
+                    temp.add(s);
+                    p.setSongs(temp);
+                    playlists.add(p);
+                }
             }
         }
         return playlists;

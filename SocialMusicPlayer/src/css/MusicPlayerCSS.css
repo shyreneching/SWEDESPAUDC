@@ -81,3 +81,21 @@
 .choice-box .context-menu { -fx-border-width: 3.5; }
 .choice-box .context-menu { -fx-font: 20px Brown; }
 
+.check-box .box {
+
+    -fx-background-color: #292929;
+    -fx-border-color:#00ead0;
+    -fx-border-radius:3px;
+
+}
+
+.check-box:selected .mark {
+
+    -fx-background-color: #00ead0;
+
+}
+
+.check-box:selected .box {
+
+    -fx-background-color: #292929;
+}

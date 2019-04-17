@@ -1,8 +1,6 @@
 package Controller;
 
-import Mp3agic.InvalidDataException;
-import Mp3agic.NotSupportedException;
-import Mp3agic.UnsupportedTagException;
+import Model.FacadeModel;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.scene.control.Label;
@@ -12,15 +10,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import Model.FacadeModel;
+
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Port;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class MusicPlayerController {

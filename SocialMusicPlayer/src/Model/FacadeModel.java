@@ -371,8 +371,111 @@ public class FacadeModel {
         return false;
     }
 
+    /*Stanley was here*/
+    public PlaylistInterface getPlaylistFromUser(String playlist, String username) throws SQLException {
+        return ((PlaylistService)playlistService).getPlaylistName(playlist, username);
+    }
+
+    public AlbumInterface getAlbumFromUser(String albumName, String artist) throws SQLException{
+        return ((AlbumService)albumService).getAlbumName(artist, albumName);
+    }
+
+    //add
+    public boolean likeSong(SongInterface song){
+        try {
+            return ((SongService) songService).addSongtoUser(song.getSongid(), user.getUsername());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Returns the songs that the user liked
+    public ObservableList<SongInterface> getlikedSongs(){
+        ObservableList<SongInterface> original = FXCollections.observableArrayList();
+        try {
+            original = getUserSongs();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ObservableList<SongInterface> liked = FXCollections.observableArrayList();
+
+        for(SongInterface s: original){
+            if(!(s.getArtist().equals(user.getUsername()))){
+                liked.add(s);
+            }
+        }
+        return liked;
+    }
+
+    // Returns the songs that the user uploaded
+    public ObservableList<SongInterface> getUserOwnedSong(){
+        ObservableList<SongInterface> original = FXCollections.observableArrayList();
+        try {
+            original = getUserSongs();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ObservableList<SongInterface> liked = FXCollections.observableArrayList();
+
+        for(SongInterface s: original){
+            if(s.getArtist().equals(user.getUsername())){
+                liked.add(s);
+            }
+        }
+        return liked;
+    }
+
+    /*Returns list of playlists that user follows*/
+    public ObservableList<PlaylistInterface> getFollowedPlaylistList() throws SQLException{
+        PlaylistFactory playlistFactory = new FollowedPlaylistListConcreteFactory();
+        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
+    }
+
+    /*Returns list of playlists that user can see*/
+    public ObservableList<PlaylistInterface> getPlaylistUserCanFollow() throws SQLException {
+        PlaylistFactory playlistFactory = new PlaylistUserCanFollowConcreteFactory();
+        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
+    }
+
     public SongInterface getSong(String songid) throws SQLException {
         return ((SongService) songService).getSong(songid, user.getUsername());
+    }
+
+    public ObservableList<SongInterface> getAlbumSong(String name) {
+        AlbumInterface aa = null;
+        ObservableList<Object> temp = FXCollections.observableArrayList();
+        ObservableList<SongInterface> list = FXCollections.observableArrayList();
+        try {
+            aa = ((AlbumService)albumService).getAlbumName(user.getUsername(), name);
+            temp = songService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(Object o : temp) {
+            if(((SongInterface)o).getAlbum().equalsIgnoreCase(aa.getAlbumname())) {
+                list.add((SongInterface)o);
+            }
+        }
+        return list;
+    }
+
+    public int getAlbumSize(String name) {
+        AlbumInterface aa = null;
+        ObservableList<Object> temp = FXCollections.observableArrayList();
+        try {
+            aa = ((AlbumService)albumService).getAlbumName(user.getUsername(), name);
+            temp = songService.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        int counter = 0;
+        for(Object o : temp) {
+            if(((SongInterface)o).getAlbum().equalsIgnoreCase(aa.getAlbumname())) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
     /*Deletes one specific song in the database using songid
@@ -389,10 +492,12 @@ public class FacadeModel {
         SongInterface old = s;
         s.setName(name);
         parser.editSongDetails(old, s);
-        boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+        /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
+        ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
-        update();
-        return b;
+        /*update();
+          return b;*/
+        return true;
     }
 
     /*Updates the genre of the song given the new name and the song that wants to be changed*/
@@ -400,10 +505,12 @@ public class FacadeModel {
         SongInterface old = s;
         s.setGenre(genre);
         parser.editSongDetails(old, s);
-        boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+        /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
+        ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
-        update();
-        return b;
+        /*update();
+        return b;*/
+        return true;
     }
 
     /*Updates the artist of the song given the new name and the song that wants to be changed*/
@@ -411,10 +518,12 @@ public class FacadeModel {
         SongInterface old = s;
         s.setArtist(artist);
         parser.editSongDetails(old, s);
-        boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+        /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
+        ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
-        update();
-        return b;
+        /*update();
+          return b;*/
+        return true;
     }
 
     /*Updates the album of the song given the new name and the song that wants to be changed*/
@@ -422,10 +531,12 @@ public class FacadeModel {
         SongInterface old = s;
         s.setAlbum(album);
         parser.editSongDetails(old, s);
-        boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+        /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
+        ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
-        update();
-        return b;
+        /*update();
+        return b;*/
+        return true;
     }
 
     /*Updates the year of the song given the new name and the song that wants to be changed*/
@@ -506,6 +617,9 @@ public class FacadeModel {
 //        return true;
     }
 
+    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
+        return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
+    }
 
     /*Returns all the songs in the database*/
     public ObservableList<SongInterface> getAllSong() throws SQLException {
@@ -607,10 +721,6 @@ public class FacadeModel {
         return false;
     }
 
-    public AlbumInterface getAlbumFromName(String albumName, String artist)throws SQLException{
-        return ((AlbumService)albumService).getAlbumName(artist, albumName);
-    }
-
     public ObservableList<SongInterface> searchSong(String key) {
         ObservableList<Object> temp = FXCollections.observableArrayList();
         ObservableList<SongInterface> list = FXCollections.observableArrayList();
@@ -619,11 +729,6 @@ public class FacadeModel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        /*try {
-            list = ((SongService)songService).search(key);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }*/
         for(Object o : temp) {
             if(((SongInterface)o).getName().toLowerCase().contains(key.toLowerCase())) {
                 list.add((SongInterface)o);
@@ -633,19 +738,21 @@ public class FacadeModel {
     }
 
     public ObservableList<AccountInterface> searchArtist(String key) {
-        ObservableList<Object> temp = FXCollections.observableArrayList();
         ObservableList<AccountInterface> list = FXCollections.observableArrayList();
         try {
-            temp = accountService.getAll();
+            list = ((AccountService)accountService).searchArtist(key);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        for(Object o : temp) {
-            if(o instanceof Artist) {
-                if(((AccountInterface)o).getUsername().toLowerCase().contains(key.toLowerCase())) {
-                    list.add((AccountInterface)o);
-                }
-            }
+        return list;
+    }
+
+    public ObservableList<AccountInterface> searchListener(String key) {
+        ObservableList<AccountInterface> list = FXCollections.observableArrayList();
+        try {
+            list = ((AccountService)accountService).searchListener(key);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -667,7 +774,14 @@ public class FacadeModel {
     }
 
     public ObservableList<AlbumInterface> searchAlbum(String key) {
-        ObservableList<Object> temp = FXCollections.observableArrayList();
+        ObservableList<AlbumInterface> list = FXCollections.observableArrayList();
+        try {
+            list = ((AlbumService)albumService).searchAlbum(key);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+        /*ObservableList<Object> temp = FXCollections.observableArrayList();
         ObservableList<AlbumInterface> list = FXCollections.observableArrayList();
         try {
             temp = albumService.getAll();
@@ -679,7 +793,7 @@ public class FacadeModel {
                 list.add((AlbumInterface)o);
             }
         }
-        return list;
+        return list;*/
     }
 
     public File getAlbumArt(String albumid) throws SQLException{
@@ -712,6 +826,30 @@ public class FacadeModel {
         return true;
     }
 
+    public boolean updatePlaylist(PlaylistInterface p) throws SQLException {
+        return playlistService.update(p.getPlaylistid(), p);
+    }
+
+    public boolean makePlaylistPrivate(PlaylistInterface p) throws SQLException {
+        p.setStatus("private");
+        return playlistService.update(p.getPlaylistid(), p);
+    }
+
+    public boolean makePlaylistPublic(PlaylistInterface p) throws SQLException {
+        p.setStatus("public");
+        return playlistService.update(p.getPlaylistid(), p);
+    }
+
+    public boolean makeFollowedPlaylistPrivate(PlaylistInterface p) throws SQLException {
+        p.setStatus("private");
+        return ((PlaylistService)playlistService).updateFollowedPlaylist(p.getPlaylistid(), (FollowedPlaylist) p);
+    }
+
+    public boolean makeFollowedPlaylistPublic(PlaylistInterface p) throws SQLException {
+        p.setStatus("public");
+        return ((PlaylistService)playlistService).updateFollowedPlaylist(p.getPlaylistid(), (FollowedPlaylist) p);
+    }
+
     /*Takes specifc playlist*/
     public PlaylistInterface getPlaylist(String playlistid) throws SQLException {
         return ((PlaylistService) playlistService).getPlaylist(playlistid, user.getUsername());
@@ -724,7 +862,6 @@ public class FacadeModel {
         ObservableList<PlaylistInterface> playlists = playlistFactory.playlistFactoryMethod(user.getUsername(), null);
         if (playlists != null) {
             user.setPlaylists(playlists);
-            System.out.println(playlists.size());
             return playlists;
         }
         return null;
@@ -780,21 +917,6 @@ public class FacadeModel {
         } else {
             return playlistFactory.playlistFactoryMethod(null, songs);
         }
-    }
-    /*Returns list of playlists that user follows*/
-    public ObservableList<PlaylistInterface> getFollowedPlaylistList() throws SQLException{
-        PlaylistFactory playlistFactory = new FollowedPlaylistListConcreteFactory();
-        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
-    }
-
-    /*Returns list of playlists that user can see*/
-    public ObservableList<PlaylistInterface> getPlaylistUserCanFollow() throws SQLException {
-        PlaylistFactory playlistFactory = new PlaylistUserCanFollowConcreteFactory();
-        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
-    }
-
-    public AccountInterface getPlaylistOwner(String playlistID) {
-        return null;
     }
 
     /*Deletes the playlist in the database*/
@@ -914,11 +1036,15 @@ public class FacadeModel {
     }
 
     public boolean followUser(AccountInterface person) throws SQLException {
-        return ((AccountService) accountService).followPeople(user, person);
+        /*return ((AccountService) accountService).followPeople(user, person);*/
+        ((AccountService) accountService).followPeople(user, person);
+        return true;
     }
 
     public boolean unfollowUser(AccountInterface person) throws SQLException {
-        return ((AccountService) accountService).unfollowPeople(user, person);
+        /*return ((AccountService) accountService).unfollowPeople(user, person);*/
+        ((AccountService) accountService).unfollowPeople(user, person);
+        return true;
     }
 
     public boolean followPlaylist(PlaylistInterface playlist) throws SQLException {

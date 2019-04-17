@@ -474,9 +474,9 @@ public class SongService implements Service{
             statement.setInt(6, s.getTrackNumber());
             statement.setInt(7, s.getLength());
             statement.setDouble(8, s.getSize());
-           /* // Write the file into the database
+           //* // Write the file into the database
             FileInputStream songfile = new FileInputStream(s.getSongfile());
-            statement.setBinaryStream(9, songfile);*/
+            statement.setBinaryStream(9, songfile);
             statement.setString(9, songid);
             statement2.setInt(1, s.getTimesplayed());
             statement2.setString(2, username);
@@ -487,9 +487,36 @@ public class SongService implements Service{
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } /*catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } */finally {
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+    //add
+    public boolean updateTimesPlayed(int times, SongInterface s, String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        AudioParserInterface ap = new AudioParser();
+
+        String query = "UPDATE usersong SET "
+                + "timesplayed = ? "
+                + "WHERE username= ?"
+                + " AND idsong = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setInt(1, times);
+            statement.setString(2, username);
+            statement.setString(2, s.getSongid());
+
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
             if(statement != null) statement.close();
             if(connection != null)  connection.close();
         }

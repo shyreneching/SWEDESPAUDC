@@ -283,4 +283,53 @@ public class AlbumService implements Service {
         pool.checkIn(connection);
         return null;
     }
+
+    public ObservableList<AlbumInterface> searchAlbum(String search) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<AlbumInterface> albums = FXCollections.observableArrayList();
+
+        String query = "SELECT *  FROM  album" +
+                " WHERE  albumname LIKE '%" + search + "%' ";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        try {
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                AlbumInterface s = new Album();
+                s.setAlbumID(rs.getString("albumid"));
+                s.setAlbumname(rs.getString("albumname"));
+                s.setArtist(rs.getString("artist"));
+                s.setDate(rs.getTimestamp("dateCreated"));
+
+                /*//gets the song from the databse and make put it in a File datatype
+                File theFile = new File(s.getFilename());
+                OutputStream out = new FileOutputStream(theFile);
+                InputStream input = rs.getBinaryStream("songfile");
+                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
+                while (input.read(buffer) > 0) {
+                    out.write(buffer);
+                }
+                s.setSongfile(theFile);
+                //takes the exact location of the song
+                s.setFilelocation(theFile.getAbsolutePath());*/
+
+                albums.add(s);
+            }
+            return albums;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } /*catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */ finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
 }

@@ -25,6 +25,20 @@
 
 <AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <AnchorPane fx:id="welcomePane" layoutX="200.0" layoutY="75.0" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: #292929;">
+         <children>
+            <Label layoutX="400.0" layoutY="250.0" text="welcome." textFill="#00ead0">
+               <font>
+                  <Font name="Brown-Regular" size="55.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="56.0" fitWidth="188.0" layoutX="447.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Media/waveIcon.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
       <AnchorPane prefHeight="790.0" prefWidth="200.0" style="-fx-background-color: #202020;">
          <children>
             <ImageView fx:id="songPicture" fitHeight="200.0" fitWidth="200.0" layoutY="590.0" pickOnBounds="true" preserveRatio="true">
@@ -32,7 +46,7 @@
                   <Image url="@../Media/default_album_art.png" />
                </image>
             </ImageView>
-          <AnchorPane fx:id="leftTab" minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="200.0" style="-fx-background-color: #202020;">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="200.0" style="-fx-background-color: #202020;">
                <children>
                   <Label fx:id="songsLbl" layoutX="15.0" layoutY="100.0" text="songs" textFill="#aaaaaa">
                      <font>
@@ -200,18 +214,23 @@
                   <Font name="Brown-Regular" size="24.0" />
                </font>
             </Label>
-            <Line fx:id="titleLine" endX="160.0" layoutX="120.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
-            <Label fx:id="artistBtn" layoutX="300.0" layoutY="115.0" text="artist" textFill="WHITE">
+            <Line fx:id="titleLine" endX="70.0" layoutX="120.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
+            <Label fx:id="artistBtn" layoutX="210.0" layoutY="115.0" text="artist" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="albumBtn" layoutX="485.0" layoutY="115.0" text="album" textFill="WHITE">
+            <Label fx:id="albumBtn" layoutX="395.0" layoutY="115.0" text="album" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="genreBtn" layoutX="670.0" layoutY="115.0" text="genre" textFill="WHITE">
+            <Label fx:id="genreBtn" layoutX="580.0" layoutY="115.0" text="genre" textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="dateUploadedBtn" layoutX="710.0" layoutY="115.0" text="d.u." textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>
@@ -226,9 +245,10 @@
                   <Font name="Brown-Regular" size="24.0" />
                </font>
             </Label>
-            <Line fx:id="artistLine" endX="70.0" layoutX="395.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
-            <Line fx:id="albumLine" endX="70.0" layoutX="580.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
-            <Line fx:id="genreLine" endX="15.0" layoutX="765.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
+            <Line fx:id="artistLine" endX="70.0" layoutX="305.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
+            <Line fx:id="albumLine" endX="70.0" layoutX="490.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
+            <Line fx:id="dateUploadedLine" endX="-25.0" layoutX="805.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
+            <Line fx:id="genreLine" endX="15.0" layoutX="675.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
             <Line fx:id="yearLine" endX="-40.0" layoutX="895.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
             <Line fx:id="timeLine" endX="-40.0" layoutX="970.0" layoutY="145.0" startX="-100.0" stroke="WHITE" />
             <ScrollPane hbarPolicy="NEVER" layoutY="149.0" prefHeight="485.0" prefWidth="1000.0" style="-fx-background-color: #292929;" stylesheets="@../CSS/MusicPlayerCSS.css">
@@ -271,27 +291,45 @@
                         <Font name="Brown-Regular" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="deletePlaylistLbl" alignment="CENTER" layoutX="13.0" layoutY="51.0" prefHeight="36.0" prefWidth="170.0" text="Delete Playlist" textFill="#c6c6c6">
+                  <Label fx:id="deletePlaylistLbl" alignment="CENTER" layoutX="13.0" layoutY="50.0" prefHeight="36.0" prefWidth="170.0" text="Delete Playlist" textFill="#c6c6c6">
+                     <font>
+                        <Font name="Brown-Regular" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="highLightPlaylist" alignment="CENTER" layoutX="13.0" layoutY="85.0" prefHeight="36.0" prefWidth="170.0" text="Highlight Playlist" textFill="#c6c6c6">
+                     <font>
+                        <Font name="Brown-Regular" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="editPlaylistName" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Edit Playlist Name" textFill="#c6c6c6">
                      <font>
                         <Font name="Brown-Regular" size="16.0" />
                      </font>
                   </Label>
                </children>
             </AnchorPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="welcomePane" layoutX="200.0" layoutY="75.0" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: #292929;">
-         <children>
-            <Label layoutX="400.0" layoutY="250.0" text="welcome." textFill="#00ead0">
-               <font>
-                  <Font name="Brown-Regular" size="55.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="56.0" fitWidth="188.0" layoutX="447.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Media/waveIcon.png" />
-               </image>
-            </ImageView>
+            <AnchorPane fx:id="albumKebab" layoutX="740.0" layoutY="55.0" prefHeight="200.0" prefWidth="195.0" style="-fx-background-color: #333333;" visible="false">
+               <effect>
+                  <DropShadow blurType="GAUSSIAN" />
+               </effect>
+               <children>
+                  <Label fx:id="editAlbumNameBtn" alignment="CENTER" layoutX="14.0" layoutY="15.0" prefHeight="36.0" prefWidth="160.0" text="Edit Album Name" textFill="#c6c6c6">
+                     <font>
+                        <Font name="Brown-Regular" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="editAlbumArtBtn" alignment="CENTER" layoutX="13.0" layoutY="50.0" prefHeight="36.0" prefWidth="170.0" text="Edit Album Art" textFill="#c6c6c6">
+                     <font>
+                        <Font name="Brown-Regular" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="deleteAlbumBtn" alignment="CENTER" layoutX="13.0" layoutY="85.0" prefHeight="36.0" prefWidth="170.0" text="Delete Album" textFill="#c6c6c6">
+                     <font>
+                        <Font name="Brown-Regular" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="sortPlaylistPane" layoutX="200.0" layoutY="75.0" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: #292929;" visible="false">
@@ -327,7 +365,7 @@
                </font>
             </Label>
             <Line endX="899.333251953125" endY="-1.52587890625E-5" layoutX="52.0" layoutY="231.0" opacity="0.28" startX="0.6666717529296875" startY="-1.52587890625E-5" stroke="#aaaaaa" strokeWidth="2.0" />
-            <Label fx:id="prof_following_btn" layoutX="306.0" layoutY="177.0" prefHeight="54.0" prefWidth="121.0" text="following" textFill="WHITE">
+            <Label fx:id="prof_following_btn" layoutX="286.0" layoutY="177.0" prefHeight="54.0" prefWidth="121.0" text="following" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="27.0" />
                </font>
@@ -337,12 +375,27 @@
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
-            <Label fx:id="prof_followers_btn" layoutX="489.0" layoutY="177.0" prefHeight="54.0" prefWidth="124.0" text="followers" textFill="WHITE">
+            <Label fx:id="prof_followers_btn" layoutX="451.0" layoutY="177.0" prefHeight="54.0" prefWidth="124.0" text="followers" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
-            <Button fx:id="listenerfollowBtn" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="follow" textFill="#252a2c">
+            <Label fx:id="prof_favourites_btn" layoutX="612.0" layoutY="177.0" prefHeight="54.0" prefWidth="139.0" text="favourites " textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="27.0" />
+               </font>
+            </Label>
+            <Label fx:id="prof_highlight_btn" layoutX="787.0" layoutY="177.0" prefHeight="54.0" prefWidth="170.0" text="highlighted " textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="27.0" />
+               </font>
+            </Label>
+            <Button fx:id="listenerfollowBtn" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="follow" textFill="#252a2c" visible="false">
+               <font>
+                  <Font name="Brown-Regular" size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="listenerunfollowBtn" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c" visible="false">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>
@@ -365,11 +418,6 @@
                   <URL value="@../CSS/MusicPlayerCSS.css" />
                </stylesheets>
             </ScrollPane>
-            <Button fx:id="listenerunfollowBtn" layoutX="842.0" layoutY="108.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c">
-               <font>
-                  <Font name="Brown-Regular" size="24.0" />
-               </font>
-            </Button>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="artist_profile_pane" layoutX="200.0" layoutY="73.0" prefHeight="643.0" prefWidth="999.0" style="-fx-background-color: #292929;" visible="false">
@@ -390,6 +438,11 @@
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
+            <Button fx:id="logoutBtnArtist" layoutX="822.0" layoutY="88.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="21.0" />
+               </font>
+            </Button>
             <Label fx:id="artist_prof_albums_btn" layoutX="50.0" layoutY="177.0" prefHeight="54.0" prefWidth="113.0" text="albums" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="27.0" />
@@ -415,7 +468,7 @@
                   <VBox fx:id="artist_vbox" prefHeight="395.0" prefWidth="989.0" style="-fx-background-color: #292929;" />
                </content>
             </ScrollPane>
-            <Button fx:id="artistunfollowBtn" layoutX="832.0" layoutY="98.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c">
+            <Button fx:id="artistunfollowBtn" layoutX="822.0" layoutY="88.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>
@@ -457,7 +510,7 @@
             </ImageView>
             <ImageView fx:id="shuffleBtn" fitHeight="20.0" fitWidth="20.0" layoutX="381.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Media/MusicPlayer%20Buttons%20copy.png" />
+                  <Image url="@../Media/MusicPlayer Buttons copy.png" />
                </image>
             </ImageView>
             <ImageView fx:id="repeatBtn" fitHeight="20.0" fitWidth="20.0" layoutX="602.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
@@ -475,7 +528,7 @@
                   <Font name="Brown-Regular" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="endTime" layoutX="650.0" layoutY="29.0" text="00:00" textFill="#bbbbbb">
+            <Label fx:id="endTime" layoutX="650.0" layoutY="29.0" text="04:13" textFill="#bbbbbb">
                <font>
                   <Font name="Brown-Regular" size="18.0" />
                </font>
@@ -552,12 +605,22 @@
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="remove_from_playlist_btn" alignment="CENTER" layoutX="13.0" layoutY="51.0" prefHeight="36.0" prefWidth="170.0" text="Remove from playlist" textFill="#c6c6c6">
+            <Label fx:id="remove_from_playlist_btn" alignment="CENTER" layoutX="13.0" layoutY="50.0" prefHeight="36.0" prefWidth="170.0" text="Remove from playlist" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="add_to_playlist_btn" alignment="CENTER" layoutX="13.0" layoutY="87.0" prefHeight="36.0" prefWidth="170.0" text="Add to playlist" textFill="#c6c6c6">
+            <Label fx:id="add_to_playlist_btn" alignment="CENTER" layoutX="13.0" layoutY="85.0" prefHeight="36.0" prefWidth="170.0" text="Add to playlist" textFill="#c6c6c6">
+               <font>
+                  <Font name="Brown-Regular" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="likeSongBtn" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Like this song" textFill="#c6c6c6">
+               <font>
+                  <Font name="Brown-Regular" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="editSongBtn" alignment="CENTER" layoutX="13.0" layoutY="155.0" prefHeight="36.0" prefWidth="170.0" text="Edit Song" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>
@@ -631,7 +694,76 @@
             <ChoiceBox fx:id="albumChoice" layoutX="15.0" layoutY="45.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00ead0; -fx-border-color: #333333; -fx-border-width: 3.5; -fx-mark-color: #333333;" stylesheets="@../CSS/MusicPlayerCSS.css" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="addtoPlaylistPane" layoutX="715.0" layoutY="40.0" prefHeight="150.0" prefWidth="230.0" style="-fx-background-color: #333333;" visible="false">
+      <AnchorPane fx:id="editSongPane" layoutX="550.0" layoutY="150.0" prefHeight="425.0" prefWidth="335.0" style="-fx-background-color: #333333;" visible="false">
+         <effect>
+            <DropShadow blurType="GAUSSIAN" />
+         </effect>
+         <children>
+            <Label fx:id="add_to_queue_btn1" layoutX="19.0" layoutY="76.0" prefHeight="36.0" prefWidth="160.0" text="Song Name:" textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="editTitleBar" alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="106.0" prefHeight="35.0" prefWidth="300.0" promptText="title" style="-fx-text-fill: #00ead0;" stylesheets="@../CSS/MusicPlayerCSS.css">
+               <font>
+                  <Font name="Brown-Regular" size="19.0" />
+               </font>
+            </TextField>
+            <Label fx:id="add_to_queue_btn11" layoutX="19.0" layoutY="141.0" prefHeight="36.0" prefWidth="160.0" text="Album Name:" textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="editAlbumBar" alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="171.0" prefHeight="35.0" prefWidth="300.0" promptText="album" style="-fx-text-fill: #00ead0;" stylesheets="@../CSS/MusicPlayerCSS.css">
+               <font>
+                  <Font name="Brown-Regular" size="19.0" />
+               </font>
+            </TextField>
+            <Label fx:id="add_to_queue_btn12" layoutX="19.0" layoutY="206.0" prefHeight="36.0" prefWidth="160.0" text="Genre:" textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="editGenreBar" alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="236.0" prefHeight="35.0" prefWidth="300.0" promptText="genre" style="-fx-text-fill: #00ead0;" stylesheets="@../CSS/MusicPlayerCSS.css">
+               <font>
+                  <Font name="Brown-Regular" size="19.0" />
+               </font>
+            </TextField>
+            <Label fx:id="add_to_queue_btn13" layoutX="19.0" layoutY="271.0" prefHeight="36.0" prefWidth="160.0" text="Year:" textFill="WHITE">
+               <font>
+                  <Font name="Brown-Regular" size="20.0" />
+               </font>
+            </Label>
+            <TextField fx:id="editYearBar" alignment="BOTTOM_LEFT" layoutX="14.0" layoutY="301.0" prefHeight="35.0" prefWidth="300.0" promptText="year" style="-fx-text-fill: #00ead0;" stylesheets="@../CSS/MusicPlayerCSS.css">
+               <font>
+                  <Font name="Brown-Regular" size="19.0" />
+               </font>
+            </TextField>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00ead0" height="50.0" layoutX="80.0" layoutY="15.0" stroke="#252a2c" strokeType="INSIDE" width="255.0" />
+            <Label layoutX="165.0" layoutY="22.0" text="edit song" textFill="#292929">
+               <font>
+                  <Font name="Brown-Regular" size="36.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#333333" height="50.0" layoutX="90.0" layoutY="15.0" stroke="#252a2c" strokeType="INSIDE" width="10.0" />
+            <Button fx:id="editConfirmBtn" layoutX="35.0" layoutY="360.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="confirm" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="editCancelBtn" layoutX="180.0" layoutY="360.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="cancel" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="18.0" />
+               </font>
+            </Button>
+            <Label fx:id="invalidAlbum" alignment="CENTER_RIGHT" layoutX="154.0" layoutY="141.0" prefHeight="36.0" prefWidth="160.0" text="invalid album" textAlignment="RIGHT" textFill="RED">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="addtoPlaylistPane" layoutX="725.0" layoutY="50.0" prefHeight="150.0" prefWidth="230.0" style="-fx-background-color: #333333;" visible="false">
          <effect>
             <DropShadow blurType="GAUSSIAN" />
          </effect>
@@ -641,7 +773,7 @@
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Button fx:id="addplaylistenterBtn" layoutX="15.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="enter" textFill="#252a2c">
+            <Button fx:id="addplaylistenerBtn" layoutX="15.0" layoutY="100.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="enter" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="18.0" />
                </font>
