@@ -59,6 +59,9 @@ public class MusicPlayerController {
     @FXML
     private ChoiceBox albumChoice, playlistChoice;
 
+    private boolean isLoggedInUser;
+    private boolean isLoggedInArtist;
+
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -1101,7 +1104,7 @@ public class MusicPlayerController {
 
             listener_vbox.getChildren().clear();
 
-            for (int i = 0; i <= 24; i++) {
+            for (int i = 0; i <= 2; i++) {
                 Label pubplaylist = new Label("Playlist" + i); //insert musicplayerController.getpublicplaylistname or something
                 listener_vbox.getChildren().add(pubplaylist);
                 listener_vbox.setSpacing(24);
@@ -1109,6 +1112,7 @@ public class MusicPlayerController {
                 pubplaylist.setAlignment(Pos.CENTER);
                 pubplaylist.setFont(Font.font(24));
                 pubplaylist.setTextAlignment(TextAlignment.CENTER);
+                isLoggedInUser = true;
 
                 pubplaylist.setOnMouseEntered(event1 -> {
                     pubplaylist.setTextFill(Color.web("#00ead0"));
@@ -1119,6 +1123,7 @@ public class MusicPlayerController {
                 });
 
                 pubplaylist.setOnMouseClicked(event1 -> {
+                    isLoggedInUser = true;
                     isAlbumOpen=false;
                     isPlaylistOpen=true;
                     isQueueOpened = false;
@@ -1126,13 +1131,95 @@ public class MusicPlayerController {
                     profile_pane.setVisible(false);
                     songsPane.setVisible(true);
                     setSongView();
-                    songViewTitle.setText("Playlist");
+                    songViewTitle.setText(pubplaylist.getText());
                     songViewCreator.setText("created by: ");
-                    followBtn.setVisible(true);
+                    if (!isLoggedInUser) {
+                        followBtn.setVisible(true);
+                        deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                        deletePlaylistLbl.setDisable(true);
+                        highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                        highLightPlaylist.setDisable(true);
+                        editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                        editPlaylistName.setDisable(true);
+                        remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                        remove_from_playlist_btn.setDisable(true);
+                        editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        editSongBtn.setDisable(true);
+                    }
+                    else {
+                        followBtn.setVisible(false);
+                        deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                        deletePlaylistLbl.setDisable(false);
+                        highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+                        highLightPlaylist.setDisable(false);
+                        editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                        editPlaylistName.setDisable(false);
+                        remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                        remove_from_playlist_btn.setDisable(false);
+                        editSongBtn.setTextFill(Color.web("#C6C6C6"));
+                        editSongBtn.setDisable(false);
+                    }
                     playListMore.setVisible(true);
                     playListBtn.setVisible(true);
                 });
             }
+
+            Label otheruser = new Label("Best of BTS");
+            listener_vbox.getChildren().add(otheruser);
+            listener_vbox.setSpacing(24);
+            otheruser.setTextFill(Color.web("#FFFFFF"));
+            otheruser.setAlignment(Pos.CENTER);
+            otheruser.setFont(Font.font(24));
+            otheruser.setTextAlignment(TextAlignment.CENTER);
+
+            otheruser.setOnMouseEntered(event1 -> {
+                otheruser.setTextFill(Color.web("#00ead0"));
+            });
+
+            otheruser.setOnMouseExited(event1 -> {
+                otheruser.setTextFill(Color.web("#FFFFFF"));
+            });
+
+            otheruser.setOnMouseClicked(event1 -> {
+                isLoggedInUser = false; //hard-code assigning; gotta make this dynamic somehow
+                isAlbumOpen=false;
+                isPlaylistOpen=true;
+                isQueueOpened = false;
+                isProfileOpened = false;
+                profile_pane.setVisible(false);
+                songsPane.setVisible(true);
+                setSongView();
+                songViewTitle.setText(otheruser.getText());
+                songViewCreator.setText("created by: ");
+                if (!isLoggedInUser) {
+                    followBtn.setVisible(true);
+                    deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                    deletePlaylistLbl.setDisable(true);
+                    highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                    highLightPlaylist.setDisable(true);
+                    editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                    editPlaylistName.setDisable(true);
+                    remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                    remove_from_playlist_btn.setDisable(true);
+                    editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                    editSongBtn.setDisable(true);
+                }
+                else {
+                    followBtn.setVisible(false);
+                    deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                    deletePlaylistLbl.setDisable(false);
+                    highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+                    highLightPlaylist.setDisable(false);
+                    editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                    editPlaylistName.setDisable(false);
+                    remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                    remove_from_playlist_btn.setDisable(false);
+                    editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                    editSongBtn.setDisable(true);
+                }
+                playListMore.setVisible(true);
+                playListBtn.setVisible(true);
+            });
         });
 
         prof_following_btn.setOnMouseClicked(event -> {
@@ -1163,6 +1250,7 @@ public class MusicPlayerController {
 
                 followings.setOnMouseClicked(event1 -> {
                     showListenerProfilePane(followings.getText());
+                    listenerunfollowBtn.setVisible(true);
                     logoutBtn.setVisible(false);
                 });
             }
@@ -1196,8 +1284,14 @@ public class MusicPlayerController {
 
                 followers.setOnMouseClicked(event1 -> {
                     showListenerProfilePane(followers.getText());
-                    //if following then display unfollow btn otherwise
-                    listenerfollowBtn.setVisible(true);
+                    /*if (!controller.isInFollowing(followers.getText())) {
+                        listenerfollowBtn.setVisible(true);
+                        listenerunfollowBtn.setVisible(false);
+                    }
+                    else {
+                        listenerfollowBtn.setVisible(false);
+                        listenerunfollowBtn.setVisible(true);
+                    }*/
                 });
             }
         });
@@ -1240,6 +1334,7 @@ public class MusicPlayerController {
                 });
 
                 highlight.setOnMouseClicked(event1 -> {
+                    isLoggedInUser = false;
                     isQueueOpened = false;
                     isProfileOpened = false;
                     profile_pane.setVisible(false);
@@ -1247,7 +1342,32 @@ public class MusicPlayerController {
                     setSongView();
                     songViewTitle.setText(highlight.getText());
                     songViewCreator.setText("created by: ");
-                    followBtn.setVisible(true);
+                    if (!isLoggedInUser) {
+                        followBtn.setVisible(true);
+                        deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                        deletePlaylistLbl.setDisable(true);
+                        highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                        highLightPlaylist.setDisable(true);
+                        editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                        editPlaylistName.setDisable(true);
+                        remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                        remove_from_playlist_btn.setDisable(true);
+                        editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        editSongBtn.setDisable(true);
+                    }
+                    else {
+                        followBtn.setVisible(false);
+                        deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                        deletePlaylistLbl.setDisable(false);
+                        highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+                        highLightPlaylist.setDisable(false);
+                        editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                        editPlaylistName.setDisable(false);
+                        remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                        remove_from_playlist_btn.setDisable(false);
+                        editSongBtn.setTextFill(Color.web("#C6C6C6"));
+                        editSongBtn.setDisable(false);
+                    }
                     playListMore.setVisible(true);
                     playListBtn.setVisible(true);
                 });
@@ -1262,7 +1382,7 @@ public class MusicPlayerController {
 
             artist_vbox.getChildren().clear();
 
-            for (int i = 0; i <= 24; i++) {
+            for (int i = 0; i <= 5; i++) {
                 Label albums = new Label("Album " + i); //insert musicplayerController.getpublicplaylistname or something
                 artist_vbox.getChildren().add(albums);
                 artist_vbox.setSpacing(24);
@@ -1280,12 +1400,39 @@ public class MusicPlayerController {
                 });
 
                 albums.setOnMouseClicked(event1 -> {
+                    isLoggedInArtist = true;
                     isQueueOpened = false;
                     isAlbumOpen=true;
                     isPlaylistOpen=false;
                     artist_profile_pane.setVisible(false);
                     songsPane.setVisible(true);
                     setSongView();
+                    if (!isLoggedInArtist) {
+                        followBtn.setVisible(true);
+                        deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                        deletePlaylistLbl.setDisable(true);
+                        highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                        highLightPlaylist.setDisable(true);
+                        editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                        editPlaylistName.setDisable(true);
+                        remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                        remove_from_playlist_btn.setDisable(true);
+                        editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        editSongBtn.setDisable(true);
+                    }
+                    else {
+                        followBtn.setVisible(false);
+                        deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                        deletePlaylistLbl.setDisable(false);
+                        highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+                        highLightPlaylist.setDisable(false);
+                        editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                        editPlaylistName.setDisable(false);
+                        remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                        remove_from_playlist_btn.setDisable(false);
+                        editSongBtn.setTextFill(Color.web("#C6C6C6"));
+                        editSongBtn.setDisable(false);
+                    }
                 });
             }
         });
@@ -1391,8 +1538,14 @@ public class MusicPlayerController {
 
                 afollowers.setOnMouseClicked(event1 -> {
                     showListenerProfilePane(afollowers.getText());
-                    artistunfollowBtn.setVisible(false);
-                    artistfollowBtn.setVisible(true);
+                    /*if (!controller.isInFollowing(afollowers.getText())) {
+                        artistfollowBtn.setVisibl   e(true);
+                        artistunfollowBtn.setVisible(false);
+                    }
+                    else {
+                        artistfollowBtn.setVisible(false);
+                        artistunfollowBtn.setVisible(true);
+                    }*/
                 });
             }
         });
@@ -1925,11 +2078,34 @@ public class MusicPlayerController {
                     song_etc_anchorpane.setVisible(true);
                     song_etc_anchorpane.setLayoutX(kebab.getLayoutX());
                     song_etc_anchorpane.setLayoutY((mouseEvent.getSceneY()));
-                    remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
-                    remove_from_playlist_btn.setDisable(false);
+                    if (!isLoggedInUser) {
+                        followBtn.setVisible(true);
+                        deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                        deletePlaylistLbl.setDisable(true);
+                        highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                        highLightPlaylist.setDisable(true);
+                        editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                        editPlaylistName.setDisable(true);
+                        remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                        remove_from_playlist_btn.setDisable(true);
+                        editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        editSongBtn.setDisable(true);
+                    }
+                    else {
+                        followBtn.setVisible(false);
+                        deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                        deletePlaylistLbl.setDisable(false);
+                        highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+                        highLightPlaylist.setDisable(false);
+                        editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                        editPlaylistName.setDisable(false);
+                        remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                        remove_from_playlist_btn.setDisable(false);
+                        editSongBtn.setTextFill(Color.web("#C6C6C6"));
+                        editSongBtn.setDisable(false);
+                    }
                     song_etc_anchorpane.setDisable(false);
                     song_etc_anchorpane.setOpacity(1);
-                    editSongBtn.setVisible(true);
                     isKebabOpened = true;
                 } else if (isKebabOpened) {
                     System.out.println("CLOSE");

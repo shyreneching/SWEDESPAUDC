@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerController">
+<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MusicPlayerController">
    <children>
       <AnchorPane fx:id="welcomePane" layoutX="200.0" layoutY="75.0" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: #292929;">
          <children>
@@ -595,7 +595,7 @@
             <DropShadow />
          </effect>
       </AnchorPane>
-      <AnchorPane fx:id="song_etc_anchorpane" layoutX="964.0" layoutY="300.0" prefHeight="200.0" prefWidth="195.0" style="-fx-background-color: #333333;" visible="false">
+      <AnchorPane fx:id="song_etc_anchorpane" layoutX="964.0" layoutY="300.0" prefHeight="207.0" prefWidth="195.0" style="-fx-background-color: #333333;" visible="false">
          <effect>
             <DropShadow blurType="GAUSSIAN" />
          </effect>
@@ -615,12 +615,12 @@
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="likeSongBtn" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Like this song" textFill="#c6c6c6">
+            <Label fx:id="likeSongBtn" alignment="CENTER" layoutX="13.0" layoutY="155.0" prefHeight="36.0" prefWidth="170.0" text="Like this song" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="editSongBtn" alignment="CENTER" layoutX="13.0" layoutY="155.0" prefHeight="36.0" prefWidth="170.0" text="Edit Song" textFill="#c6c6c6">
+            <Label fx:id="editSongBtn" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Edit Song" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>
