@@ -442,12 +442,12 @@ public class FacadeModel {
         return ((SongService) songService).getSong(songid, user.getUsername());
     }
 
-    public ObservableList<SongInterface> getAlbumSong(String name) {
+    public ObservableList<SongInterface> getAlbumSong(String name, AccountInterface viewUser) {
         AlbumInterface aa = null;
         ObservableList<Object> temp = FXCollections.observableArrayList();
         ObservableList<SongInterface> list = FXCollections.observableArrayList();
         try {
-            aa = ((AlbumService)albumService).getAlbumName(user.getUsername(), name);
+            aa = ((AlbumService)albumService).getAlbumName(viewUser.getUsername(), name);
             temp = songService.getAll();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1089,7 +1089,7 @@ public class FacadeModel {
     }
 
     public boolean unfollowPlaylist(PlaylistInterface playlist) throws SQLException {
-        return ((PlaylistService) playlistService).unfollowfollowPlaylist(playlist.getPlaylistid(), user.getUsername());
+        return ((PlaylistService) playlistService).unfollowPlaylist(playlist.getPlaylistid(), user.getUsername());
     }
 
     public SongInterface getSelectedSong() {

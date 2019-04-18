@@ -281,6 +281,11 @@
                   <Font name="Brown-Regular" size="24.0" />
                </font>
             </Button>
+            <Button fx:id="unfollowBtn" layoutX="770.0" layoutY="30.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="24.0" />
+               </font>
+            </Button>
             <AnchorPane fx:id="playListKebab" layoutX="730.0" layoutY="45.0" prefHeight="200.0" prefWidth="195.0" style="-fx-background-color: #333333;" visible="false">
                <effect>
                   <DropShadow blurType="GAUSSIAN" />
@@ -438,16 +443,16 @@
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
-            <Button fx:id="logoutBtnArtist" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
-               <font>
-                  <Font name="Brown-Regular" size="21.0" />
-               </font>
-            </Button>
             <Label fx:id="artist_prof_albums_btn" layoutX="50.0" layoutY="177.0" prefHeight="54.0" prefWidth="113.0" text="albums" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
+            <Button fx:id="logoutBtnArtist" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
+               <font>
+                  <Font name="Brown-Regular" size="21.0" />
+               </font>
+            </Button>
             <Label fx:id="artist_prof_following_btn" layoutX="399.0" layoutY="177.0" prefHeight="54.0" prefWidth="124.0" text="following" textFill="WHITE">
                <font>
                   <Font name="Brown-Regular" size="27.0" />
@@ -595,7 +600,7 @@
             <DropShadow />
          </effect>
       </AnchorPane>
-      <AnchorPane fx:id="song_etc_anchorpane" layoutX="964.0" layoutY="300.0" prefHeight="213.0" prefWidth="195.0" style="-fx-background-color: #333333;" visible="false">
+      <AnchorPane fx:id="song_etc_anchorpane" layoutX="964.0" layoutY="300.0" prefHeight="207.0" prefWidth="195.0" style="-fx-background-color: #333333;" visible="false">
          <effect>
             <DropShadow blurType="GAUSSIAN" />
          </effect>
@@ -615,12 +620,12 @@
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="likeSongBtn" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Like this song" textFill="#c6c6c6">
+            <Label fx:id="likeSongBtn" alignment="CENTER" layoutX="13.0" layoutY="155.0" prefHeight="36.0" prefWidth="170.0" text="Like this song" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="editSongBtn" alignment="CENTER" layoutX="13.0" layoutY="155.0" prefHeight="36.0" prefWidth="170.0" text="Edit Song" textFill="#c6c6c6">
+            <Label fx:id="editSongBtn" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Edit Song" textFill="#c6c6c6">
                <font>
                   <Font name="Brown-Regular" size="16.0" />
                </font>

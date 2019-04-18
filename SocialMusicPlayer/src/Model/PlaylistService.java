@@ -589,7 +589,7 @@ public class PlaylistService implements Service{
                 PlaylistInterface p = new FollowedPlaylist();
                 p.setPlaylistid(rs.getString("idplaylist"));
                 p.setName(rs.getString("playlistname"));
-                p.setUser(rs.getString("playlist.username"));
+                p.setUser(rs.getString("username"));
                 p.setSongs(FXCollections.observableArrayList());
                 p.setStatus(rs.getString("status"));
                 p.setDisplay(rs.getBoolean("display"));
@@ -609,7 +609,7 @@ public class PlaylistService implements Service{
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
                 s.setSize(rs2.getFloat("size"));
-                s.setSize(rs2.getFloat("size"));
+                s.setDate(rs2.getTimestamp("dateuploaded"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
 
@@ -962,7 +962,7 @@ public class PlaylistService implements Service{
     //add
     public boolean followPlaylist(String idplaylist, String username) throws SQLException {
         Connection connection = pool.checkOut();
-        String query = "INSERT INTO playlist VALUE (?, ?, ?, ?)";
+        String query = "INSERT INTO followedplaylist VALUE (?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
 
         try {
@@ -971,8 +971,10 @@ public class PlaylistService implements Service{
             statement.setString(3, "private");
             statement.setBoolean(4, false);
 
-            boolean added = statement.execute();
-            return added;
+            /*boolean added = statement.execute();*/
+            statement.execute();
+            /*return added;*/
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
@@ -984,15 +986,17 @@ public class PlaylistService implements Service{
     }
 
     //add
-    public boolean unfollowfollowPlaylist(String idplaylist, String username) throws SQLException {
+    public boolean unfollowPlaylist(String idplaylist, String username) throws SQLException {
         Connection connection = pool.checkOut();
         String query2 = "DELETE FROM followedplaylist WHERE idplaylist = ? AND username = ?";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             statement2.setString(1, idplaylist);
             statement2.setString(2, username);
-            boolean deleted  = statement2.execute();
-            return deleted;
+            /*boolean deleted  = statement2.execute();*/
+            statement2.execute();
+            /*return deleted;*/
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         } finally {

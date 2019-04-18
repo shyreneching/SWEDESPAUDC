@@ -4,6 +4,7 @@ import Model.*;
 import Mp3agic.InvalidDataException;
 import Mp3agic.NotSupportedException;
 import Mp3agic.UnsupportedTagException;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
@@ -135,13 +136,44 @@ public class FacadeController {
         return false;
     }
 
-    public boolean followPlaylist() {
-
+    public boolean followPlaylist(String name, String artist) {
+        PlaylistInterface p = null;
+        try {
+            p = model.getPlaylistFromUser(name, artist);
+            if(model.followPlaylist(p)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
-    public boolean unfollowPlaylist() {
+    public boolean unfollowPlaylist(String name, String artist) {
+        PlaylistInterface p = null;
+        try {
+            p = model.getPlaylistFromUser(name, artist);
+            if(model.unfollowPlaylist(p)) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    public boolean inFollowedPlaylist(String name, String artist) {
+        ObservableList<PlaylistInterface> followed = FXCollections.observableArrayList();
+        try {
+            followed = model.getFollowedPlaylistList();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(PlaylistInterface p : followed) {
+            if(p.getName().trim().equalsIgnoreCase(name) && p.getUser().trim().equalsIgnoreCase(artist)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -240,6 +272,12 @@ public class FacadeController {
     public boolean unfollowUser(AccountInterface acc) {
         try {
             if(model.unfollowUser(acc)) {
+                ObservableList<PlaylistInterface> list = model.getUserPlaylist(acc.getUsername());
+                for(PlaylistInterface p : list) {
+                    if(inFollowedPlaylist(p.getName(), acc.getUsername())) {
+                        unfollowPlaylist(p.getName(), acc.getUsername());
+                    }
+                }
                 return true;
             }
         } catch (SQLException e) {
@@ -261,11 +299,6 @@ public class FacadeController {
         return false;
     }
 
-    public boolean isInFollowers(String username) {
-
-        return false;
-    }
-
     public boolean validAlbum(String name) {
         ObservableList<AlbumInterface> list = model.getUserAlbum(model.getUser().getUsername());
         for(AlbumInterface a : list) {
@@ -282,5 +315,31 @@ public class FacadeController {
             }
         }
         return false;
+    }
+
+    public boolean validPlaylist(String name) {
+        ObservableList<PlaylistInterface> list = FXCollections.observableArrayList();
+        try {
+            list = model.getUserPlaylist();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(PlaylistInterface p : list) {
+            if(p.getName().trim().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ObservableList<PlaylistInterface> searchPlaylist(String key) {
+        ObservableList<PlaylistInterface> temp = model.searchPlaylist(key);
+        ObservableList<PlaylistInterface> filter = FXCollections.observableArrayList();
+        for(PlaylistInterface p : temp) {
+            if(isInFollowing(p.getUser()) || p.getUser().trim().equalsIgnoreCase(model.getUser().getUsername().trim())) {
+                filter.add(p);
+            }
+        }
+        return filter;
     }
 }
