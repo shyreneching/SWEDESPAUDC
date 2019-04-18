@@ -427,8 +427,11 @@ public class PlaylistService implements Service{
         try {
             statement.setString(1, playlistid);
             statement2.setString(1, playlistid);
-            boolean deleted  = statement2.execute() && statement.execute();
-            return deleted;
+            /*boolean deleted  = statement2.execute() && statement.execute();*/
+            statement2.execute();
+            statement.execute();
+            /*return deleted;*/
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
@@ -488,7 +491,7 @@ public class PlaylistService implements Service{
                 + "playlistname = ?," +
                 "status = ?," +
                 "display = ?"
-                + " WHERE idplaylist= ?";
+                + " WHERE idplaylist = ?";
 
         PreparedStatement statement = connection.prepareStatement(query);
         try {
@@ -498,6 +501,27 @@ public class PlaylistService implements Service{
             statement.setString(4, p.getPlaylistid());
             statement.executeUpdate();
             updatePlaylistSongs(playlistid, p);
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+    public boolean updatePlaylistName(String name, String playlistid) throws SQLException {
+        Connection connection = pool.checkOut();
+        /*UPDATE `musicplayer`.`playlist` SET `playlistname` = 'new plasylist' WHERE (`idplaylist` = 'P01');*/
+        String query = "UPDATE playlist SET " +
+                "playlistname = '" + name + "'" +
+                "WHERE idplaylist = '" + playlistid + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.executeUpdate();
             return true;
 
         } catch (SQLException e) {

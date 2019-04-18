@@ -400,7 +400,7 @@
                   <Font name="Brown-Regular" size="24.0" />
                </font>
             </Button>
-            <Button fx:id="logoutBtn" layoutX="840.0" layoutY="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
+            <Button fx:id="logoutBtn" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="21.0" />
                </font>
@@ -438,7 +438,7 @@
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
-            <Button fx:id="logoutBtnArtist" layoutX="822.0" layoutY="88.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
+            <Button fx:id="logoutBtnArtist" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="21.0" />
                </font>
@@ -458,7 +458,7 @@
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
-            <Button fx:id="artistfollowBtn" layoutX="822.0" layoutY="88.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="follow" textFill="#252a2c">
+            <Button fx:id="artistfollowBtn" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="follow" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>
@@ -468,7 +468,7 @@
                   <VBox fx:id="artist_vbox" prefHeight="395.0" prefWidth="989.0" style="-fx-background-color: #292929;" />
                </content>
             </ScrollPane>
-            <Button fx:id="artistunfollowBtn" layoutX="822.0" layoutY="88.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c">
+            <Button fx:id="artistunfollowBtn" layoutX="832.0" layoutY="95.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #292929; -fx-border-color: #00ead0; -fx-border-width: 3.5; -fx-text-fill: #00ead0; -fx-border-radius: 1;" text="unfollow" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="24.0" />
                </font>

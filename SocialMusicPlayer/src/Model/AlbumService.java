@@ -207,11 +207,11 @@ public class AlbumService implements Service {
         String query = "DELETE FROM album WHERE albumid = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
-
             statement.setString(1, albumid);
-
-            boolean deleted  = statement.execute();
-            return deleted;
+            statement.execute();
+            /*boolean deleted  = statement.execute();
+            return deleted;*/
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
@@ -231,7 +231,7 @@ public class AlbumService implements Service {
         AlbumInterface a = (Album) o;
         String query = "UPDATE album SET "
                 + "albumid = ?, "
-                + "albumname = ? "
+                + "albumname = ?, "
                 + "artist = ? "
                 + "WHERE albumid= ?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -244,6 +244,47 @@ public class AlbumService implements Service {
 
             statement.executeUpdate();
 
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+    public boolean updateAlbumName(String albumid, String albumname) throws SQLException {
+        Connection connection = pool.checkOut();
+        /*UPDATE `musicplayer`.`album` SET `albumname` = 'Jumbo' WHERE (`albumid` = 'A01');*/
+        String query = "UPDATE album SET "
+                + "albumname = '" + albumname + "'"
+                + "WHERE albumid = '" + albumid + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+    public boolean updateAlbumInSong(String albumid, String songid) throws SQLException {
+        Connection connection = pool.checkOut();
+
+        /*UPDATE `musicplayer`.`song` SET `albumid` = 'A02' WHERE (`idsong` = 'S02');*/
+        String query = "UPDATE song SET "
+                + "albumid = '" + albumid + "' "
+                + "WHERE idsong = '" + songid + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

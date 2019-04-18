@@ -28,6 +28,8 @@ public class GenrePlaylist implements PlaylistList {
                     temp.add(s);
                     play.setSongs(temp);
                     added = true;
+                } else {
+                    added = false;
                 }
             }
             if(!added){

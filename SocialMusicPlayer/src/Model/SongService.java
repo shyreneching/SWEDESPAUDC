@@ -437,7 +437,7 @@ public class SongService implements Service{
 
     public boolean update(String s, Object o){return false;}
 
-    //pass the songid of the song that wants to be change and song class with COMPLETE information including the updates
+    /*//pass the songid of the song that wants to be change and song class with COMPLETE information including the updates
     public boolean update(String songid, SongInterface s, String username) throws SQLException {
         Connection connection = pool.checkOut();
         AudioParserInterface ap = new AudioParser();
@@ -495,34 +495,7 @@ public class SongService implements Service{
         }
         pool.checkIn(connection);
         return false;
-    }
-
-    //add
-    public boolean updateTimesPlayed(int times, SongInterface s, String username) throws SQLException {
-        Connection connection = pool.checkOut();
-        AudioParserInterface ap = new AudioParser();
-
-        String query = "UPDATE usersong SET "
-                + "timesplayed = ? "
-                + "WHERE username= ?"
-                + " AND idsong = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        try {
-            statement.setInt(1, times);
-            statement.setString(2, username);
-            statement.setString(2, s.getSongid());
-
-            statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if(statement != null) statement.close();
-            if(connection != null)  connection.close();
-        }
-        pool.checkIn(connection);
-        return false;
-    }
+    }*/
 
     public ObservableList<SongInterface> search(String search) throws SQLException {
         Connection connection = pool.checkOut();
@@ -586,4 +559,91 @@ public class SongService implements Service{
         return null;
     }
 
+    //pass the songid of the song that wants to be change and song class with COMPLETE information including the updates
+    public boolean update(String songid, SongInterface s, String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        AudioParserInterface ap = new AudioParser();
+
+        String query = "UPDATE song SET "
+                + "songname = ?, "
+                + "genre = ?, "
+                + "artist = ?, "
+                //+ "album = ?, "
+                + "albumid = ?, "
+                + "year = ?, "
+                + "trackNumber = ?, "
+                + "length = ?, "
+                + "size = ? "
+                //+ "songfile = ? "
+                + " WHERE idsong = ?";
+
+        /*String query2 = "UPDATE usersong SET "
+                + "timesplayed = ? "
+                + "WHERE username= ?";*/
+        PreparedStatement statement = connection.prepareStatement(query);
+        //PreparedStatement statement2 = connection.prepareStatement(query2);
+        try {
+            //add
+            AlbumService as = new AlbumService();
+            AlbumInterface a = as.getAlbumName(s.getArtist(), s.getAlbum());
+
+            statement.setString(1, s.getName());
+            statement.setString(2, s.getGenre());
+            statement.setString(3, s.getArtist());
+            //statement.setString(4, s.getAlbum());
+            statement.setString(4, a.getAlbumID());
+            statement.setInt(5, s.getYear());
+            statement.setInt(6, s.getTrackNumber());
+            statement.setInt(7, s.getLength());
+            statement.setDouble(8, s.getSize());
+			/* // Write the file into the database
+            FileInputStream songfile = new FileInputStream(s.getSongfile());
+            statement.setBinaryStream(9, songfile);*/
+            statement.setString(9, songid);
+            System.out.println("updating...");
+            //add
+            updateTimesPlayed(s.getTimesplayed(), s, username);
+            /*statement2.setInt(1, s.getTimesplayed());
+            statement2.setString(2, username);*/
+
+            statement.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } /*catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } */finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
+
+    //add
+    public boolean updateTimesPlayed(int times, SongInterface s, String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        System.out.println("updating . . .");
+        String query = "UPDATE usersong SET "
+                + "timesplayed = ? "
+                + "WHERE username= ?"
+                + " AND idsong = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+            statement.setInt(1, times);
+            statement.setString(2, username);
+            statement.setString(3, s.getSongid());
+
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return false;
+    }
 }

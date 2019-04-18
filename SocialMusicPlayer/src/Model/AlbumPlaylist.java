@@ -21,7 +21,7 @@ public class AlbumPlaylist implements PlaylistList{
         else
             songs = ss;
         ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
-        boolean added = false; 
+        boolean added = false;
         
         for(SongInterface s: songs){
             if (playlists.isEmpty()){
@@ -39,12 +39,15 @@ public class AlbumPlaylist implements PlaylistList{
                         temp.add(s);
                         play.setSongs(temp);
                         added = true;
+                    } else {
+                        added= false;
                     }
                 }
                 if(!added){
                     ObservableList<SongInterface> temp = FXCollections.observableArrayList();
                     PlaylistInterface p = new Playlist();
                     p.setName(s.getAlbum());
+                    p.setUser(s.getArtist());
                     temp.add(s);
                     p.setSongs(temp);
                     playlists.add(p);

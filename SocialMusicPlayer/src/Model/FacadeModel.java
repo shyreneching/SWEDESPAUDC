@@ -491,7 +491,7 @@ public class FacadeModel {
     public boolean updateSongName(String name, SongInterface s) throws SQLException, UnsupportedTagException, NotSupportedException, InvalidDataException, IOException {
         SongInterface old = s;
         s.setName(name);
-        parser.editSongDetails(old, s);
+        /*parser.editSongDetails(old, s);*/
         /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
         ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
@@ -504,7 +504,7 @@ public class FacadeModel {
     public boolean updateSongGenre(String genre, SongInterface s) throws SQLException, UnsupportedTagException, NotSupportedException, InvalidDataException, IOException {
         SongInterface old = s;
         s.setGenre(genre);
-        parser.editSongDetails(old, s);
+        /*parser.editSongDetails(old, s);*/
         /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
         ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
@@ -530,7 +530,7 @@ public class FacadeModel {
     public boolean updateSongAlbum(String album, SongInterface s) throws SQLException, UnsupportedTagException, NotSupportedException, InvalidDataException, IOException {
         SongInterface old = s;
         s.setAlbum(album);
-        parser.editSongDetails(old, s);
+        /*parser.editSongDetails(old, s);*/
         /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
         ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
@@ -543,11 +543,35 @@ public class FacadeModel {
     public boolean updateSongYear(int year, SongInterface s) throws SQLException, UnsupportedTagException, NotSupportedException, InvalidDataException, IOException {
         SongInterface old = s;
         s.setYear(year);
-        parser.editSongDetails(old, s);
-        boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());
+        /*parser.editSongDetails(old, s);*/
+        /*boolean b = ((SongService) songService).update(s.getSongid(), s, s.getUser());*/
+        ((SongService) songService).update(s.getSongid(), s, s.getUser());
         user.setSongs(getUserSongs());
-        update();
-        return b;
+        /*update();
+        return b;*/
+        return true;
+    }
+
+    public boolean updateAlbum(AlbumInterface album, String albumname) throws SQLException {
+        return albumService.update(albumname, album);
+    }
+
+    public boolean updateAlbumName(AlbumInterface album, String albumname) {
+        try {
+            return((AlbumService)albumService).updateAlbumName(album.getAlbumID(), albumname);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateAlbumInSong(String albumid, String songid) {
+        try {
+            return ((AlbumService)albumService).updateAlbumInSong(albumid, songid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /*Updates the track number of the song given the new name and the song that wants to be changed*/
@@ -921,19 +945,32 @@ public class FacadeModel {
 
     /*Deletes the playlist in the database*/
     public boolean deletePlaylist(String playlistid) throws SQLException {
-        boolean b = playlistService.delete(playlistid);
+        /*boolean b = playlistService.delete(playlistid);*/
+        playlistService.delete(playlistid);
         user.setPlaylists(getUserPlaylist());
-        update();
-        return b;
+        /*update();
+        return b;*/
+        return true;
+    }
+
+    public boolean updatePlaylistName(String name, String id) {
+        try {
+            return ((PlaylistService)playlistService).updatePlaylistName(name, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /*Edits the name of the playlist*/
     public boolean renamePlaylist(String playlistname, PlaylistInterface p) throws SQLException {
         p.setName(playlistname);
-        boolean b = playlistService.update(p.getPlaylistid(), p);
+        /*boolean b = playlistService.update(p.getPlaylistid(), p);*/
+        playlistService.update(p.getPlaylistid(), p);
         user.setPlaylists(getUserPlaylist());
-        update();
-        return b;
+        /*update();
+        return b;*/
+        return true;
     }
 
     /*Edits the name of the user*/
