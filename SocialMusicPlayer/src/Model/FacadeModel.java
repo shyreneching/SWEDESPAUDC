@@ -352,11 +352,12 @@ public class FacadeModel {
                 }
             }
             if (exist) {
-                boolean b = ((SongService) songService).addSongtoUser(id, user.getUsername());
-                System.out.println(b);
-                user.setSongs(getUserSongs());
-                update();
-                return b;
+//                boolean b = ((SongService) songService).addSongtoUser(id, user.getUsername());
+//                System.out.println(b);
+//                user.setSongs(getUserSongs());
+//                update();
+//                return b;
+                return false;
             } else {
                 s.setSongid(String.format("S%02d", songs.size() + 1));
                 if (songService.add(s)) {
