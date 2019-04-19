@@ -646,6 +646,11 @@ public class FacadeModel {
         return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
     }
 
+    public ObservableList<PlaylistInterface> getDisplayedPlaylist() throws SQLException {
+        PlaylistFactory playlistFactory = new DisplayedPlaylistConcreteFactory();
+        return playlistFactory.playlistFactoryMethod(user.getUsername(), null);
+    }
+
     /*Returns all the songs in the database*/
     public ObservableList<SongInterface> getAllSong() throws SQLException {
         ObservableList<Object> o = songService.getAll();
