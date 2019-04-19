@@ -1,6 +1,7 @@
 package View;
 
 import Controller.LoginController;
+import Controller.UDCClient;
 import javafx.animation.PathTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,7 +85,7 @@ public class LoginView {
         moveEnd.setNode(coverScreen);
         moveEnd.setAutoReverse(false);
 
-        userTypeChoice.getItems().addAll("artist","listener");
+        resetChoiceBox();
 
         MediaPlayer mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/Media/loginVideo.mp4").toExternalForm()));
         mediaPlayer.setAutoPlay(true);
@@ -194,6 +195,8 @@ public class LoginView {
                     regUsernameInput.clear();
                     regPasswordInput.clear();
                     moveBack.play();
+                    resetChoiceBox();
+
                 } else {
                     missingLbl.setText("username already taken");
                     missingLbl.setOpacity(1);
@@ -220,6 +223,12 @@ public class LoginView {
 
         backBtn.setOnAction(event -> {
             moveBack.play();
+            resetChoiceBox();
         });
+    }
+
+    public void resetChoiceBox() {
+        userTypeChoice.getItems().clear();
+        userTypeChoice.getItems().addAll("artist","listener");
     }
 }

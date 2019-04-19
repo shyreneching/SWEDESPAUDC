@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane fx:id="welcomePane" layoutX="200.0" layoutY="75.0" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: #292929;">
          <children>
@@ -291,11 +291,6 @@
                   <DropShadow blurType="GAUSSIAN" />
                </effect>
                <children>
-                  <Label fx:id="makePublicLbl" alignment="CENTER" layoutX="14.0" layoutY="15.0" prefHeight="36.0" prefWidth="160.0" text="Make Public" textFill="#c6c6c6">
-                     <font>
-                        <Font name="Brown-Regular" size="16.0" />
-                     </font>
-                  </Label>
                   <Label fx:id="deletePlaylistLbl" alignment="CENTER" layoutX="13.0" layoutY="50.0" prefHeight="36.0" prefWidth="170.0" text="Delete Playlist" textFill="#c6c6c6">
                      <font>
                         <Font name="Brown-Regular" size="16.0" />
@@ -306,7 +301,7 @@
                         <Font name="Brown-Regular" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="editPlaylistName" alignment="CENTER" layoutX="13.0" layoutY="120.0" prefHeight="36.0" prefWidth="170.0" text="Edit Playlist Name" textFill="#c6c6c6">
+                  <Label fx:id="editPlaylistName" alignment="CENTER" layoutX="15.0" layoutY="15.0" prefHeight="36.0" prefWidth="170.0" text="Edit Playlist Name" textFill="#c6c6c6">
                      <font>
                         <Font name="Brown-Regular" size="16.0" />
                      </font>

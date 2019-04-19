@@ -3,6 +3,7 @@ package View;
 import ComparatorClass.*;
 import Controller.FacadeController;
 import Controller.MusicPlayerController;
+import Controller.UDCClient;
 import Mp3agic.InvalidDataException;
 import Mp3agic.NotSupportedException;
 import Mp3agic.UnsupportedTagException;
@@ -133,10 +134,14 @@ public class MusicPlayerView implements View {
     private int previousPlaylist;
     private int nextPlaylist;
 
+    private UDCClient client;
+
     public MusicPlayerView(Stage stage, FacadeModel model) {
         this.stage = stage;
         this.model = model;
+        this.client = new UDCClient();
         this.model.attach(this);
+        this.client.attach(this);
         viewUser = model.getUser();
         this.controller = new FacadeController(this.model);
         this.musicPlayerController = new MusicPlayerController(this.model);
@@ -156,6 +161,13 @@ public class MusicPlayerView implements View {
         musicPlayerController.setArtist(artistLbl);
         musicPlayerController.setButton(playBtn);
         musicPlayerController.setPicture(songPicture);
+        client.setMessage(model.getUser().getUsername() + "," + "login" + ",");
+        if(model.getUser().getFollowedPeople().size() > 0) {
+            for(int i = 0; i < model.getUser().getFollowedPeople().size(); i++) {
+                client.setMessage(client.getMessage() + model.getUser().getFollowedPeople().get(i).getUsername().trim() + ",");
+            }
+        }
+        client.sendPacket();
         update();
     }
 
@@ -698,14 +710,16 @@ public class MusicPlayerView implements View {
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 System.out.println("New Playlist name: " + result.get());
-                if(!result.get().trim().equalsIgnoreCase(songViewTitle.getText().trim())) {
-                    try {
-                        controller.updatePlaylistName(result.get(), model.getPlaylistFromUser(songViewTitle.getText().trim(), model.getUser().getUsername().trim()));
-                        setPlaylistView(model.getUserPlaylist());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                if(!result.get().isEmpty()) {
+                    if(!result.get().trim().equalsIgnoreCase(songViewTitle.getText().trim())) {
+                        try {
+                            controller.updatePlaylistName(result.get(), model.getPlaylistFromUser(songViewTitle.getText().trim(), model.getUser().getUsername().trim()));
+                            setPlaylistView(model.getUserPlaylist());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        songViewTitle.setText(result.get().trim());
                     }
-                    songViewTitle.setText(result.get().trim());
                 }
                 playListKebab.setVisible(false);
             }
@@ -1532,7 +1546,7 @@ public class MusicPlayerView implements View {
 
             artist_vbox.getChildren().clear();
             ObservableList<PlaylistInterface> listPlaylist = FXCollections.observableArrayList();
-            if(artistunfollowBtn.isVisible()) {
+            if(artistunfollowBtn.isVisible() || viewUser.getUsername().trim().equalsIgnoreCase(model.getUser().getUsername().trim())) {
                 try {
                     listPlaylist = model.getUserPlaylist(viewUser.getUsername());
                 } catch (SQLException e) {
@@ -1762,6 +1776,8 @@ public class MusicPlayerView implements View {
                 } else if (isProfileOpened) {
                     prof_followers_btn.fireEvent(event);
                 }
+                client.setMessage(model.getUser().getUsername().trim() + "," + "follow" + "," + acc.getUsername().trim() + ",");
+                client.sendPacket();
             }
         });
 
@@ -1789,6 +1805,8 @@ public class MusicPlayerView implements View {
                 } else if (isProfileOpened) {
                     prof_followers_btn.fireEvent(event);
                 }
+                client.setMessage(model.getUser().getUsername().trim() + "," + "unfollow" + "," + acc.getUsername().trim() + ",");
+                client.sendPacket();
             }
         });
 
@@ -1816,6 +1834,8 @@ public class MusicPlayerView implements View {
                 } else if (isProfileOpened) {
                     prof_followers_btn.fireEvent(event);
                 }
+                client.setMessage(model.getUser().getUsername().trim() + "," + "follow" + "," + acc.getUsername().trim() + ",");
+                client.sendPacket();
             }
         });
 
@@ -1843,6 +1863,8 @@ public class MusicPlayerView implements View {
                 } else if (isProfileOpened) {
                     prof_followers_btn.fireEvent(event);
                 }
+                client.setMessage(model.getUser().getUsername().trim() + "," + "unfollow" + "," + acc.getUsername().trim() + ",");
+                client.sendPacket();
             }
         });
 
@@ -2139,6 +2161,9 @@ public class MusicPlayerView implements View {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                    client.setMessage(model.getUser().getUsername().trim() + "," + "uploadplaylist" + ",");
+                    client.sendPacket();
+
                 }
             }
         });
@@ -2360,6 +2385,8 @@ public class MusicPlayerView implements View {
                     }
                     songsBtn.fire();
                 }
+                client.setMessage(model.getUser().getUsername().trim() + "," + "uploadsong" + ",");
+                client.sendPacket();
             }
         });
 
@@ -2728,6 +2755,54 @@ public class MusicPlayerView implements View {
                         unfollowBtn.setVisible(false);
                         playListMore.setVisible(true);
                         playListBtn.setVisible(true);
+                        if(viewUser.getUsername().equalsIgnoreCase(model.getUser().getUsername())) {
+                            if(controller.validPlaylist(songViewTitle.getText().trim())) {
+                                remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                                remove_from_playlist_btn.setDisable(false);
+                            } else {
+                                remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                                remove_from_playlist_btn.setDisable(true);
+                            }
+                            if(model.getUser() instanceof Artist) {
+                                deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                                deletePlaylistLbl.setDisable(false);
+                                highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                                highLightPlaylist.setDisable(true);
+                                editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                                editPlaylistName.setDisable(false);
+                                likeSongBtn.setTextFill(Color.web("#7b7b7b"));
+                                likeSongBtn.setDisable(true);
+                                if(isSongsSelected) {
+                                    editSongBtn.setTextFill(Color.web("#C6C6C6"));
+                                    editSongBtn.setDisable(false);
+                                } else {
+                                    editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                                    editSongBtn.setDisable(true);
+                                }
+                            } else if (model.getUser() instanceof Listener) {
+                                deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                                deletePlaylistLbl.setDisable(false);
+                                highLightPlaylist.setTextFill(Color.web("#C6C6C6"));
+                                highLightPlaylist.setDisable(false);
+                                editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                                editPlaylistName.setDisable(false);
+                                likeSongBtn.setTextFill(Color.web("#C6C6C6"));
+                                likeSongBtn.setDisable(false);
+                                editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                                editSongBtn.setDisable(true);
+                            }
+                        } else {
+                            deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                            deletePlaylistLbl.setDisable(true);
+                            highLightPlaylist.setTextFill(Color.web("#7b7b7b"));
+                            highLightPlaylist.setDisable(true);
+                            editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                            editPlaylistName.setDisable(true);
+                            remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                            remove_from_playlist_btn.setDisable(true);
+                            editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                            editSongBtn.setDisable(true);
+                        }
                         resetLeftTab();
 
 //                        if(((Label) node).getText().compareToIgnoreCase("Songs")==0) {
@@ -3441,6 +3516,13 @@ public class MusicPlayerView implements View {
         yearsBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
         recentsLbl.setTextFill(Color.web("#AAAAAA"));
         recentsBtn.setStyle("-fx-border-width: 0 0 0 0; -fx-border-color: #00ead0; -fx-background-color: transparent");
+    }
+
+    public void showNotification(String message) {
+        Platform.runLater(() -> {
+            notif_lbl.setText(message);
+            testBtn.fire();
+        });
     }
 
     @Override

@@ -581,7 +581,7 @@ public class PlaylistService implements Service{
         PreparedStatement statement = connection.prepareStatement(query);
         String query2 ="SELECT * FROM songcollection " +
                 "INNER JOIN song ON songcollection.idsong = song.idsong " +
-                "NATURAL JOIN album";
+                "NATURAL JOIN album ";
         PreparedStatement statement2 = connection.prepareStatement(query2);
         try {
             ResultSet rs = statement.executeQuery();
