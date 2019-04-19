@@ -23,8 +23,8 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
         String query = "INSERT INTO song VALUE (?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
-        String query2 = "INSERT INTO usersong VALUE (?, ?, ?)";
-        PreparedStatement statement2 = connection.prepareStatement(query2);
+//        String query2 = "INSERT INTO usersong VALUE (?, ?, ?)";
+//        PreparedStatement statement2 = connection.prepareStatement(query2);
 
         try {
             AlbumService as = new AlbumService();
@@ -43,12 +43,12 @@ public class SongService implements Service{
             statement.setBinaryStream(10, songfile);
             statement.setTimestamp(11, timestamp);
 
-            statement2.setString(1, s.getSongid());
-            statement2.setString(2, s.getUser());
-            statement2.setInt(3, s.getTimesplayed());
+//            statement2.setString(1, s.getSongid());
+//            statement2.setString(2, s.getUser());
+//            statement2.setInt(3, s.getTimesplayed());
 
             statement.execute();
-            statement2.execute();
+//            statement2.execute();
 
             return true;
         } catch (SQLException e){
