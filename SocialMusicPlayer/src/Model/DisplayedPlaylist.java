@@ -16,14 +16,16 @@ public class DisplayedPlaylist implements PlaylistList {
     @Override
     public ObservableList<PlaylistInterface> createPlaylist(String username, ObservableList<SongInterface> s) throws SQLException {
         ObservableList<PlaylistInterface> playlists = FXCollections.observableArrayList();
-        playlists.addAll(playlistService.getFollowedPlaylist(username));
-        playlists.addAll((PlaylistInterface) playlistService.getAll());
+//        commented out in favor of more appropriate service method
+//        playlists.addAll(playlistService.getFollowedPlaylist(username));
+//        playlists.addAll((PlaylistInterface) playlistService.getAll());
+//
+//        for(PlaylistInterface p : playlists) {
+//            if(!p.isDisplay() || p.getUser().equals(username))
+//                playlists.remove(p);
+//        }
 
-        for(PlaylistInterface p : playlists) {
-            if(!p.isDisplay() || p.getUser().equals(username))
-                playlists.remove(p);
-        }
-
+        playlists = playlistService.getUserDisplayedPlaylist(username);
         return playlists;
     }
 }
