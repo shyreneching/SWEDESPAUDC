@@ -619,7 +619,6 @@ public class FacadeModel {
         return parser.getSongImage(s);
     }
 
-
     /*Updates the album of the song given the new name and the song that wants to be changed*/
 //    public boolean playSong(SongInterface s) throws SQLException {
     public File playSong(SongInterface s) throws SQLException {
@@ -642,9 +641,10 @@ public class FacadeModel {
 //        return true;
     }
 
-    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
-        return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
-    }
+//    this method is redundant with getDisplayedPlaylist, but the service method used here is more appropriate
+//    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
+//        return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
+//    }
 
     public ObservableList<PlaylistInterface> getDisplayedPlaylist() throws SQLException {
         PlaylistFactory playlistFactory = new DisplayedPlaylistConcreteFactory();
@@ -878,6 +878,26 @@ public class FacadeModel {
     public boolean makeFollowedPlaylistPublic(PlaylistInterface p) throws SQLException {
         p.setStatus("public");
         return ((PlaylistService)playlistService).updateFollowedPlaylist(p.getPlaylistid(), (FollowedPlaylist) p);
+    }
+
+    public boolean highlightPlaylist(PlaylistInterface p) throws SQLException{
+        p.setDisplay(true);
+        return playlistService.update(p.getPlaylistid(), p);
+    }
+
+    public boolean highlightFollowedPlaylist(PlaylistInterface p) throws SQLException{
+        p.setDisplay(true);
+        return playlistService.update(p.getPlaylistid(), p);
+    }
+
+    public boolean unhighlightPlaylist(PlaylistInterface p) throws SQLException{
+        p.setDisplay(false);
+        return playlistService.update(p.getPlaylistid(), p);
+    }
+
+    public boolean unhighlightFollowedPlaylist(PlaylistInterface p) throws SQLException{
+        p.setDisplay(false);
+        return playlistService.update(p.getPlaylistid(), p);
     }
 
     /*Takes specifc playlist*/
