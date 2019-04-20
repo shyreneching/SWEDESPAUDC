@@ -89,7 +89,6 @@ public class PlaylistService implements Service{
             statement.setString(1, playlistid);
             statement.setString(2, s.getSongid());
             Boolean added = statement.execute();
-
             return added;
         } catch (SQLException e){
             e.printStackTrace();
@@ -487,7 +486,7 @@ public class PlaylistService implements Service{
         Connection connection = pool.checkOut();
 
         PlaylistInterface p = (Playlist) o;
-        String query = "UPDATE playlist, SET "
+        String query = "UPDATE playlist SET "
                 + "playlistname = ?," +
                 "status = ?," +
                 "display = ?"
@@ -935,7 +934,7 @@ public class PlaylistService implements Service{
                 s.setTrackNumber(rs2.getInt("trackNumber"));
                 s.setLength(rs2.getInt("length"));
                 s.setSize(rs2.getFloat("size"));
-                s.setSize(rs2.getFloat("size"));
+                s.setDate(rs2.getTimestamp("dateuploaded"));
                 // sets the name to "Artist-title"
                 s.setFilename(s.getArtist() + "-"+ s.getName()+ ".mp3");
 

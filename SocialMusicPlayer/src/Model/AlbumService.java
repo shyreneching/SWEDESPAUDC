@@ -31,9 +31,10 @@ public class AlbumService implements Service {
             statement.setTimestamp(4, timestamp);
             statement.setTimestamp(5, null);
 
-            boolean added = statement.execute();
-
-            return added;
+            /*boolean added = statement.execute();
+            return added;*/
+            statement.execute();
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         }finally {
@@ -94,14 +95,18 @@ public class AlbumService implements Service {
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
                 //gets the song from the databse and make put it in a File datatype
-                File theFile = new File("src/Music/" + rs.getString("artist") + "-"+ rs.getString("albumname")+ ".jpg");
+                File theFile = new File("src/Music/" + rs.getString("artist") + "_"+ rs.getString("albumname")+ ".jpg");
                 OutputStream out = new FileOutputStream(theFile);
                 InputStream input = rs.getBinaryStream("albumart");
                 byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
-                while (input.read(buffer) > 0) {
-                    out.write(buffer);
+                if(input != null) {
+                    while (input.read(buffer) > 0) {
+                        out.write(buffer);
+                    }
+                    return theFile;
+                } else {
+                    return null;
                 }
-                return theFile;
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -177,7 +182,7 @@ public class AlbumService implements Service {
         // Get a connection:
         Connection connection = pool.checkOut();
 
-        String query ="SELECT * FROM album WHERE albumname = '" + albumname + "' AND artist =  '" + username +"'";
+        String query ="SELECT * FROM album WHERE albumname = '" + albumname.trim() + "' AND artist =  '" + username.trim() +"'";
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 

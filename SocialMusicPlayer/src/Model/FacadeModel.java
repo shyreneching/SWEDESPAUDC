@@ -104,7 +104,7 @@ public class FacadeModel {
         ObservableList<Object> list = FXCollections.observableArrayList();
         ObservableList<AccountInterface> accs = FXCollections.observableArrayList();
         try {
-             list = accountService.getAll();
+            list = accountService.getAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -482,10 +482,22 @@ public class FacadeModel {
     /*Deletes one specific song in the database using songid
      * Automatically deletes the song in the playlist that contains the song*/
     public boolean deleteSong(String songid) throws SQLException {
-        boolean b = ((SongService) songService).delete(songid, (AccountInterface) user);
+        /*boolean b = ((SongService) songService).delete(songid, (AccountInterface) user);*/
+        ((SongService) songService).delete(songid, user);
         user.setSongs(getUserSongs());
-        update();
-        return b;
+        /*update();
+        return b;*/
+        return true;
+    }
+
+    /*Unlike a specific song*/
+    public boolean unlikeSong(String songid) {
+        try {
+            ((SongService)songService).unlikeSong(songid, user.getUsername().trim());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     /*Updates the title of the song given the new name and the song that wants to be changed*/
@@ -619,6 +631,7 @@ public class FacadeModel {
         return parser.getSongImage(s);
     }
 
+
     /*Updates the album of the song given the new name and the song that wants to be changed*/
 //    public boolean playSong(SongInterface s) throws SQLException {
     public File playSong(SongInterface s) throws SQLException {
@@ -641,10 +654,9 @@ public class FacadeModel {
 //        return true;
     }
 
-//    this method is redundant with getDisplayedPlaylist, but the service method used here is more appropriate
-//    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
-//        return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
-//    }
+    public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
+        return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
+    }
 
     public ObservableList<PlaylistInterface> getDisplayedPlaylist() throws SQLException {
         PlaylistFactory playlistFactory = new DisplayedPlaylistConcreteFactory();
@@ -666,7 +678,7 @@ public class FacadeModel {
 
     /*Returns the songs that the user imported*/
     public ObservableList<SongInterface> getUserSongs() throws SQLException {
-        ObservableList<SongInterface> songs = ((SongService) songService).getUserSong(user.getUsername());
+        ObservableList<SongInterface> songs = ((SongService) songService).getUserSong(user.getUsername().trim());
         if (songs != null) {
             return songs;
         }

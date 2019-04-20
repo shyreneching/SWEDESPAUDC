@@ -7,6 +7,7 @@ import Mp3agic.UnsupportedTagException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -44,6 +45,13 @@ public class FacadeController {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateAlbumArt(String albumid, File file) {
+        if(model.uploadALbumArt(albumid, file)) {
+            return true;
         }
         return false;
     }
@@ -106,7 +114,27 @@ public class FacadeController {
     }
 
     public boolean deleteSong(SongInterface song) {
+        try {
+            if(model.deleteSong(song.getSongid())) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    public boolean likeSong(SongInterface song) {
+        if(model.likeSong(song)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unlikeSong(SongInterface song) {
+        if(model.unlikeSong(song.getSongid())) {
+            return true;
+        }
         return false;
     }
 
@@ -286,6 +314,48 @@ public class FacadeController {
         return false;
     }
 
+    public boolean highlightPlaylist(PlaylistInterface playlist) {
+        if(inFollowedPlaylist(playlist.getName().trim(), model.getUser().getUsername().trim())) {
+            try {
+                if(model.highlightFollowedPlaylist(playlist)) {
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                if(model.highlightPlaylist(playlist)) {
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean unhighlightPlaylist(PlaylistInterface playlist) {
+        if(inFollowedPlaylist(playlist.getName().trim(), model.getUser().getUsername().trim())) {
+            try {
+                if(model.unhighlightFollowedPlaylist(playlist)) {
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                if(model.unhighlightPlaylist(playlist)) {
+                    return true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public boolean isInFollowing(String username) {
         try {
             for(AccountInterface acc : model.getFollowed()) {
@@ -335,11 +405,21 @@ public class FacadeController {
     public ObservableList<PlaylistInterface> searchPlaylist(String key) {
         ObservableList<PlaylistInterface> temp = model.searchPlaylist(key);
         ObservableList<PlaylistInterface> filter = FXCollections.observableArrayList();
-        for(PlaylistInterface p : temp) {
-            if(isInFollowing(p.getUser()) || p.getUser().trim().equalsIgnoreCase(model.getUser().getUsername().trim())) {
+        for (PlaylistInterface p : temp) {
+            if (isInFollowing(p.getUser()) || p.getUser().trim().equalsIgnoreCase(model.getUser().getUsername().trim())) {
                 filter.add(p);
             }
         }
         return filter;
+    }
+
+    public boolean inLikedSong(SongInterface song) {
+        ObservableList<SongInterface> list = model.getlikedSongs();
+        for(SongInterface s : list) {
+            if(s.getSongid().equalsIgnoreCase(song.getSongid())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

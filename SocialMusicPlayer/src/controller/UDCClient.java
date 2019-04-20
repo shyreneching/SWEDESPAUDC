@@ -43,8 +43,17 @@ public class UDCClient {
                 }
                 String sentence = new String(receivePacket.getData());
                 if(!sentence.trim().equalsIgnoreCase("")) {
-                    System.out.println("From Server: " + sentence);
-                    view.showNotification(sentence);
+                    if(sentence.trim().contains("delete")) {
+                        String[] temp = sentence.split(",");
+                        view.resetSong(temp[1]);
+                        view.showNotification("The song has been deleted by the owner");
+                    } else if(sentence.trim().contains("edit")) {
+                        String[] temp = sentence.split(",");
+                        view.updateSong(temp[1]);
+                    } else {
+                        System.out.println("From Server: " + sentence);
+                        view.showNotification(sentence);
+                    }
                 }
             }
         });

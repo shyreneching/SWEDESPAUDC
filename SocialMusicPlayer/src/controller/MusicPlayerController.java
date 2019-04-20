@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.AlbumInterface;
 import Model.FacadeModel;
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -16,6 +17,9 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Port;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 public class MusicPlayerController {
@@ -180,6 +184,7 @@ public class MusicPlayerController {
         media.stop();
         play = false;
         played = false;
+        playBtn.setImage(new Image(getClass().getResourceAsStream("/Media/play_button.png")));
     }
 
     public void setButton(ImageView playBtn) {
@@ -197,9 +202,10 @@ public class MusicPlayerController {
         artist.setText(model.getCurrentSong().getArtist());
         end.setText(getDuration(model.getCurrentSong().getLength()));
         try {
-            File file = model.getSongArt(model.getCurrentSong());
+            AlbumInterface aa = model.getAlbumFromUser(model.getCurrentSong().getAlbum().trim(), model.getCurrentSong().getArtist().trim());
+            File file = model.getAlbumArt(aa.getAlbumID());
             if(file != null) {
-                songPicture.setImage(new Image(getClass().getResourceAsStream(file.toURI().toString())));
+                songPicture.setImage(new Image(file.toURI().toString().replaceAll("%20", " ").replaceAll("\'","\\'")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

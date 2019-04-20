@@ -23,8 +23,8 @@ public class SongService implements Service{
         Connection connection = pool.checkOut();
         String query = "INSERT INTO song VALUE (?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
-//        String query2 = "INSERT INTO usersong VALUE (?, ?, ?)";
-//        PreparedStatement statement2 = connection.prepareStatement(query2);
+        String query2 = "INSERT INTO usersong VALUE (?, ?, ?)";
+        PreparedStatement statement2 = connection.prepareStatement(query2);
 
         try {
             AlbumService as = new AlbumService();
@@ -43,12 +43,12 @@ public class SongService implements Service{
             statement.setBinaryStream(10, songfile);
             statement.setTimestamp(11, timestamp);
 
-//            statement2.setString(1, s.getSongid());
-//            statement2.setString(2, s.getUser());
-//            statement2.setInt(3, s.getTimesplayed());
+            statement2.setString(1, s.getSongid());
+            statement2.setString(2, s.getUser());
+            statement2.setInt(3, s.getTimesplayed());
 
             statement.execute();
-//            statement2.execute();
+            statement2.execute();
 
             return true;
         } catch (SQLException e){
@@ -75,9 +75,10 @@ public class SongService implements Service{
             statement.setString(2, username);
             statement.setInt(3, 0);
 
-            boolean added = statement.execute();
-
-            return added;
+            /*boolean added = statement.execute();
+            return added;*/
+            statement.execute();
+            return true;
         } catch (SQLException e){
 
         } finally {
@@ -345,78 +346,38 @@ public class SongService implements Service{
         return null;
     }
 
-
-    //get songs with the same name
-    public ObservableList<SongInterface> getSongName(String songname, String username) throws SQLException {
-        Connection connection = pool.checkOut();
-        ObservableList<SongInterface> songs = FXCollections.observableArrayList();
-
-        String query ="SELECT * FROM song NATURAL JOIN usersong NATURAL JOIN album WHERE songname = '" + songname +
-                "' AND '" + username + "'";
-        PreparedStatement statement = connection.prepareStatement(query);
-        try {
-
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()){
-                SongInterface s = new Song();
-                s.setSongid(rs.getString("idsong"));
-                s.setName(rs.getString("songname"));
-                s.setGenre(rs.getString("genre"));
-                s.setArtist(rs.getString("artist"));
-                s.setAlbum(rs.getString("albumname"));
-                s.setYear(rs.getInt("year"));
-                s.setTrackNumber(rs.getInt("trackNumber"));
-                s.setLength(rs.getInt("length"));
-                s.setSize(rs.getFloat("size"));
-
-                // sets the name to "Artist-title"
-                s.setFilename("src/Music/" + s.getArtist() + "-"+ s.getName()+ ".mp3");
-
-                /*//gets the song from the databse and make put it in a File datatype
-                File theFile = new File(s.getFilename());
-                OutputStream out = new FileOutputStream(theFile);
-                InputStream input = rs.getBinaryStream("songfile");
-                byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
-                while (input.read(buffer) > 0) {
-                    out.write(buffer);
-                }
-                s.setSongfile(theFile);
-                //takes the exact location of the song
-                s.setFilelocation(theFile.getAbsolutePath());*/
-                s.setUser(rs.getString("username"));
-                s.setTimesplayed(rs.getInt("timesplayed"));
-                s.setDate(rs.getTimestamp("dateuploaded"));
-                songs.add(s);
-            }
-            return songs;
-        } catch (SQLException e){
-            e.printStackTrace();
-        } /*catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } */finally {
-            if(statement != null) statement.close();
-            if(connection != null)  connection.close();
-        }
-        pool.checkIn(connection);
-        return null;
-    }
-
     public boolean delete(String s){return false;}
+
+    public boolean unlikeSong(String songid, String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        String query = "DELETE FROM usersong " +
+                "WHERE idsong = '" + songid.trim() + "' AND username = '" + username.trim() + "'";
+
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.execute();
+        return true;
+    }
 
     //pass the song id to delete the specific song
     public boolean delete(String songid, AccountInterface a) throws SQLException {
         Connection connection = pool.checkOut();
-        String query = "DELETE FROM usersong " +
+        String query0 = "DELETE FROM recentlyplayed " +
+                "WHERE idsong = '" + songid + "'";
+        String query1 = "DELETE FROM usersong " +
                 "WHERE idsong = ? AND username = ?";
         String query2 = "DELETE FROM songcollection " +
-                "WHERE idsong = ? AND playlistid = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
+                "WHERE idsong = ? AND idplaylist = ?";
+        String query3 = "DELETE FROM song " +
+                "WHERE idsong = '" + songid + "'";
+        PreparedStatement statement0 = connection.prepareStatement(query0);
+        PreparedStatement statement1 = connection.prepareStatement(query1);
         PreparedStatement statement2 = connection.prepareStatement(query2);
+        PreparedStatement statement3 = connection.prepareStatement(query3);
         try {
-            statement.setString(1, songid);
-            statement.setString(2, a.getUsername());
+            statement0.execute();
+            statement1.setString(1, songid);
+            statement1.setString(2, a.getUsername());
+            statement1.execute();
             if(a.getPlaylists() != null) {
                 for (PlaylistInterface p: a.getPlaylists()) {
                     statement2.setString(1, songid);
@@ -424,14 +385,17 @@ public class SongService implements Service{
                     statement2.execute();
                 }
             }
-            boolean deleted  = statement.execute();
-            return deleted;
+            /*boolean deleted  = statement.execute();
+            return deleted;*/
+            statement3.execute();
+            return true;
         } catch (SQLException e){
             e.printStackTrace();
         } finally {
-            if(statement != null) statement.close();
+            if(statement1 != null) statement1.close();
             if(connection != null)  connection.close();
         }
+        pool.checkIn(connection);
         return false;
     }
 

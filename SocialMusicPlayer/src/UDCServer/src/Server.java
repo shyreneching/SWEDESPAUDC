@@ -6,7 +6,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.regex.Pattern;
 
 public class Server {
 
@@ -46,23 +45,19 @@ public class Server {
                 String next = "";
                 String[] separator = sentence.split(",");
                 if(separator[1].equalsIgnoreCase("login")) {
-                    if(inUserList(separator[0].trim())) {
-                        IPAddress.set(getUserIndex(separator[0].trim()),receivePacket.getAddress());
-                        port.set(getUserIndex(separator[0].trim()), receivePacket.getPort());
-                    } else {
-                        username.add(new User(separator[0].trim()));
-                        IPAddress.add(receivePacket.getAddress());
-                        port.add(receivePacket.getPort());
+                    username.add(new User(separator[0].trim()));
+                    IPAddress.add(receivePacket.getAddress());
+                    port.add(receivePacket.getPort());
 
-                        if(isValid(separator[2].trim())) {
-                            for(int i = 2; i < separator.length; i++) {
-                                if(isValid(separator[i].trim())) {
-                                    System.out.println(separator[i]);
-                                    getUser(separator[0].trim()).getFollower().add(separator[i].trim());
-                                }
+                    if(isValid(separator[2].trim())) {
+                        for(int i = 2; i < separator.length; i++) {
+                            if(isValid(separator[i].trim())) {
+                                System.out.println(separator[i]);
+                                getUser(separator[0].trim()).getFollower().add(separator[i].trim());
                             }
                         }
                     }
+
                     next = "";
                     sendData = next.getBytes();
                     sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), receivePacket.getPort());
@@ -71,18 +66,43 @@ public class Server {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else if (separator[1].equalsIgnoreCase("logout")) {
+                    User x = null;
+                    for(User u : username) {
+                        if(u.getName().trim().equalsIgnoreCase(separator[0].trim())) {
+                            x = u;
+                            break;
+                        }
+                    }
+                    int i = getUserIndex(x.getName().trim());
+                    IPAddress.remove(i);
+                    port.remove(i);
+                    username.remove(x);
                 } else if(separator[1].equalsIgnoreCase("follow")) {
-                    getUser(separator[2].trim()).getFollower().add(separator[0].trim());
-                    next = separator[0].trim() + " has followed you";
-                    sendData = next.getBytes();
-                    sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), receivePacket.getPort());
-                    try {
-                        server.send(sendPacket);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(getUser(separator[2].trim()) != null) {
+                        getUser(separator[2].trim()).getFollower().add(separator[0].trim());
+                        next = separator[0].trim() + " has followed you";
+                        sendData = next.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress.get(getUserIndex(separator[2].trim())), port.get(getUserIndex(separator[2].trim())));
+                        try {
+                            server.send(sendPacket);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        next = "";
+                        sendData = next.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), receivePacket.getPort());
+                        try {
+                            server.send(sendPacket);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else if(separator[1].equalsIgnoreCase("unfollow")) {
-                    getUser(separator[2].trim()).getFollower().remove(separator[0].trim());
+                    if(getUser(separator[2].trim()) != null) {
+                        getUser(separator[2].trim()).getFollower().remove(separator[0].trim());
+                    }
                     next = "";
                     sendData = next.getBytes();
                     sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), receivePacket.getPort());
@@ -90,6 +110,71 @@ public class Server {
                         server.send(sendPacket);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                } else if (separator[1].equalsIgnoreCase("like")) {
+                    if(getUser(separator[2].trim()) != null) {
+                        next = separator[0].trim() + " liked your song";
+                        sendData = next.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress.get(getUserIndex(separator[2].trim())), port.get(getUserIndex(separator[2].trim())));
+                        try {
+                            server.send(sendPacket);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        next = "";
+                        sendData = next.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), receivePacket.getPort());
+                        try {
+                            server.send(sendPacket);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else if (separator[1].equalsIgnoreCase("unlike")) {
+                    next = "";
+                    sendData = next.getBytes();
+                    sendPacket = new DatagramPacket(sendData, sendData.length, receivePacket.getAddress(), receivePacket.getPort());
+                    try {
+                        server.send(sendPacket);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if(separator[1].equalsIgnoreCase("delete")) {
+                    next = "delete" + "," + separator[2] + ",";
+                    sendData = next.getBytes();
+                    for(int i = 0; i < username.size(); i++) {
+                        if(!username.get(i).getName().equalsIgnoreCase(separator[0])) {
+                            sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress.get(i), port.get(i));
+                            try {
+                                server.send(sendPacket);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else if(separator[1].equalsIgnoreCase("edit")) {
+                    next = "edit" + "," + separator[2] + ",";
+                    sendData = next.getBytes();
+                    for(int i = 0; i < username.size(); i++) {
+                        if(!username.get(i).getName().equalsIgnoreCase(separator[0])) {
+                            sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress.get(i), port.get(i));
+                            try {
+                                server.send(sendPacket);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else if(separator[1].equalsIgnoreCase("uploadsong") || separator[1].equalsIgnoreCase("uploadplaylist")) {
                     if(separator[1].equalsIgnoreCase("uploadsong")) {
@@ -120,15 +205,6 @@ public class Server {
             }
         });
         t.start();
-    }
-
-    public boolean inUserList(String name) {
-        for(User u : username) {
-            if(u.getName().trim().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public int getUserIndex(String name) {
