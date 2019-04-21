@@ -25,7 +25,17 @@ public class DisplayedPlaylist implements PlaylistList {
 //                playlists.remove(p);
 //        }
 
-        playlists = playlistService.getUserDisplayedPlaylist(username);
+        for(Object ob : playlistService.getFollowedPlaylist(username)) {
+            if(((PlaylistInterface)ob).isDisplay()) {
+                playlists.add((PlaylistInterface)ob);
+            }
+        }
+
+        for(Object ob : playlistService.getAll()) {
+            if(((PlaylistInterface)ob).getUser().equalsIgnoreCase(username) && ((PlaylistInterface)ob).isDisplay()) {
+                playlists.add((PlaylistInterface)ob);
+            }
+        }
         return playlists;
     }
 }

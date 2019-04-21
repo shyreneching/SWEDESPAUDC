@@ -23,7 +23,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainPane" prefHeight="790.0" prefWidth="1163.0" style="-fx-background-color: #292929;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane fx:id="welcomePane" layoutX="200.0" layoutY="75.0" prefHeight="640.0" prefWidth="1000.0" style="-fx-background-color: #292929;">
          <children>
@@ -139,6 +139,11 @@
             <ImageView fx:id="createBtn" fitHeight="35.0" fitWidth="35.0" layoutX="740.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Media/add_button.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="notifOpenBtn" fitHeight="35.0" fitWidth="35.0" layoutX="865.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Media/notif_button.png" />
                </image>
             </ImageView>
          </children>
@@ -574,9 +579,9 @@
       </Path>
       <AnchorPane fx:id="notif_pane" layoutX="795.0" layoutY="560.0" prefHeight="142.0" prefWidth="400.0" style="-fx-background-color: #202020;" visible="false">
          <children>
-            <Label fx:id="notif_lbl" alignment="CENTER" layoutX="4.0" layoutY="81.0" prefHeight="54.0" prefWidth="390.0" text="BTS has uploaded a new album!" textFill="#00ead0">
+            <Label fx:id="notif_lbl" alignment="TOP_LEFT" layoutX="25.0" layoutY="76.0" prefHeight="54.0" prefWidth="351.0" text="BTS released a new album! " textFill="#00ead0">
                <font>
-                  <Font size="20.0" />
+                  <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
             <Label fx:id="notif_title" alignment="CENTER" layoutX="106.0" layoutY="36.0" prefHeight="38.0" prefWidth="176.0" text="NOTICE" textFill="WHITE">
@@ -703,6 +708,11 @@
             <ChoiceBox fx:id="albumChoice" layoutX="15.0" layoutY="45.0" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #00ead0; -fx-border-color: #333333; -fx-border-width: 3.5; -fx-mark-color: #333333;" stylesheets="@../CSS/MusicPlayerCSS.css" />
          </children>
       </AnchorPane>
+      <ScrollPane fx:id="notifHistoryPane" hbarPolicy="NEVER" layoutX="900.0" layoutY="75.0" prefHeight="632.0" prefWidth="300.0" style="-fx-background-color: #292929;" stylesheets="@../CSS/MusicPlayerCSS.css" visible="false">
+         <content>
+            <VBox fx:id="notifHistoryVBox" prefHeight="630.0" prefWidth="300.0" style="-fx-background-color: #202020; -fx-border-color: #202020;" />
+         </content>
+      </ScrollPane>
       <AnchorPane fx:id="editSongPane" layoutX="550.0" layoutY="150.0" prefHeight="425.0" prefWidth="335.0" style="-fx-background-color: #333333;" visible="false">
          <effect>
             <DropShadow blurType="GAUSSIAN" />

@@ -43,16 +43,32 @@ public class UDCClient {
                 }
                 String sentence = new String(receivePacket.getData());
                 if(!sentence.trim().equalsIgnoreCase("")) {
-                    if(sentence.trim().contains("delete")) {
+                    if(sentence.trim().contains("notification")) {
                         String[] temp = sentence.split(",");
-                        view.resetSong(temp[1]);
-                        view.showNotification("The song has been deleted by the owner");
-                    } else if(sentence.trim().contains("edit")) {
-                        String[] temp = sentence.split(",");
-                        view.updateSong(temp[1]);
-                    } else {
                         System.out.println("From Server: " + sentence);
-                        view.showNotification(sentence);
+                        String time = "";
+                        for(int i = 2; i < temp.length; i++) {
+                            time += temp[i] + ",";
+                        }
+                        view.addNotification(temp[1], time);
+                    } else {
+                        if(sentence.trim().contains("delete")) {
+                            String[] temp = sentence.split(",");
+                            view.resetSong(temp[1]);
+                            view.showNotification("This song has been deleted by the owner");
+                        } else if(sentence.trim().contains("edit")) {
+                            String[] temp = sentence.split(",");
+                            view.updateSong(temp[1]);
+                        } else {
+                            String[] temp = sentence.split(",");
+                            System.out.println("From Server: " + sentence);
+                            String time = "";
+                            for(int i = 1; i < temp.length; i++) {
+                                time += temp[i] + ",";
+                            }
+                            view.addNotification(temp[0], time);
+                            view.showNotification(sentence);
+                        }
                     }
                 }
             }

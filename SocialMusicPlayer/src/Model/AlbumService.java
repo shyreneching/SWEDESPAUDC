@@ -95,7 +95,16 @@ public class AlbumService implements Service {
             ResultSet rs = statement.executeQuery();
             if(rs.next()) {
                 //gets the song from the databse and make put it in a File datatype
-                File theFile = new File("src/Music/" + rs.getString("artist") + "_"+ rs.getString("albumname")+ ".jpg");
+                File theFile = new File("src/Music/" + rs.getString("artist") + "_"+ rs.getString("albumname")+ ".png");
+                /*FileOutputStream fos = new FileOutputStream(theFile);
+                byte b[];
+                Blob blob;
+
+                blob = rs.getBlob("albumart");
+                if(blob != null) {
+                    b = blob.getBytes(1,(int)blob.length());
+                    fos.write(b);
+                }*/
                 OutputStream out = new FileOutputStream(theFile);
                 InputStream input = rs.getBinaryStream("albumart");
                 byte[] buffer = new byte[4096];  // how much of the file to read/write at a time
@@ -133,15 +142,17 @@ public class AlbumService implements Service {
         PreparedStatement statement = connection.prepareStatement(query);
         try {
 
-            //FileInputStream albumImage = new FileInputStream(albumart);
-            //statement.setString(1, albumImage);
-            statement.setString(1, albumart.toString());
+            FileInputStream albumImage = new FileInputStream(albumart);
+            statement.setBinaryStream(1, albumImage);
+            //statement.setString(1, albumart.toString());
             statement.setString(2, albumid);
 
             statement.executeUpdate();
 
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
             if(statement != null) statement.close();

@@ -36,9 +36,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 public class MusicPlayerView implements View {
@@ -60,6 +60,8 @@ public class MusicPlayerView implements View {
     private ObservableList<String> albumCreator = FXCollections.observableArrayList();
     private ObservableList<String> playlistCreator = FXCollections.observableArrayList();
     private ObservableList<String> publicPlaylistCreator = FXCollections.observableArrayList();
+    private ObservableList<String> notificationMessage = FXCollections.observableArrayList();
+    private ObservableList<String> notificationTime = FXCollections.observableArrayList();
 
     private String[] month = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
@@ -72,7 +74,7 @@ public class MusicPlayerView implements View {
     @FXML
     private ProgressBar progress, volProgress;
     @FXML
-    private ImageView transitionGif, playBtn, nextBtn, prevBtn, shuffleBtn, repeatBtn, muteBtn, searchBtn, playListMore, createPlaylistBtn, queueBtn, createBtn, homeBtn, songPicture;
+    private ImageView transitionGif, playBtn, nextBtn, prevBtn, shuffleBtn, repeatBtn, muteBtn, searchBtn, playListMore, createPlaylistBtn, queueBtn, createBtn, homeBtn, songPicture, notifOpenBtn;
     @FXML
     private Path pathingStart;
     @FXML
@@ -82,13 +84,15 @@ public class MusicPlayerView implements View {
     @FXML
     private Line titleLine, artistLine, albumLine, genreLine, yearLine, timeLine, dateUploadedLine;
     @FXML
-    private VBox songList, playList, songSearchPane, albumSearchPane, artistSearchPane, playlistSearchPane, profileSearchPane, sortPlaylistScroll, listener_vbox, artist_vbox;
+    private VBox songList, playList, songSearchPane, albumSearchPane, artistSearchPane, playlistSearchPane, profileSearchPane, sortPlaylistScroll, listener_vbox, artist_vbox, notifHistoryVBox;
     @FXML
     private TextField searchBar, albumNameInput, editTitleBar, editAlbumBar, editGenreBar, editYearBar;
     @FXML
     private ChoiceBox albumChoice, playlistChoice;
     @FXML
     private CheckBox singleChoice;
+    @FXML
+    private ScrollPane notifHistoryPane;
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -122,10 +126,12 @@ public class MusicPlayerView implements View {
     private boolean isAlbumKebabOpened;
     private boolean isAlbumOpen;
     private boolean isPlaylistOpen;
+    private boolean isNotifHistoryOpen;
 
     private boolean isArtistFollowerOpened;
     private boolean isListenerFollowerOpened;
     private boolean isFavoriteOpened;
+    private boolean newNotification;
 
     private int previousSong;
     private int nextSong;
@@ -160,10 +166,14 @@ public class MusicPlayerView implements View {
         musicPlayerController.setButton(playBtn);
         musicPlayerController.setPicture(songPicture);
         client.setMessage(model.getUser().getUsername() + "," + "login" + ",");
-        if(model.getUser().getFollowedPeople().size() > 0) {
-            for(int i = 0; i < model.getUser().getFollowedPeople().size(); i++) {
-                client.setMessage(client.getMessage() + model.getUser().getFollowedPeople().get(i).getUsername().trim() + ",");
+        try {
+            if(model.getFollowers().size() > 0) {
+                for(int i = 0; i < model.getFollowers().size(); i++) {
+                    client.setMessage(client.getMessage() + model.getFollowers().get(i).getUsername().trim() + ",");
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         client.sendPacket();
         update();
@@ -199,10 +209,12 @@ public class MusicPlayerView implements View {
         isAlbumKebabOpened = false;
         isAlbumOpen = false;
         isPlaylistOpen = false;
+        isNotifHistoryOpen=false;
 
         isArtistFollowerOpened = false;
         isListenerFollowerOpened = false;
         isFavoriteOpened = false;
+        newNotification = false;
 
         nextSong = 0;
         previousSong = 0;
@@ -1086,7 +1098,12 @@ public class MusicPlayerView implements View {
                 songsPane.setVisible(true);
                 songViewTitle.setText("Recently Played");
                 viewUser = model.getUser();
-
+                try {
+                    viewSong = model.getRecentlyPlayed();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                setSongView(viewSong);
                 songViewCreator.setText("");
                 followBtn.setVisible(false);
                 unfollowBtn.setVisible(false);
@@ -1846,7 +1863,8 @@ public class MusicPlayerView implements View {
                 } else if (isProfileOpened && isListenerFollowerOpened) {
                     refreshListenerFollower.fire();
                 }
-                client.setMessage(model.getUser().getUsername().trim() + "," + "follow" + "," + acc.getUsername().trim() + ",");
+                client.setMessage(model.getUser().getUsername().trim() + "," + "follow" + "," + acc.getUsername().trim() + "," +
+                        LocalDateTime.now().getHour() + "," + LocalDateTime.now().getMinute() + "," + LocalDateTime.now().getSecond() + ",");
                 client.sendPacket();
             }
         });
@@ -1904,7 +1922,8 @@ public class MusicPlayerView implements View {
                 } else if (isProfileOpened && isListenerFollowerOpened) {
                     refreshListenerFollower.fire();
                 }
-                client.setMessage(model.getUser().getUsername().trim() + "," + "follow" + "," + acc.getUsername().trim() + ",");
+                client.setMessage(model.getUser().getUsername().trim() + "," + "follow" + "," + acc.getUsername().trim() + "," +
+                        LocalDateTime.now().getHour() + "," + LocalDateTime.now().getMinute() + "," + LocalDateTime.now().getSecond() + ",");
                 client.sendPacket();
             }
         });
@@ -2056,14 +2075,13 @@ public class MusicPlayerView implements View {
             if(likeSongBtn.getText().trim().equalsIgnoreCase("like this song")) {
                 if(controller.likeSong(s)) {
                     likeSongBtn.setText("Unlike this song");
-                    client.setMessage(model.getUser().getUsername().trim() + "," + "like" + "," + s.getArtist().trim() + ",");
+                    client.setMessage(model.getUser().getUsername().trim() + "," + "like" + "," + s.getArtist().trim() + "," +
+                            LocalDateTime.now().getHour() + "," + LocalDateTime.now().getMinute() + "," + LocalDateTime.now().getSecond() + ",");
                     client.sendPacket();
                 }
             } else if(likeSongBtn.getText().trim().equalsIgnoreCase("unlike this song")) {
                 if(controller.unlikeSong(s)) {
                     likeSongBtn.setText("Like this song");
-                    client.setMessage(model.getUser().getUsername().trim() + "," + "unlike" + ",");
-                    client.sendPacket();
                     if(isProfileOpened) {
                         refreshFav.fire();
                     }
@@ -2328,7 +2346,8 @@ public class MusicPlayerView implements View {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    client.setMessage(model.getUser().getUsername().trim() + "," + "uploadplaylist" + ",");
+                    client.setMessage(model.getUser().getUsername().trim() + "," + "uploadplaylist" + "," +
+                            LocalDateTime.now().getHour() + "," + LocalDateTime.now().getMinute() + "," + LocalDateTime.now().getSecond() + ",");
                     client.sendPacket();
 
                 }
@@ -2533,7 +2552,7 @@ public class MusicPlayerView implements View {
                 isCreateOpened = false;
                 songUpload.setVisible(false);
                 createPane.setVisible(false);
-                if (albumChoice.getValue().toString().contains("- Single")) {
+                /*if (albumChoice.getValue().toString().contains("- Single")) {
                     if (model.getAlbumSize(albumChoice.getValue().toString().trim()) == 0) {
                         FileChooser file = new FileChooser();
                         File temp = file.showOpenDialog(stage);
@@ -2564,8 +2583,9 @@ public class MusicPlayerView implements View {
                     updateAlbumList();
                     isSongsSelected = false;
                     songsBtn.fire();
-                }
-                client.setMessage(model.getUser().getUsername().trim() + "," + "uploadsong" + ",");
+                }*/
+                client.setMessage(model.getUser().getUsername().trim() + "," + "uploadsong" + "," +
+                        LocalDateTime.now().getHour() + "," + LocalDateTime.now().getMinute() + "," + LocalDateTime.now().getSecond() + ",");
                 client.sendPacket();
             }
         });
@@ -2617,6 +2637,39 @@ public class MusicPlayerView implements View {
             editSongPane.setVisible(false);
 
             resetLeftTab();
+        });
+
+        notifOpenBtn.setOnMouseEntered(event -> {
+            if (!isNotifHistoryOpen){
+                notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button_hover_white.png")));
+            }
+            if(newNotification){
+                notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button_with_circle_hover_white.png")));
+            }
+        });
+
+        notifOpenBtn.setOnMouseExited(event -> {
+            if (!isNotifHistoryOpen){
+                notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button.png")));
+            }
+
+            if(newNotification){
+                notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button_with_circle.png")));
+            }
+        });
+
+        notifOpenBtn.setOnMouseClicked(event -> {
+            if (!isNotifHistoryOpen){
+                isNotifHistoryOpen=true;
+                newNotification = false;
+                notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button_hover.png")));
+                notifHistoryPane.setVisible(true);
+                setNotificationHistory();
+            }else if (isNotifHistoryOpen){
+                isNotifHistoryOpen=false;
+                notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button.png")));
+                notifHistoryPane.setVisible(false);
+            }
         });
     }
 
@@ -2796,8 +2849,8 @@ public class MusicPlayerView implements View {
                             musicPlayerController.stop();
                         }
                     }
-                    model.getCurrentPlaylist().setSongs(viewSong);
                     musicPlayerController.setIndex(finalI);
+                    model.getCurrentPlaylist().setSongs(viewSong);
                     musicPlayerController.play();
                 }
 
@@ -3695,6 +3748,60 @@ public class MusicPlayerView implements View {
 
     }
 
+    public void setNotificationHistory() {
+        ArrayList<StackPane> playlistStack = new ArrayList<>();
+        ArrayList<Rectangle> boxes = new ArrayList<>();
+        ArrayList<AnchorPane> anchorPane = new ArrayList<>();
+
+        int numPlaylist = notificationMessage.size();
+
+        notifHistoryVBox.getChildren().clear();
+        playlistStack.clear();
+        boxes.clear();
+        anchorPane.clear();
+
+        for (int i = 0; i < numPlaylist; i++) {
+            String newMessage = notificationMessage.get(i);
+            String[] temp = notificationTime.get(i).split(",");
+            String newTime = getTime(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), Integer.parseInt(temp[2]));
+            playlistStack.add(new StackPane());
+            boxes.add(new Rectangle());
+            boxes.get(i).setWidth(300);
+            boxes.get(i).setHeight(100);
+            boxes.get(i).setLayoutX(0);
+            boxes.get(i).setLayoutY(0);
+            boxes.get(i).setFill(Color.web("#202020"));
+            playlistStack.get(i).getChildren().add(boxes.get(i));
+            anchorPane.add(new AnchorPane());
+            Label title = new Label(newMessage);
+            title.setMaxWidth(295);
+            title.setMaxHeight(75);
+            title.setWrapText(true);
+            title.setTextFill(Color.web("#FFFFFF"));
+            title.setFont(new Font("Brown", 20));
+            title.setLayoutX(15);
+            title.setLayoutY(10);
+            Label time = new Label(newTime);
+            time.setMaxWidth(295);
+            time.setMaxHeight(25);
+            time.setTextFill(Color.web("#797979"));
+            time.setFont(new Font("Brown", 20));
+            time.setLayoutX(15);
+            time.setLayoutY(75);
+            time.setStyle("-fx-font-size: 14;");
+            anchorPane.get(i).getChildren().addAll(title,time);
+            int finalX = i;
+            anchorPane.get(i).setOnMouseEntered(event -> {
+                boxes.get(finalX).setFill(Color.web("#323232"));
+            });
+            anchorPane.get(i).setOnMouseExited(event -> {
+                boxes.get(finalX).setFill(Color.web("#202020"));
+            });
+            playlistStack.get(i).getChildren().addAll(anchorPane.get(i));
+            notifHistoryVBox.getChildren().add(playlistStack.get(i));
+        }
+    }
+
     public String convertDate(Timestamp time) {
         return month[time.toLocalDateTime().getMonthValue() - 1] + " " + time.toLocalDateTime().getYear();
     }
@@ -3786,6 +3893,37 @@ public class MusicPlayerView implements View {
                 }
             });
         }
+    }
+
+    public void addNotification(String message, String time) {
+        notificationMessage.add(message);
+        notificationTime.add(time);
+        newNotification = true;
+        notifOpenBtn.setImage(new Image(getClass().getResourceAsStream("/Media/notif_button_with_circle.png")));
+        Platform.runLater(() -> setNotificationHistory());
+        System.out.println(message);
+    }
+
+    public String getTime(int hour, int min, int sec) {
+        LocalDateTime now = LocalDateTime.now();
+        String time = "";
+        if(hour == now.getHour() && min == now.getMinute() && sec == now.getSecond()) {
+            time = "just now";
+        } else if(hour == now.getHour() && min == now.getMinute() && now.getSecond() - sec > 1) {
+            time = "a few seconds ago";
+        } else if(hour == now.getHour() && min == now.getMinute()) {
+            time = "1 minute ago";
+        } else if(hour == now.getHour() && now.getMinute() - min > 1) {
+            time = "a few minutes ago";
+        } else if(hour == now.getHour() && now.getMinute() - min >= 30) {
+            time = "30 minutes ago";
+        } else if(now.getHour() - hour == 1) {
+            time = "1 hour ago";
+        } else if(now.getHour() - hour > 1) {
+            time = "a few hours ago";
+        }
+        System.out.println("time: " + time);
+        return time;
     }
 
     @Override
