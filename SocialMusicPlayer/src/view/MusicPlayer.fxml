@@ -451,7 +451,7 @@
                   <Font name="Brown-Regular" size="27.0" />
                </font>
             </Label>
-            <Button fx:id="logoutBtnArtist" layoutX="822.0" layoutY="88.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
+            <Button fx:id="logoutBtnArtist" layoutX="840.0" layoutY="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="130.0" style="-fx-background-color: #00EAD0; -fx-border-color: #00ead0; -fx-border-radius: 1;" text="logout" textFill="#252a2c">
                <font>
                   <Font name="Brown-Regular" size="21.0" />
                </font>

@@ -39,6 +39,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class MusicPlayerView implements View {
@@ -715,12 +716,29 @@ public class MusicPlayerView implements View {
                 e.printStackTrace();
             }
             if(highLightPlaylist.getText().trim().equalsIgnoreCase("highlight playlist")) {
-                if(controller.highlightPlaylist(pp)) {
-                    highLightPlaylist.setText("Unhighlight Playlist");
+                if(unfollowBtn.isVisible()) {
+                    if(controller.highlightFollowedPlaylist(pp)) {
+                        highLightPlaylist.setText("Unhighlight Playlist");
+                    }
+                } else if(viewUser.getUsername().trim().equalsIgnoreCase(model.getUser().getUsername().trim())) {
+                    if(controller.highlightPlaylist(pp)) {
+                        highLightPlaylist.setText("Unhighlight Playlist");
+                    }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText("Unable to highlight playlist");
+                    alert.setContentText("You have not followed " + songViewTitle.getText().trim());
+                    alert.showAndWait();
                 }
             } else if(highLightPlaylist.getText().trim().equalsIgnoreCase("unhighlight playlist")) {
-                if(controller.unhighlightPlaylist(pp)) {
-                    highLightPlaylist.setText("Highlight Playlist");
+                if(unfollowBtn.isVisible()) {
+                    if(controller.unhighlightFollowedPlaylist(pp)) {
+                        highLightPlaylist.setText("Highlight Playlist");
+                    }
+                } else if(viewUser.getUsername().trim().equalsIgnoreCase(model.getUser().getUsername().trim())) {
+                    if(controller.unhighlightPlaylist(pp)) {
+                        highLightPlaylist.setText("Highlight Playlist");
+                    }
                 }
             }
             isPlayListKebabOpened = false;
@@ -1549,12 +1567,84 @@ public class MusicPlayerView implements View {
                 highlight.setOnMouseClicked(event1 -> {
                     isQueueOpened = false;
                     isProfileOpened = false;
+                    isPlaylistOpen = true;
+                    isPlayListKebabOpened = false;
                     profile_pane.setVisible(false);
                     songsPane.setVisible(true);
                     songViewTitle.setText(highlight.getText());
-                    viewSong = p.getSongs();
-                    setSongView(p.getSongs());
+                    viewUser = model.getUser(p.getUser().trim());
+                    if(viewUser.getUsername().trim().equalsIgnoreCase(model.getUser().getUsername())) {
+                        try {
+                            viewSong = model.getPlaylistFromUser(songViewTitle.getText().trim(), model.getUser().getUsername().trim()).getSongs();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        viewSong = p.getSongs();
+                    }
+                    setSongView(viewSong);
                     songViewCreator.setText("created by: " + viewUser.getUsername().trim());
+                    if(controller.inDisplayedPlaylist(p)) {
+                        highLightPlaylist.setText("Unhighlight playlist");
+                    } else {
+                        highLightPlaylist.setText("Highlight playlist");
+                    }
+                    /*if(viewUser.getUsername().equalsIgnoreCase(model.getUser().getUsername())) {
+                        if(controller.validPlaylist(songViewTitle.getText().trim())) {
+                            remove_from_playlist_btn.setTextFill(Color.web("#C6C6C6"));
+                            remove_from_playlist_btn.setDisable(false);
+                        } else {
+                            remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                            remove_from_playlist_btn.setDisable(true);
+                        }
+                        if(model.getUser() instanceof Artist) {
+                            deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                            deletePlaylistLbl.setDisable(false);
+                            editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                            editPlaylistName.setDisable(false);
+                            if(isSongsSelected || isPlaylistOpen || isAlbumOpen) {
+                                deleteSongBtn.setTextFill(Color.web("#C6C6C6"));
+                                deleteSongBtn.setDisable(false);
+                                editSongBtn.setTextFill(Color.web("#C6C6C6"));
+                                editSongBtn.setDisable(false);
+                            } else {
+                                deleteSongBtn.setTextFill(Color.web("#7b7b7b"));
+                                deleteSongBtn.setDisable(true);
+                                editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                                editSongBtn.setDisable(true);
+                            }
+                        } else if (model.getUser() instanceof Listener) {
+                            deletePlaylistLbl.setTextFill(Color.web("#C6C6C6"));
+                            deletePlaylistLbl.setDisable(false);
+                            editPlaylistName.setTextFill(Color.web("#C6C6C6"));
+                            editPlaylistName.setDisable(false);
+                            likeSongBtn.setTextFill(Color.web("#C6C6C6"));
+                            likeSongBtn.setDisable(false);
+                        }
+                    } else {
+                        deletePlaylistLbl.setTextFill(Color.web("#7b7b7b"));
+                        deletePlaylistLbl.setDisable(true);
+                        editPlaylistName.setTextFill(Color.web("#7b7b7b"));
+                        editPlaylistName.setDisable(true);
+                        remove_from_playlist_btn.setTextFill(Color.web("#7b7b7b"));
+                        remove_from_playlist_btn.setDisable(true);
+                        editSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        editSongBtn.setDisable(true);
+                        deleteSongBtn.setTextFill(Color.web("#7b7b7b"));
+                        deleteSongBtn.setDisable(true);
+                    }*/
+                    if(songViewCreator.getText().trim().substring(12).equalsIgnoreCase(model.getUser().getUsername().trim())) {
+                        followBtn.setVisible(false);
+                        unfollowBtn.setVisible(false);
+                    } else {
+                        if(controller.inFollowedPlaylist(songViewTitle.getText().trim(), songViewCreator.getText().trim().substring(12))) {
+                            followBtn.setVisible(false);
+                            unfollowBtn.setVisible(true);
+                        } else {
+                            followBtn.setVisible(true);
+                            unfollowBtn.setVisible(false);
+                        }
+                    }
                     playListMore.setVisible(true);
                     playListBtn.setVisible(true);
                 });
@@ -2033,8 +2123,14 @@ public class MusicPlayerView implements View {
             if (playlistChoice.getValue() != null) {
                 isaddtoplaylistOpened = false;
                 isKebabOpened = false;
-                if (controller.addSongToPlaylist(model.getUser().getSongs().get(nextSong), playlistChoice.getValue().toString())) {
-                    update();
+                if(searchPane.isVisible()) {
+                    if (controller.addSongToPlaylist(songSearchList.get(nextPlaylist), playlistChoice.getValue().toString())) {
+                        update();
+                    }
+                } else {
+                    if (controller.addSongToPlaylist(viewSong.get(nextSong), playlistChoice.getValue().toString())) {
+                        update();
+                    }
                 }
                 addtoPlaylistPane.setVisible(false);
                 song_etc_anchorpane.setVisible(false);
@@ -2552,7 +2648,7 @@ public class MusicPlayerView implements View {
                 isCreateOpened = false;
                 songUpload.setVisible(false);
                 createPane.setVisible(false);
-                /*if (albumChoice.getValue().toString().contains("- Single")) {
+                if (albumChoice.getValue().toString().contains("- Single")) {
                     if (model.getAlbumSize(albumChoice.getValue().toString().trim()) == 0) {
                         FileChooser file = new FileChooser();
                         File temp = file.showOpenDialog(stage);
@@ -2583,7 +2679,7 @@ public class MusicPlayerView implements View {
                     updateAlbumList();
                     isSongsSelected = false;
                     songsBtn.fire();
-                }*/
+                }
                 client.setMessage(model.getUser().getUsername().trim() + "," + "uploadsong" + "," +
                         LocalDateTime.now().getHour() + "," + LocalDateTime.now().getMinute() + "," + LocalDateTime.now().getSecond() + ",");
                 client.sendPacket();
@@ -3774,16 +3870,14 @@ public class MusicPlayerView implements View {
             playlistStack.get(i).getChildren().add(boxes.get(i));
             anchorPane.add(new AnchorPane());
             Label title = new Label(newMessage);
-            title.setMaxWidth(295);
-            title.setMaxHeight(75);
+            title.setPrefSize(290, 75);
             title.setWrapText(true);
             title.setTextFill(Color.web("#FFFFFF"));
             title.setFont(new Font("Brown", 20));
             title.setLayoutX(15);
             title.setLayoutY(10);
             Label time = new Label(newTime);
-            time.setMaxWidth(295);
-            time.setMaxHeight(25);
+            time.setPrefSize(290, 75);
             time.setTextFill(Color.web("#797979"));
             time.setFont(new Font("Brown", 20));
             time.setLayoutX(15);

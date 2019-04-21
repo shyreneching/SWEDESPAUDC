@@ -541,10 +541,10 @@ public class PlaylistService implements Service{
 
 
     //add
-    public boolean updateFollowedPlaylist(String playlistid, FollowedPlaylist p) throws SQLException {
+    public boolean updateFollowedPlaylist(String playlistid, PlaylistInterface p) throws SQLException {
         Connection connection = pool.checkOut();
 
-        String query = "UPDATE followedplaylist, SET " +
+        String query = "UPDATE followedplaylist SET " +
                 "status = ?," +
                 "display = ?"
                 + " WHERE idplaylist= ?";

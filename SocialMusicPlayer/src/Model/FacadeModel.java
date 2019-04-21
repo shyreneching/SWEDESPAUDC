@@ -900,7 +900,8 @@ public class FacadeModel {
 
     public boolean highlightFollowedPlaylist(PlaylistInterface p) throws SQLException{
         p.setDisplay(true);
-        return playlistService.update(p.getPlaylistid(), p);
+        /*return playlistService.update(p.getPlaylistid(), p);*/
+        return ((PlaylistService)playlistService).updateFollowedPlaylist(p.getPlaylistid(), p);
     }
 
     public boolean unhighlightPlaylist(PlaylistInterface p) throws SQLException{
@@ -910,7 +911,8 @@ public class FacadeModel {
 
     public boolean unhighlightFollowedPlaylist(PlaylistInterface p) throws SQLException{
         p.setDisplay(false);
-        return playlistService.update(p.getPlaylistid(), p);
+        /*return playlistService.update(p.getPlaylistid(), p);*/
+        return ((PlaylistService)playlistService).updateFollowedPlaylist(p.getPlaylistid(), p);
     }
 
     public ObservableList<SongInterface> getRecentlyPlayed() throws SQLException{

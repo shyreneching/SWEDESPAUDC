@@ -315,43 +315,45 @@ public class FacadeController {
     }
 
     public boolean highlightPlaylist(PlaylistInterface playlist) {
-        if(inFollowedPlaylist(playlist.getName().trim(), model.getUser().getUsername().trim())) {
-            try {
-                if(model.highlightFollowedPlaylist(playlist)) {
-                    return true;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            if(model.highlightPlaylist(playlist)) {
+                return true;
             }
-        } else {
-            try {
-                if(model.highlightPlaylist(playlist)) {
-                    return true;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean highlightFollowedPlaylist(PlaylistInterface playlist) {
+        try {
+            if(model.highlightFollowedPlaylist(playlist)) {
+                return true;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
     public boolean unhighlightPlaylist(PlaylistInterface playlist) {
-        if(inFollowedPlaylist(playlist.getName().trim(), model.getUser().getUsername().trim())) {
-            try {
-                if(model.unhighlightFollowedPlaylist(playlist)) {
-                    return true;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            if(model.unhighlightPlaylist(playlist)) {
+                return true;
             }
-        } else {
-            try {
-                if(model.unhighlightPlaylist(playlist)) {
-                    return true;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean unhighlightFollowedPlaylist(PlaylistInterface playlist) {
+        try {
+            if(model.unhighlightFollowedPlaylist(playlist)) {
+                return true;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -366,6 +368,22 @@ public class FacadeController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean inDisplayedPlaylist(PlaylistInterface playlist) {
+        ObservableList<PlaylistInterface> list = FXCollections.observableArrayList();
+        try {
+            list = model.getDisplayedPlaylist();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(PlaylistInterface p : list) {
+            if(p.getPlaylistid().equalsIgnoreCase(playlist.getPlaylistid())) {
+                return true;
+            }
+        }
+
         return false;
     }
 

@@ -32,7 +32,7 @@ public class DisplayedPlaylist implements PlaylistList {
         }
 
         for(Object ob : playlistService.getAll()) {
-            if(((PlaylistInterface)ob).getUser().equalsIgnoreCase(username) && ((PlaylistInterface)ob).isDisplay()) {
+            if(((PlaylistInterface)ob).getUser().trim().equalsIgnoreCase(username.trim()) && ((PlaylistInterface)ob).isDisplay()) {
                 playlists.add((PlaylistInterface)ob);
             }
         }
