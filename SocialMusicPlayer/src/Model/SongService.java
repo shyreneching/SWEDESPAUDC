@@ -610,4 +610,95 @@ public class SongService implements Service{
         pool.checkIn(connection);
         return false;
     }
+
+    public ObservableList<SongInterface> getRecentlyPlayed(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<SongInterface> songs = FXCollections.observableArrayList();
+        ObservableList<String> nameTracker = FXCollections.observableArrayList();
+        /*SELECT * FROM song NATURAL JOIN album INNER JOIN recentlyplayed ON recentlyplayed.idsong = song.idsong
+            WHERE recentlyplayed.username = 'artist1'*/
+        String query = "SELECT * FROM song NATURAL JOIN album " +
+                "INNER JOIN usersong ON usersong.idsong = song.idsong " +
+                "INNER JOIN recentlyplayed ON recentlyplayed.idsong = song.idsong " +
+                "WHERE recentlyplayed.username = '" + username + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                SongInterface s = new Song();
+                s.setSongid(rs.getString("idsong"));
+                s.setName(rs.getString("songname"));
+                s.setGenre(rs.getString("genre"));
+                s.setArtist(rs.getString("artist"));
+                s.setAlbum(rs.getString("albumname"));
+                s.setYear(rs.getInt("year"));
+                s.setTrackNumber(rs.getInt("trackNumber"));
+                s.setLength(rs.getInt("length"));
+                s.setSize(rs.getFloat("size"));
+                s.setDate(rs.getTimestamp("timeplayed"));
+                s.setTimesplayed(rs.getInt("timesplayed"));
+                // sets the name to "Artist-title"
+                s.setFilename("src/Music/" + s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                if(!nameTracker.contains(s.getName())) {
+                    nameTracker.add(s.getName());
+                    songs.add(s);
+                } else {
+                    int x = nameTracker.indexOf(s.getName());
+                    if(songs.get(x).getDate().compareTo(s.getDate()) < 0) {
+                        songs.get(x).setDate(s.getDate());
+                    }
+                }
+            }
+            return songs;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
+
+    public ObservableList<SongInterface> getMostPlayed(String username) throws SQLException {
+        Connection connection = pool.checkOut();
+        ObservableList<SongInterface> songs = FXCollections.observableArrayList();
+        /*SELECT * FROM song INNER JOIN usersong ON song.idsong = usersong.idsong
+            WHERE song.artist = 'artist1' AND usersong.username = 'artist1';*/
+        String query = "SELECT * FROM song NATURAL JOIN album INNER JOIN usersong ON song.idsong = usersong.idsong " +
+                        "WHERE song.artist = '" + username + "' AND usersong.username = '" + username + "'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        try {
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                SongInterface s = new Song();
+                s.setSongid(rs.getString("idsong"));
+                s.setName(rs.getString("songname"));
+                s.setGenre(rs.getString("genre"));
+                s.setArtist(rs.getString("artist"));
+                s.setAlbum(rs.getString("albumname"));
+                s.setYear(rs.getInt("year"));
+                s.setTrackNumber(rs.getInt("trackNumber"));
+                s.setLength(rs.getInt("length"));
+                s.setSize(rs.getFloat("size"));
+                s.setDate(rs.getTimestamp("dateuploaded"));
+                s.setTimesplayed(rs.getInt("timesplayed"));
+                // sets the name to "Artist-title"
+                s.setFilename("src/Music/" + s.getArtist() + "-"+ s.getName()+ ".mp3");
+
+                songs.add(s);
+            }
+            return songs;
+        } catch (SQLException e){
+            e.printStackTrace();
+        } finally {
+            if(statement != null) statement.close();
+            if(connection != null)  connection.close();
+        }
+        pool.checkIn(connection);
+        return null;
+    }
 }

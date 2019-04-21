@@ -58,7 +58,7 @@ public class RecentlyPlayedService implements Service {
             statement.setInt(1, r.size()+1);
             statement.setString(2, a.getIdsong());
             statement.setString(3, a.getUsername());
-            statement.setTimestamp(4, timestamp);
+            statement.setTimestamp(4, a.getTimeplayed());
 
             boolean added = statement.execute();
 

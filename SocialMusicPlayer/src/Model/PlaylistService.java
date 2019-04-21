@@ -567,6 +567,15 @@ public class PlaylistService implements Service{
         return false;
     }
 
+    public PlaylistInterface getRecentlyPlayed(String username) {
+        Connection connection = pool.checkOut();
+        PlaylistInterface p = new Playlist();
+
+
+
+        pool.checkIn(connection);
+        return null;
+    }
 
     //new
     public ObservableList<PlaylistInterface> getFollowedPlaylist(String username) throws SQLException {

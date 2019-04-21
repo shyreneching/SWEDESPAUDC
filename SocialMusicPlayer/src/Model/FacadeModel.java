@@ -14,8 +14,12 @@ import View.View;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class FacadeModel {
@@ -645,6 +649,7 @@ public class FacadeModel {
         RecentlyPlayedInterface recentlyPlayed = new RecentlyPlayed();
         recentlyPlayed.setIdsong(s.getSongid());
         recentlyPlayed.setUsername(user.getUsername());
+        recentlyPlayed.setTimeplayed(new Timestamp(System.currentTimeMillis()));
         recentlyplayedService.add(recentlyPlayed);
         /*update();*/
         /*return s.getSongfile();*/
@@ -916,7 +921,11 @@ public class FacadeModel {
     }
 
     public ObservableList<SongInterface> getRecentlyPlayed() throws SQLException{
-        int iterationNo = 0;//debug
+        ObservableList<SongInterface> songs = ((SongService)songService).getRecentlyPlayed(user.getUsername().trim());
+        songs.sort(Comparator.comparing(SongInterface::getDate));
+        Collections.reverse(songs);
+        return songs;
+        /*int iterationNo = 0;//debug
         //note: all system.out lines are all just debug statements xD
         RecentlyPlayedInterface recentlyPlayed, base;
         ObservableList<Object> recentlyPlayedList = recentlyplayedService.getAll();
@@ -966,7 +975,7 @@ public class FacadeModel {
         recentlyPlayedSongs = reverseList(recentlyPlayedSongs);
         for (SongInterface x: recentlyPlayedSongs)
             System.out.println(x.getName());
-        return recentlyPlayedSongs;
+        return recentlyPlayedSongs;*/
     }
 
     /*Takes specifc playlist*/
@@ -1150,14 +1159,18 @@ public class FacadeModel {
 
     public ObservableList<SongInterface> getMostPlayed() {
         ObservableList<SongInterface> mostplayed = FXCollections.observableArrayList();
-        for (SongInterface song : songs) {
-            mostplayed.add(song);
+        try {
+            mostplayed = ((SongService)songService).getMostPlayed(user.getUsername().trim());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        mostplayed.sort(Comparator.comparing(SongInterface::getTimesplayed));
 
+        mostplayed.sort(Comparator.comparing(SongInterface::getTimesplayed));
         mostplayed = reverseList(mostplayed);
         return mostplayed;
     }
+
+
 
     private ObservableList<SongInterface> reverseList(ObservableList<SongInterface> list) {
         ObservableList<SongInterface> reverse = FXCollections.observableArrayList();
