@@ -15,6 +15,7 @@ import View.View;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class FacadeModel {
@@ -31,7 +32,7 @@ public class FacadeModel {
     private Service recentlyplayedService;
     private Service albumService;
     private AudioParserInterface parser;
-    /*private ObservableList<View> view;*/
+    /*private ObservableList<View> View;*/
     private View view;
 
     public FacadeModel() {
@@ -51,7 +52,7 @@ public class FacadeModel {
     }
 
     public void update() {
-        /*for(View v : view) {
+        /*for(View v : View) {
             v.update();
         }*/
         view.update();
@@ -656,6 +657,60 @@ public class FacadeModel {
 
     public ObservableList<PlaylistInterface> displayPlaylist() throws SQLException {
         return ((PlaylistService) playlistService).getUserDisplayedPlaylist(user.getUsername());
+    }
+
+    public ObservableList<SongInterface> getRecentlyPlayed() throws SQLException{
+        int iterationNo = 0;//debug
+        //note: all system.out lines are all just debug statements xD
+        RecentlyPlayedInterface recentlyPlayed, base;
+        ObservableList<Object> recentlyPlayedList = recentlyplayedService.getAll();
+        ObservableList<SongInterface> recentlyPlayedSongs = FXCollections.observableArrayList();
+        SongInterface recentlyPlayedSong, toRemove;
+        ArrayList<String> songNames = new ArrayList<>();
+        String songName;
+
+        for (Object rp: recentlyPlayedList){
+            recentlyPlayed = (RecentlyPlayed)rp;
+            recentlyPlayedSong = ((SongService)songService).getSong(recentlyPlayed.getIdsong(), user.getUsername());
+            songName = recentlyPlayedSong.getName();
+            System.out.println(songName);
+//          duplicate checker; first checks if song name is in list of recently played songs, if true then remove the less recent song
+            System.out.println(songNames.contains(songName));
+            if(songNames.contains(songName)){
+//              if true; cycle through whole list of recently playeds, this assumes current recentlyPlayed is 2nd occurrence of a certain song
+                for (Object y: recentlyPlayedList){
+                    base = (RecentlyPlayed)y;
+                    toRemove = ((SongService)songService).getSong(base.getIdsong(), user.getUsername());
+//                  if recentlyPlayed's song is the same as the first occurrence of the song; remove based on timestamp
+                    if (recentlyPlayed.getIdsong() == base.getIdsong()){
+//                      if recentlyPlayed is more recent; remove old and add new
+                        if(recentlyPlayed.getTimeplayed().after(base.getTimeplayed())) {
+                            recentlyPlayedSongs.remove(toRemove);
+                            recentlyPlayedSongs.add(recentlyPlayedSong);
+                            System.out.println("replaced a song!");
+                            iterationNo = 0;
+                            break;
+//                      if base is more recent; dont add new
+//                        } else if (base.getTimeplayed().after(recentlyPlayed.getTimeplayed())){
+                        } else {
+                            iterationNo++;
+                            System.out.println(iterationNo + ": Okay i think timestamps are equal? or theyre somehow a less recent song is actually more recent");
+                        }
+                    }
+                }
+//          if song is not a duplicate, then add recently played song
+            } else {
+                System.out.println("added!");
+                songNames.add(songName);
+                recentlyPlayedSongs.add(recentlyPlayedSong);
+            }
+        }
+
+        System.out.println("LIST OF ALL SONGS");
+        recentlyPlayedSongs = reverseList(recentlyPlayedSongs);
+        for (SongInterface x: recentlyPlayedSongs)
+            System.out.println(x.getName());
+        return recentlyPlayedSongs;
     }
 
     public ObservableList<PlaylistInterface> getDisplayedPlaylist() throws SQLException {
